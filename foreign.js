@@ -14,10 +14,10 @@
     // Инициализация массива строк
     function obfuscationArray() {
         var strings = [
-            'length', 'Ошибка доступа', 'MGM+', '(((.+)+)+)+$', '.menu .menu__list', 
+            'length', 'Ошибка', 'MGM+', '(((.+)+)+)+$', '.menu .menu__list', 
             'discover/tv?first_air_date.lte=2025-12-31&first_air_date.gte=2020-01-01', 
             'apply', 'return (function()', 'warn', 'Турецкие сериалы', 'Manifest', 
-            'bylampa', 'settings_rest_source', 'table', 'Noty', 'true', 'Дорамы', 
+            'lampa', 'settings_rest_source', 'table', 'true', 'Дорамы', 
             'menu', 'log', '213', '1939986NcFnJf', '1024', '__proto__', 'translate', 
             'Activity', 'origin', 'Listener', 'Netflix', 'Apple TV+', '1455276VmKcBF', 
             'toString', 'Apple TV+', 'search', 'title', 
