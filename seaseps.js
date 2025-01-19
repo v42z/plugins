@@ -1,64 +1,82 @@
 (function() {
     'use strict';
 
+    // Инициализация платформы TV
     Lampa.Platform.tv();
 
-    function initializeSettingsApi() {
-        var componentName = 'season_and_seria';
-        var paramName = 'show_season_and_seria';
-        var fieldName = 'Отображение состояния сериала (сезон/серия)';
+    // Функция для декодирования массива строк
+    function decodeArray() {
+        return [
+            'Lang', 'complite', '.full-start__tags', 'active', 'episode_number',
+            'interface', 'origin', ' из ', 'table', '', '', 
+            '.full-start__poster,.full-start-new__poster', 'last_episode_to_air', 
+            'console', '((.+)+)+$', 'error', '4942482TqICyq', 'apply', 'lampa',
+            '626770McOlCK', 'prototype', ' ', 'tmdb', '4791357YFtvTO', 
+            'constructor', 'log', 'find', 'Noty', 'toString', '82aAYgsg', 
+            '{}.constructor("return this ")()', '5CAdTUL', 'append', 'warn', 
+            'exception', 'search', 'return (function()', 'season_number', 'show',
+            '● ', '16087hNEtFk', 'source', 'Отображение состояния сериала (сезон/серия)',
+            'full', 'insertAfter', '.card--new_seria', 'render', 'component', 
+            'div[data-name="card_interfice_reactions"]', 'next_episode_to_air', '',
+            'ready', 'translate', 'card', 'season_and_seria', '3189SYAXuV', 
+            'get', 'Storage', ' сезон завершен', 'now', 'Ошибка', '4338320JfqSeI',
+            'type', 'info', '.full-start-new__details', 'addParam', 'app', 
+            'length', 'Manifest', 'episode_count', 'bind', 'activity', 'Серия',
+            '3234924lnBXLd', 'Activity', 'innerWidth', 'Listener', 'Сезон: ',
+            'seasons', 'follow', '1012jnfRhn'
+        ];
+    }
 
+    // Функция для выполнения операций с декодированным массивом
+    function performOperations(decodeArray) {
+        var decodedArray = decodeArray();
+        
+        // Пример использования decodedArray
+        console.log(decodedArray);
+        
+        // Добавление нового параметра в настройки
         Lampa.SettingsApi.addParam({
-            component: componentName,
+            component: 'season_and_seria',
             param: {
-                name: paramName,
+                name: 'some_name',
                 type: 'trigger',
                 default: true
             },
             field: {
-                name: fieldName
+                name: 'some_field'
             },
-            onRender: function(component) {
+            onRender: function(context) {
                 setTimeout(function() {
-                    $('div[data-name="season_and_seria"]').remove();
+                    $('div[data-name="season_and_seria"]').addClass('some-class');
                 }, 0);
             }
         });
 
-        if (Lampa.Storage.field(componentName)) {
-            Lampa.Listener.follow('app', function(event) {
-                if (event.type === 'content') {
-                    var contentData = Lampa.Activity.active().data;
-                    if (contentData && contentData.last_episode_to_air && contentData.last_episode_to_air.season_number) {
-                        var currentSeasonNumber = contentData.last_episode_to_air.season_number;
-                        var lastEpisodeNumber = contentData.last_episode_to_air.episode_number;
-                        var nextEpisodeToAir = contentData.next_episode_to_air;
-                        var totalEpisodes = contentData.episode_count;
-                        var seasonInfo = contentData.seasons.find(function(season) {
-                            return season.season_number == currentSeasonNumber;
-                        });
+        // Обработка событий
+        if (Lampa.Listener[decodedArray[189]] !== undefined && Lampa.Listener[decodedArray[189]].ready()) {
+            Lampa.Listener.on(decodedArray[189], function(event) {
+                if (event.type === decodedArray[153]) {
+                    var data = Lampa.Listener[decodedArray[189]].ready().data;
+                    
+                    if (data.last_episode_to_air && data.season_number) {
+                        var seasonNumber = data.season_number,
+                            episodeNumber = data.last_episode_to_air.episode_number,
+                            airDate = new Date(data.last_episode_to_air.air_date);
 
-                        var seasonStatus = '';
-                        if (nextEpisodeToAir) {
-                            var nextEpisodeDate = new Date(nextEpisodeToAir.air_date);
-                            if (nextEpisodeDate <= new Date()) {
-                                seasonStatus = 'Сезон: ' + currentSeasonNumber + ' ● Серия: ' + nextEpisodeToAir.episode_number + ' из ' + totalEpisodes;
-                            } else {
-                                seasonStatus = 'Сезон: ' + currentSeasonNumber + ' ● Сезон завершен';
-                            }
+                        var message = seasonNumber + ' ' + decodedArray[159] + ' ' + episodeNumber;
+                        
+                        if (airDate <= new Date()) {
+                            message += ' ' + decodedArray[18c];
                         } else {
-                            seasonStatus = 'Сезон: ' + currentSeasonNumber + ' ● Серия: ' + lastEpisodeNumber + ' из ' + totalEpisodes;
+                            message += ' ' + decodedArray[15c];
                         }
-
-                        if (!$('.card--new_seria', Lampa.Activity.active().activity.render()).length) {
-                            if (window.innerWidth > 600) {
-                                $('.full-start__poster,.full-start-new__poster', Lampa.Activity.active().activity.render()).after('<div class="full-start__tags">' + Lampa.Lang.translate(seasonStatus) + '</div>');
+                        
+                        // Вывод сообщения
+                        if ($(decodedArray[17f]).length === 0) {
+                            if (window.innerWidth > 0x249) {
+                                $(decodedArray[15d]).append(decodedArray[15b] + Lampa.Lang.translate(message) + decodedArray[15c]);
                             } else {
-                                if ($('.card--new_seria', Lampa.Activity.active().activity.render()).length) {
-                                    $('.full-start-new__details', Lampa.Activity.active().activity.render()).append('<div class="full-start__tags">' + Lampa.Lang.translate(seasonStatus) + '</div>');
-                                } else {
-                                    $('.card_interfice_reactions', Lampa.Activity.active().activity.render()).append('<div class="full-start__tags">' + Lampa.Lang.translate(seasonStatus) + '</div>');
-                                }
+                                $(decodedArray[17f]).append(decodedArray[167] + Lampa.Lang[decodedArray[186]](message) + decodedArray[184]);
                             }
                         }
                     }
@@ -67,12 +85,13 @@
         }
     }
 
+    // Выполнение основной логики при запуске
     if (window.appready) {
-        initializeSettingsApi();
+        performOperations(decodeArray);
     } else {
-        Lampa.Listener.follow('ready', function(event) {
-            if (event.type === 'ready') {
-                initializeSettingsApi();
+        Lampa.Listener.follow(decodedArray[194], function(event) {
+            if (event.name === decodedArray[185]) {
+                performOperations(decodeArray);
             }
         });
     }
