@@ -3249,7 +3249,7 @@ Lampa.SettingsApi.addComponent({
 	        Lampa.SettingsApi.addParam({
 					component: 'add_online_plugin',
 					param: {
-                               			name: 'Showy',
+                               			name: 'Filmix',
                    				type: 'select',
                    				values: {
 							1:	'Установить',
@@ -3258,45 +3258,45 @@ Lampa.SettingsApi.addComponent({
 					//default: '1',
                				},
 					field: {
-                                  		name: 'Showy',
+                                  		name: 'Filmix',
                                   		description: 'Плагин для просмотра фильмов и сериалов в онлайн'
 					},
                            		onChange: function(value) {
 					if (value == '1') {
-						itemON('http://showy.online/m.js', 'Showy', '@showy', 'Showy');
+						itemON('https://immisterio.github.io/bwa/fx.js', 'Filmix', '@Filmix', 'Filmix');
 					}
 					if (value == '2') {
-						var pluginToRemoveUrl = "http://showy.online/m.js";
+						var pluginToRemoveUrl = "hhttps://immisterio.github.io/bwa/fx.js";
 						deletePlugin(pluginToRemoveUrl);
 					}
                 },
 					onRender: function (item) {$('.settings-param__name', item).css('color','f3d900'); hideInstall();
-						/*var myResult = checkPlugin('http://showy.online/m.js')
+						/*var myResult = checkPlugin('https://immisterio.github.io/bwa/fx.js')
 						setTimeout(function() {	
-							$('div[data-name="Showy"]').append('<div class="settings-param__status one"></div>')
+							$('div[data-name="Filmix"]').append('<div class="settings-param__status one"></div>')
 							if (myResult) {
-								$('div[data-name="Showy"]').find('.settings-param__status').removeClass('active error wait').addClass('active')
+								$('div[data-name="Filmix"]').find('.settings-param__status').removeClass('active error wait').addClass('active')
 							} else {
-								$('div[data-name="Showy"]').find('.settings-param__status').removeClass('active error wait').addClass('error')
+								$('div[data-name="Filmix"]').find('.settings-param__status').removeClass('active error wait').addClass('error')
 							}
 						}, 100);*/
-						var myResult = checkPlugin('http://showy.online/m.js');
+						var myResult = checkPlugin('https://immisterio.github.io/bwa/fx.js');
                                                 var pluginsArray = Lampa.Storage.get('plugins');
                                                     setTimeout(function() {
-                                                       $('div[data-name="Showy"]').append('<div class="settings-param__status one"></div>');
+                                                       $('div[data-name="Filmix"]').append('<div class="settings-param__status one"></div>');
                                                        var pluginStatus = null;
                                                        for (var i = 0; i < pluginsArray.length; i++) {
-                                                          if (pluginsArray[i].url === 'http://showy.online/m.js') {
+                                                          if (pluginsArray[i].url === 'https://immisterio.github.io/bwa/fx.js') {
                                                              pluginStatus = pluginsArray[i].status;
                                                              break;
                                                           }
                                                        }
                                                        if (myResult && pluginStatus !== 0) {
-                                                          $('div[data-name="Showy"]').find('.settings-param__status').removeClass('active error').addClass('active');
+                                                          $('div[data-name="Filmix"]').find('.settings-param__status').removeClass('active error').addClass('active');
                                                        } else if (pluginStatus === 0) {
-                                                          $('div[data-name="Showy"]').find('.settings-param__status').removeClass('active error').css('background-color', 'rgb(255, 165, 0)');
+                                                          $('div[data-name="Filmix"]').find('.settings-param__status').removeClass('active error').css('background-color', 'rgb(255, 165, 0)');
                                                        } else {
-                                                          $('div[data-name="Showy"]').find('.settings-param__status').removeClass('active error').addClass('error');
+                                                          $('div[data-name="Filmix"]').find('.settings-param__status').removeClass('active error').addClass('error');
                                                        }
                                                     }, 100);	
 					}
