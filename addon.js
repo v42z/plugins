@@ -3136,61 +3136,6 @@ Lampa.SettingsApi.addComponent({
 					}
         });
         
-		Lampa.SettingsApi.addParam({
-					component: 'add_online_plugin',
-					param: {
-                               			name: 'online_cinema',
-                   				type: 'select',
-                   				values: {
-							1:	'Установить',
-							2:	'Удалить',
-                   				},
-					//default: '1',
-               				},
-					field: {
-                                  		name: 'Онлайн Cinema',
-                                  		description: 'Плагин для просмотра фильмов и сериалов в онлайн'
-					},
-                           		onChange: function(value) {
-					if (value == '1') {
-						itemON('https://bylampa.github.io/cinema.js', 'Онлайн Cinema', '@cinema', 'online_cinema');
-					}
-					if (value == '2') {
-						var pluginToRemoveUrl = "https://bylampa.github.io/cinema.js";
-						deletePlugin(pluginToRemoveUrl);
-					}
-                },
-					onRender: function (item) {$('.settings-param__name', item).css('color','f3d900'); hideInstall();
-						/*var myResult = checkPlugin('https://bwa.to/o')
-						setTimeout(function() {	
-							$('div[data-name="Онлайн_BWA"]').append('<div class="settings-param__status one"></div>')
-							if (myResult) {
-								$('div[data-name="Онлайн_BWA"]').find('.settings-param__status').removeClass('active error wait').addClass('active')
-							} else {
-								$('div[data-name="Онлайн_BWA"]').find('.settings-param__status').removeClass('active error wait').addClass('error')
-							}
-						}, 100);*/
-						var myResult = checkPlugin('https://bylampa.github.io/cinema.js');
-                                                var pluginsArray = Lampa.Storage.get('plugins');
-                                                    setTimeout(function() {
-                                                       $('div[data-name="online_cinema"]').append('<div class="settings-param__status one"></div>');
-                                                       var pluginStatus = null;
-                                                       for (var i = 0; i < pluginsArray.length; i++) {
-                                                          if (pluginsArray[i].url === 'https://bylampa.github.io/cinema.js') {
-                                                             pluginStatus = pluginsArray[i].status;
-                                                             break;
-                                                          }
-                                                       }
-                                                       if (myResult && pluginStatus !== 0) {
-                                                          $('div[data-name="online_cinema"]').find('.settings-param__status').removeClass('active error').addClass('active');
-                                                       } else if (pluginStatus === 0) {
-                                                          $('div[data-name="online_cinema"]').find('.settings-param__status').removeClass('active error').css('background-color', 'rgb(255, 165, 0)');
-                                                       } else {
-                                                          $('div[data-name="online_cinema"]').find('.settings-param__status').removeClass('active error').addClass('error');
-                                                       }
-                                                    }, 100);	
-					}
-		});
 	        Lampa.SettingsApi.addParam({
 					component: 'add_online_plugin',
 					param: {
