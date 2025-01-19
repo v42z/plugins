@@ -29,8 +29,17 @@
 
         if (!Activity.listener('season_and_seria')) {
             Listener.follow('item_change', function(item) {
+                console.log('Item changed:', item);
+
                 if (item.type === 'show' && item.source === 'tmdb' && item.last_episode_to_air && item.seasons) {
                     const currentSeason = item.seasons.find(season => season.season_number === item.last_episode_to_air.season_number);
+                    console.log('Current Season:', currentSeason);
+
+                    if (!currentSeason) {
+                        console.error('Current season not found');
+                        return;
+                    }
+
                     const lastEpisodeNumber = item.last_episode_to_air.episode_number;
                     const airDate = item.last_episode_to_air.air_date;
                     const episodeCount = currentSeason.episode_count;
@@ -44,13 +53,20 @@
                     const episodeText = `Серия: ${episodeNumber}`;
                     const fullText = `${seasonText}. ${episodeText}`;
 
-                    if (!$('.full-start__tags', Activity.active().activity.render()).length) {
+                    console.log('Full Text:', fullText);
+
+                    const renderElement = Activity.active().activity.render();
+                    console.log('Render Element:', renderElement);
+
+                    if (!$('.full-start__tags', renderElement).length) {
                         if (window.innerWidth > 399) {
-                            $('.full-start-new__details', Activity.active().activity.render()).append(`<div class="full-start__tags">${Lang.translate(fullText)}</div>`);
+                            $('.full-start-new__details', renderElement).append(`<div class="full-start__tags">${Lang.translate(fullText)}</div>`);
                         } else {
-                            $('.full-start__poster,.full-start-new__poster', Activity.active().activity.render()).append(`<div class="full-start__tags">${Lang.translate(fullText)}</div>`);
+                            $('.full-start__poster,.full-start-new__poster', renderElement).append(`<div class="full-start__tags">${Lang.translate(fullText)}</div>`);
                         }
                     }
+                } else {
+                    console.warn('Item does not match criteria:', item);
                 }
             });
         }
