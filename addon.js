@@ -3153,7 +3153,7 @@ Lampa.SettingsApi.addComponent({
 					},
                            		onChange: function(value) {
 					if (value == '1') {
-						itemON('http://skaz.tv/vcdn.js', 'Онлайн VideoCDN', '@VideoCDN', 'online_VideoCDN');
+						itemON('http://skaz.tv/vcdn.js', 'Онлайн VideoCDN', '@lampa', 'online_VideoCDN');
 					}
 					if (value == '2') {
 						var pluginToRemoveUrl = "http://skaz.tv/vcdn.js";
@@ -3263,7 +3263,7 @@ Lampa.SettingsApi.addComponent({
 					},
                            		onChange: function(value) {
 					if (value == '1') {
-						itemON('https://immisterio.github.io/bwa/fx.js', 'Filmix', '@Filmix', 'Filmix');
+						itemON('https://immisterio.github.io/bwa/fx.js', 'Filmix', '@lampa', 'Filmix');
 					}
 					if (value == '2') {
 						var pluginToRemoveUrl = "hhttps://immisterio.github.io/bwa/fx.js";
