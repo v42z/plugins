@@ -830,7 +830,7 @@ Lampa.SettingsApi.addComponent({
 					},
 					onChange: function(value) {
 						if (value == '1') {
-						       itemON('https://v42z.github.io/plugins/cuboff.js', 'Cub Off', '@scabrum', 'Cub_off');
+						       itemON('https://v42z.github.io/plugins/cuboff.js', 'Cub Off', '@lampa', 'Cub_off');
 						}
 						if (value == '2') {
 							var pluginToRemoveUrl = "https://v42z.github.io/plugins/cuboff.js";
@@ -995,7 +995,7 @@ Lampa.SettingsApi.addComponent({
 					},
 					onChange: function(value) {
 						if (value == '1') {
-						       itemON('https://v42z.github.io/plugins/source.js', 'Дополнительные Источники', '@scabrum', 'New_source');
+						       itemON('https://v42z.github.io/plugins/source.js', 'Дополнительные Источники', '@lampa', 'New_source');
 						}
 						if (value == '2') {
 							var pluginToRemoveUrl = "https://v42z.github.io/plugins/source.js";
@@ -1384,7 +1384,7 @@ Lampa.SettingsApi.addComponent({
 					},
 					onChange: function(value) {
 						if (value == '1') {
-						       itemON('https://v42z.github.io/plugins/rusmovies.js', 'Русские Новинки', '@bylampa', 'rus_movie');
+						       itemON('https://v42z.github.io/plugins/rusmovies.js', 'Русские Новинки', '@lampa', 'rus_movie');
 						}
 						if (value == '2') {
 							var pluginToRemoveUrl = "https://v42z.github.io/plugins/rusmovies.js";
@@ -1552,7 +1552,7 @@ Lampa.SettingsApi.addComponent({
 					},
 					onChange: function(value) {
 						if (value == '1') {
-						       itemON('https://v42z.github.io/plugins/logo.js', 'Лого Вместо Названия', '@bylampa', 'logo_title');
+						       itemON('https://v42z.github.io/plugins/logo.js', 'Лого Вместо Названия', '@lampa', 'logo_title');
 						}
 						if (value == '2') {
 							var pluginToRemoveUrl = "https://v42z.github.io/plugins/logo.js";
@@ -1888,7 +1888,7 @@ Lampa.SettingsApi.addComponent({
 					},
 					onChange: function(value) {
 						if (value == '1') {
-						       itemON('https://v42z.github.io/plugins/foreign.js', 'Зарубежные Подборки', '@bylampa', 'inter_movie');
+						       itemON('https://v42z.github.io/plugins/foreign.js', 'Зарубежные Подборки', '@lampa', 'inter_movie');
 						}
 						if (value == '2') {
 							var pluginToRemoveUrl = "https://v42z.github.io/plugins/foreign.js";
@@ -2056,7 +2056,7 @@ Lampa.SettingsApi.addComponent({
 					},
 					onChange: function(value) {
 						if (value == '1') {
-						       itemON('https://v42z.github.io/plugins/seaseps.js', 'Состояние Сериала', '@bylampa', 'eps_and_seas');
+						       itemON('https://v42z.github.io/plugins/seaseps.js', 'Состояние Сериала', '@lampa', 'eps_and_seas');
 						}
 						if (value == '2') {
 							var pluginToRemoveUrl = "https://v42z.github.io/plugins/seaseps.js";
