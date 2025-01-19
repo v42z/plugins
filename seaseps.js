@@ -35,7 +35,7 @@
                     const airDate = item.last_episode_to_air.air_date;
                     const episodeCount = currentSeason.episode_count;
                     let episodeNumber = episodeCount;
-                    
+
                     if (airDate && new Date(airDate) <= new Date()) {
                         episodeNumber = lastEpisodeNumber;
                     }
@@ -48,11 +48,7 @@
                         if (window.innerWidth > 399) {
                             $('.full-start-new__details', Activity.active().activity.render()).append(`<div class="full-start__tags">${Lang.translate(fullText)}</div>`);
                         } else {
-                            if ($('.full-start__tags', Activity.active().activity.render()).length) {
-                                $('.full-start-new__details', Activity.active().activity.render()).append(`<div class="full-start__tags">${Lang.translate(fullText)}</div>`);
-                            } else {
-                                $('.full-start__poster,.full-start-new__poster', Activity.active().activity.render()).append(`<div class="full-start__tags">${Lang.translate(fullText)}</div>`);
-                            }
+                            $('.full-start__poster,.full-start-new__poster', Activity.active().activity.render()).append(`<div class="full-start__tags">${Lang.translate(fullText)}</div>`);
                         }
                     }
                 }
