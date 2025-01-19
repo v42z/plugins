@@ -6,7 +6,7 @@
         var _0x1da9c3 = [
             'Lang', 'complite', '.full-start__tags', 'active', 'episode_number', 'interface', 'origin', ' из ', 'table', '', '',
             '.full-start__poster,.full-start-new__poster', 'last_episode_to_air', 'console', '(((.+)+)+)+$', 'error', '4942482TqICyq',
-            'apply', 'lampa', '626770McOlCK', 'prototype', ' ', 'tmdb', '4791357YFtvTO', 'constructor', 'log', 'find', 'Noty', 'toString',
+            'apply', 'bylampa', '626770McOlCK', 'prototype', ' ', 'tmdb', '4791357YFtvTO', 'constructor', 'log', 'find', 'Noty', 'toString',
             '82aAYgsg', '{}.constructor("return this")()', '5CAdTUL', 'append', 'warn', 'exception', 'search', 'return (function() ',
             'season_number', 'show', '● ', '16087hNEtFk', 'source', 'Отображение состояния сериала (сезон/серия)', 'full', 'insertAfter',
             '.card--new_seria', 'render', 'component', 'div[data-name="card_interfice_reactions"]', 'next_episode_to_air', '',
@@ -100,11 +100,11 @@
             });
             _0x5037c9();
 
-            // Условие проверки origin на 'lampa'
-            if (Lampa[_0x4019ab(0x196)][_0x4019ab(0x158)] !== _0x4019ab(0x164)) {
-                Lampa[_0x4019ab(0x16d)][_0x4019ab(0x178)](_0x4019ab(0x18e));
-                return;
-            }
+            // Удалено условие проверки Lampa.Platform.origin
+            // if (Lampa[_0x4019ab(0x196)][_0x4019ab(0x158)] !== _0x4019ab(0x164)) {
+            //     Lampa[_0x4019ab(0x16d)][_0x4019ab(0x178)](_0x4019ab(0x18e));
+            //     return;
+            // }
 
             Lampa['SettingsApi'][_0x4019ab(0x193)]({
                 'component': _0x4019ab(0x157),
