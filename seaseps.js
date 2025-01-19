@@ -1,6 +1,6 @@
 (function() {
     'use strict';
-    
+
     Lampa.Platform.tv();
 
     function initializeSettingsApi() {
