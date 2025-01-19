@@ -1423,117 +1423,7 @@ Lampa.SettingsApi.addComponent({
 					}
 		});
 
-	        Lampa.SettingsApi.addParam({
-					component: 'add_interface_plugin',
-					param: {
-						name: 'in_qual',
-						type: 'select',
-						values: {
-							1:	'Установить',
-							2:	'Удалить',
-						},
-					//default: '1',
-						},
-					field: {
-						name: 'В качестве',
-						description: 'Плагин добавляет в левом меню пункт с фильмами, которые вышли в высоком качестве'
-					},
-					onChange: function(value) {
-						if (value == '1') {
-						       itemON('https://bylampa.github.io/in_quality.js', 'В Качестве', '@bylampa', 'in_qual');
-						}
-						if (value == '2') {
-							var pluginToRemoveUrl = "https://bylampa.github.io/in_quality.js";
-							deletePlugin(pluginToRemoveUrl);
-						}
-					},
-			                onRender: function (item) {$('.settings-param__name', item).css('color','f3d900'); hideInstall()
-						/*var myResult = checkPlugin('https://v42z.github.io/plugins/weather.js')
-						setTimeout(function() {	
-							$('div[data-name="Weather"]').append('<div class="settings-param__status one"></div>')
-							if (myResult) {
-								$('div[data-name="Weather"]').find('.settings-param__status').removeClass('active error wait').addClass('active')
-							} else {
-								$('div[data-name="Weather"]').find('.settings-param__status').removeClass('active error wait').addClass('error')
-							}
-						}, 100);*/
-						var myResult = checkPlugin('https://bylampa.github.io/in_quality.js');
-                                                var pluginsArray = Lampa.Storage.get('plugins');
-                                                    setTimeout(function() {
-                                                       $('div[data-name="in_qual"]').append('<div class="settings-param__status one"></div>');
-                                                       var pluginStatus = null;
-                                                       for (var i = 0; i < pluginsArray.length; i++) {
-                                                          if (pluginsArray[i].url === 'https://bylampa.github.io/in_quality.js') {
-                                                             pluginStatus = pluginsArray[i].status;
-                                                             break;
-                                                          }
-                                                       }
-                                                       if (myResult && pluginStatus !== 0) {
-                                                          $('div[data-name="in_qual"]').find('.settings-param__status').removeClass('active error').addClass('active');
-                                                       } else if (pluginStatus === 0) {
-                                                          $('div[data-name="in_qual"]').find('.settings-param__status').removeClass('active error').css('background-color', 'rgb(255, 165, 0)');
-                                                       } else {
-                                                          $('div[data-name="in_qual"]').find('.settings-param__status').removeClass('active error').addClass('error');
-                                                       }
-                                                    }, 100);
-					}
-		});
 
-	         Lampa.SettingsApi.addParam({
-					component: 'add_interface_plugin',
-					param: {
-						name: 'snow',
-						type: 'select',
-						values: {
-							1:	'Установить',
-							2:	'Удалить',
-						},
-					//default: '1',
-						},
-					field: {
-						name: 'Снег',
-						description: 'Плагин включает анмацию падающего снега (в настройках пункта интерфейс можно вкл/откл её)'
-					},
-					onChange: function(value) {
-						if (value == '1') {
-						       itemON('https://bylampa.github.io/snow.js', 'Снег', '@bylampa', 'snow');
-						}
-						if (value == '2') {
-							var pluginToRemoveUrl = "https://bylampa.github.io/snow.js";
-							deletePlugin(pluginToRemoveUrl);
-						}
-					},
-			                onRender: function (item) {$('.settings-param__name', item).css('color','f3d900'); hideInstall()
-						/*var myResult = checkPlugin('https://v42z.github.io/plugins/weather.js')
-						setTimeout(function() {	
-							$('div[data-name="Weather"]').append('<div class="settings-param__status one"></div>')
-							if (myResult) {
-								$('div[data-name="Weather"]').find('.settings-param__status').removeClass('active error wait').addClass('active')
-							} else {
-								$('div[data-name="Weather"]').find('.settings-param__status').removeClass('active error wait').addClass('error')
-							}
-						}, 100);*/
-						var myResult = checkPlugin('https://bylampa.github.io/snow.js');
-                                                var pluginsArray = Lampa.Storage.get('plugins');
-                                                    setTimeout(function() {
-                                                       $('div[data-name="snow"]').append('<div class="settings-param__status one"></div>');
-                                                       var pluginStatus = null;
-                                                       for (var i = 0; i < pluginsArray.length; i++) {
-                                                          if (pluginsArray[i].url === 'https://bylampa.github.io/snow.js') {
-                                                             pluginStatus = pluginsArray[i].status;
-                                                             break;
-                                                          }
-                                                       }
-                                                       if (myResult && pluginStatus !== 0) {
-                                                          $('div[data-name="snow"]').find('.settings-param__status').removeClass('active error').addClass('active');
-                                                       } else if (pluginStatus === 0) {
-                                                          $('div[data-name="snow"]').find('.settings-param__status').removeClass('active error').css('background-color', 'rgb(255, 165, 0)');
-                                                       } else {
-                                                          $('div[data-name="snow"]').find('.settings-param__status').removeClass('active error').addClass('error');
-                                                       }
-                                                    }, 100);
-					}
-		});
 
 	        Lampa.SettingsApi.addParam({
 					component: 'add_interface_plugin',
@@ -1720,10 +1610,10 @@ Lampa.SettingsApi.addComponent({
 					},
 					onChange: function(value) {
 						if (value == '1') {
-						       itemON('https://bylampa.github.io/cardify.js', 'Cardify', '@lampa', 'cardify');
+						       itemON('https://v42z.github.io/plugins/cardify.js', 'Cardify', '@lampa', 'cardify');
 						}
 						if (value == '2') {
-							var pluginToRemoveUrl = "https://bylampa.github.io/cardify.js";
+							var pluginToRemoveUrl = "https://v42z.github.io/plugins/cardify.js";
 							deletePlugin(pluginToRemoveUrl);
 						}
 					},
@@ -1737,13 +1627,13 @@ Lampa.SettingsApi.addComponent({
 								$('div[data-name="Weather"]').find('.settings-param__status').removeClass('active error wait').addClass('error')
 							}
 						}, 100);*/
-						var myResult = checkPlugin('https://bylampa.github.io/cardify.js');
+						var myResult = checkPlugin('https://v42z.github.io/plugins/cardify.js');
                                                 var pluginsArray = Lampa.Storage.get('plugins');
                                                     setTimeout(function() {
                                                        $('div[data-name="cardify"]').append('<div class="settings-param__status one"></div>');
                                                        var pluginStatus = null;
                                                        for (var i = 0; i < pluginsArray.length; i++) {
-                                                          if (pluginsArray[i].url === 'https://bylampa.github.io/cardify.js') {
+                                                          if (pluginsArray[i].url === 'https://v42z.github.io/plugins/cardify.js') {
                                                              pluginStatus = pluginsArray[i].status;
                                                              break;
                                                           }
@@ -1759,117 +1649,6 @@ Lampa.SettingsApi.addComponent({
 					}
 		});
 
-	        Lampa.SettingsApi.addParam({
-					component: 'add_interface_plugin',
-					param: {
-						name: 'back_menu',
-						type: 'select',
-						values: {
-							1:	'Установить',
-							2:	'Удалить',
-						},
-					//default: '1',
-						},
-					field: {
-						name: 'Меню выход',
-						description: 'Плагин подменяет меню выхода из приложения на свое со своими пунктами, которые можно включать или отключать в настройках приложения (раздел остальное, пункт Меню Выход)'
-					},
-					onChange: function(value) {
-						if (value == '1') {
-						       itemON('https://bylampa.github.io/backmenu.js', 'Меню Выход', '@bylampa', 'back_menu');
-						}
-						if (value == '2') {
-							var pluginToRemoveUrl = "https://bylampa.github.io/backmenu.js";
-							deletePlugin(pluginToRemoveUrl);
-						}
-					},
-			                onRender: function (item) {$('.settings-param__name', item).css('color','f3d900'); hideInstall()
-						/*var myResult = checkPlugin('https://v42z.github.io/plugins/logo.js')
-						setTimeout(function() {	
-							$('div[data-name="Weather"]').append('<div class="settings-param__status one"></div>')
-							if (myResult) {
-								$('div[data-name="Weather"]').find('.settings-param__status').removeClass('active error wait').addClass('active')
-							} else {
-								$('div[data-name="Weather"]').find('.settings-param__status').removeClass('active error wait').addClass('error')
-							}
-						}, 100);*/
-						var myResult = checkPlugin('https://bylampa.github.io/backmenu.js');
-                                                var pluginsArray = Lampa.Storage.get('plugins');
-                                                    setTimeout(function() {
-                                                       $('div[data-name="back_menu"]').append('<div class="settings-param__status one"></div>');
-                                                       var pluginStatus = null;
-                                                       for (var i = 0; i < pluginsArray.length; i++) {
-                                                          if (pluginsArray[i].url === 'https://bylampa.github.io/backmenu.js') {
-                                                             pluginStatus = pluginsArray[i].status;
-                                                             break;
-                                                          }
-                                                       }
-                                                       if (myResult && pluginStatus !== 0) {
-                                                          $('div[data-name="back_menu"]').find('.settings-param__status').removeClass('active error').addClass('active');
-                                                       } else if (pluginStatus === 0) {
-                                                          $('div[data-name="back_menu"]').find('.settings-param__status').removeClass('active error').css('background-color', 'rgb(255, 165, 0)');
-                                                       } else {
-                                                          $('div[data-name="back_menu"]').find('.settings-param__status').removeClass('active error').addClass('error');
-                                                       }
-                                                    }, 100);
-					}
-		});
-
-	        Lampa.SettingsApi.addParam({
-					component: 'add_interface_plugin',
-					param: {
-						name: 'my_themes',
-						type: 'select',
-						values: {
-							1:	'Установить',
-							2:	'Удалить',
-						},
-					//default: '1',
-						},
-					field: {
-						name: 'Мои темы',
-						description: 'Плагин изменяет палитру элементов приложения. Для установки темы нужно зайти в настройки интерфейса приложения и выбрать пункт Мои Темы. Чтобы вернуться на стандартный интерфейс достаточно удалить любую из тем'
-					},
-					onChange: function(value) {
-						if (value == '1') {
-						       itemON('https://bylampa.github.io/themes.js', 'Мои Темы', '@bylampa', 'my_themes');
-						}
-						if (value == '2') {
-							var pluginToRemoveUrl = "https://bylampa.github.io/themes.js";
-							deletePlugin(pluginToRemoveUrl);
-						}
-					},
-			                onRender: function (item) {$('.settings-param__name', item).css('color','f3d900'); hideInstall()
-						/*var myResult = checkPlugin('https://v42z.github.io/plugins/logo.js')
-						setTimeout(function() {	
-							$('div[data-name="Weather"]').append('<div class="settings-param__status one"></div>')
-							if (myResult) {
-								$('div[data-name="Weather"]').find('.settings-param__status').removeClass('active error wait').addClass('active')
-							} else {
-								$('div[data-name="Weather"]').find('.settings-param__status').removeClass('active error wait').addClass('error')
-							}
-						}, 100);*/
-						var myResult = checkPlugin('https://bylampa.github.io/themes.js');
-                                                var pluginsArray = Lampa.Storage.get('plugins');
-                                                    setTimeout(function() {
-                                                       $('div[data-name="my_themes"]').append('<div class="settings-param__status one"></div>');
-                                                       var pluginStatus = null;
-                                                       for (var i = 0; i < pluginsArray.length; i++) {
-                                                          if (pluginsArray[i].url === 'https://bylampa.github.io/themes.js') {
-                                                             pluginStatus = pluginsArray[i].status;
-                                                             break;
-                                                          }
-                                                       }
-                                                       if (myResult && pluginStatus !== 0) {
-                                                          $('div[data-name="my_themes"]').find('.settings-param__status').removeClass('active error').addClass('active');
-                                                       } else if (pluginStatus === 0) {
-                                                          $('div[data-name="my_themes"]').find('.settings-param__status').removeClass('active error').css('background-color', 'rgb(255, 165, 0)');
-                                                       } else {
-                                                          $('div[data-name="my_themes"]').find('.settings-param__status').removeClass('active error').addClass('error');
-                                                       }
-                                                    }, 100);
-					}
-		});
 
 	        Lampa.SettingsApi.addParam({
 					component: 'add_interface_plugin',
@@ -1927,117 +1706,6 @@ Lampa.SettingsApi.addComponent({
 					}
 		});
 
-	        Lampa.SettingsApi.addParam({
-					component: 'add_interface_plugin',
-					param: {
-						name: 'rate_lampa',
-						type: 'select',
-						values: {
-							1:	'Установить',
-							2:	'Удалить',
-						},
-					//default: '1',
-						},
-					field: {
-						name: 'Рейтинг Lampa',
-						description: 'Плагин добавляет в карточку рейтинг Lampa, основываясь на оценках пользователей'
-					},
-					onChange: function(value) {
-						if (value == '1') {
-						       itemON('https://bylampa.github.io/rate_lampa.js', 'Рейтинг Lampa', '@AndreyURL54', 'rate_lampa');
-						}
-						if (value == '2') {
-							var pluginToRemoveUrl = "https://bylampa.github.io/rate_lampa.js";
-							deletePlugin(pluginToRemoveUrl);
-						}
-					},
-			                onRender: function (item) {$('.settings-param__name', item).css('color','f3d900'); hideInstall()
-						/*var myResult = checkPlugin('https://v42z.github.io/plugins/weather.js')
-						setTimeout(function() {	
-							$('div[data-name="Weather"]').append('<div class="settings-param__status one"></div>')
-							if (myResult) {
-								$('div[data-name="Weather"]').find('.settings-param__status').removeClass('active error wait').addClass('active')
-							} else {
-								$('div[data-name="Weather"]').find('.settings-param__status').removeClass('active error wait').addClass('error')
-							}
-						}, 100);*/
-						var myResult = checkPlugin('https://bylampa.github.io/rate_lampa.js');
-                                                var pluginsArray = Lampa.Storage.get('plugins');
-                                                    setTimeout(function() {
-                                                       $('div[data-name="rate_lampa"]').append('<div class="settings-param__status one"></div>');
-                                                       var pluginStatus = null;
-                                                       for (var i = 0; i < pluginsArray.length; i++) {
-                                                          if (pluginsArray[i].url === 'https://bylampa.github.io/rate_lampa.js') {
-                                                             pluginStatus = pluginsArray[i].status;
-                                                             break;
-                                                          }
-                                                       }
-                                                       if (myResult && pluginStatus !== 0) {
-                                                          $('div[data-name="rate_lampa"]').find('.settings-param__status').removeClass('active error').addClass('active');
-                                                       } else if (pluginStatus === 0) {
-                                                          $('div[data-name="rate_lampa"]').find('.settings-param__status').removeClass('active error').css('background-color', 'rgb(255, 165, 0)');
-                                                       } else {
-                                                          $('div[data-name="rate_lampa"]').find('.settings-param__status').removeClass('active error').addClass('error');
-                                                       }
-                                                    }, 100);
-					}
-		});
-
-	        Lampa.SettingsApi.addParam({
-					component: 'add_interface_plugin',
-					param: {
-						name: 'old_cards_status',
-						type: 'select',
-						values: {
-							1:	'Установить',
-							2:	'Удалить',
-						},
-					//default: '1',
-						},
-					field: {
-						name: 'Статус на старой карточке',
-						description: 'Добавляет статус фильма,сериала и т.д. на карточке со старым стилем'
-					},
-					onChange: function(value) {
-						if (value == '1') {
-						       itemON('https://bylampa.github.io/old_card_status.js', 'Статус На Старой Карточке', '@bylampa', 'old_cards_status');
-						}
-						if (value == '2') {
-							var pluginToRemoveUrl = "https://bylampa.github.io/old_card_status.js";
-							deletePlugin(pluginToRemoveUrl);
-						}
-					},
-			                onRender: function (item) {$('.settings-param__name', item).css('color','f3d900'); hideInstall()
-						/*var myResult = checkPlugin('https://v42z.github.io/plugins/weather.js')
-						setTimeout(function() {	
-							$('div[data-name="Weather"]').append('<div class="settings-param__status one"></div>')
-							if (myResult) {
-								$('div[data-name="Weather"]').find('.settings-param__status').removeClass('active error wait').addClass('active')
-							} else {
-								$('div[data-name="Weather"]').find('.settings-param__status').removeClass('active error wait').addClass('error')
-							}
-						}, 100);*/
-						var myResult = checkPlugin('https://bylampa.github.io/old_card_status.js');
-                                                var pluginsArray = Lampa.Storage.get('plugins');
-                                                    setTimeout(function() {
-                                                       $('div[data-name="old_cards_status"]').append('<div class="settings-param__status one"></div>');
-                                                       var pluginStatus = null;
-                                                       for (var i = 0; i < pluginsArray.length; i++) {
-                                                          if (pluginsArray[i].url === 'https://bylampa.github.io/old_card_status.js') {
-                                                             pluginStatus = pluginsArray[i].status;
-                                                             break;
-                                                          }
-                                                       }
-                                                       if (myResult && pluginStatus !== 0) {
-                                                          $('div[data-name="old_cards_status"]').find('.settings-param__status').removeClass('active error').addClass('active');
-                                                       } else if (pluginStatus === 0) {
-                                                          $('div[data-name="old_cards_status"]').find('.settings-param__status').removeClass('active error').css('background-color', 'rgb(255, 165, 0)');
-                                                       } else {
-                                                          $('div[data-name="old_cards_status"]').find('.settings-param__status').removeClass('active error').addClass('error');
-                                                       }
-                                                    }, 100);
-					}
-		});
 
 	        Lampa.SettingsApi.addParam({
 					component: 'add_interface_plugin',
@@ -2586,61 +2254,7 @@ Lampa.SettingsApi.addComponent({
                                                     }, 100);
 					}
 		});
-	       /* Lampa.SettingsApi.addParam({
-					component: 'add_management_plugin',
-					param: {
-						name: 'Timecode',
-						type: 'select',
-						values: {
-							1:	'Установить',
-							2:	'Удалить',
-						},
-					//default: '1',
-						},
-					field: {
-                                    		name: 'Синхронизация таймкодов',
-                                    		description: 'Плагин синхронизирует таймкоды между вашими устройствами'
-					},
-					onChange: function(value) {
-						if (value == '1') {
-						       itemON('https://bylampa.github.io/timecode.js', 'Синхронизация Таймкодов', '@scabrum', 'Timecode');
-						}
-						if (value == '2') {
-							var pluginToRemoveUrl = "https://bylampa.github.io/timecode.js";
-							deletePlugin(pluginToRemoveUrl);
-						}
-					},
-					onRender: function (item) {$('.settings-param__name', item).css('color','f3d900'); hideInstall();
-						/*var myResult = checkPlugin('https://bylampa.github.io/timecode.js')
-						setTimeout(function() {	
-							$('div[data-name="Timecode"]').append('<div class="settings-param__status one"></div>')
-							if (myResult) {
-								$('div[data-name="Timecode"]').find('.settings-param__status').removeClass('active error wait').addClass('active')
-							} else {
-								$('div[data-name="Timecode"]').find('.settings-param__status').removeClass('active error wait').addClass('error')
-							}
-						}, 100);*/
-						/*var myResult = checkPlugin('https://bylampa.github.io/timecode.js');
-                                                var pluginsArray = Lampa.Storage.get('plugins');
-                                                    setTimeout(function() {
-                                                       $('div[data-name="Timecode"]').append('<div class="settings-param__status one"></div>');
-                                                       var pluginStatus = null;
-                                                       for (var i = 0; i < pluginsArray.length; i++) {
-                                                          if (pluginsArray[i].url === 'https://bylampa.github.io/timecode.js') {
-                                                             pluginStatus = pluginsArray[i].status;
-                                                             break;
-                                                          }
-                                                       }
-                                                       if (myResult && pluginStatus !== 0) {
-                                                          $('div[data-name="Timecode"]').find('.settings-param__status').removeClass('active error').addClass('active');
-                                                       } else if (pluginStatus === 0) {
-                                                          $('div[data-name="Timecode"]').find('.settings-param__status').removeClass('active error').css('background-color', 'rgb(255, 165, 0)');
-                                                       } else {
-                                                          $('div[data-name="Timecode"]').find('.settings-param__status').removeClass('active error').addClass('error');
-                                                       }
-                                                    }, 100);
-					}
-		}); */
+
             
 	        Lampa.SettingsApi.addParam({
 					component: 'add_management_plugin',
@@ -2810,61 +2424,6 @@ Lampa.SettingsApi.addComponent({
 					}
 		});
 
-	        Lampa.SettingsApi.addParam({
-					component: 'add_management_plugin',
-					param: {
-						name: 'acc_bylampa',
-						type: 'select',
-						values: {
-							1:	'Установить',
-							2:	'Удалить',
-						},
-					//default: '1',
-						},
-					field: {
-                                    		name: 'Аккаунт',
-                                    		description: 'Плагин позволяет после авторизации в ТГ боте синхронизировать свои данные между устройствами, а также делать бэкап данных без участия CUB'
-					},
-					onChange: function(value) {
-						if (value == '1') {
-						       itemON('https://bylampa.github.io/account.js', 'Аккаунт', '@bylampa', 'acc_bylampa');
-						}
-						if (value == '2') {
-							var pluginToRemoveUrl = "https://bylampa.github.io/account.js";
-							deletePlugin(pluginToRemoveUrl);
-						}
-					},
-					onRender: function (item) {$('.settings-param__name', item).css('color','f3d900'); hideInstall();
-						/*var myResult = checkPlugin('https://v42z.github.io/plugins/redirect.js')
-						setTimeout(function() {	
-							$('div[data-name="Redirect"]').append('<div class="settings-param__status one"></div>')
-							if (myResult) {
-								$('div[data-name="Redirect"]').find('.settings-param__status').removeClass('active error wait').addClass('active')
-							} else {
-								$('div[data-name="Redirect"]').find('.settings-param__status').removeClass('active error wait').addClass('error')
-							}
-						}, 100);*/
-						var myResult = checkPlugin('https://bylampa.github.io/account.js');
-                                                var pluginsArray = Lampa.Storage.get('plugins');
-                                                    setTimeout(function() {
-                                                       $('div[data-name="acc_bylampa"]').append('<div class="settings-param__status one"></div>');
-                                                       var pluginStatus = null;
-                                                       for (var i = 0; i < pluginsArray.length; i++) {
-                                                          if (pluginsArray[i].url === 'https://bylampa.github.io/account.js') {
-                                                             pluginStatus = pluginsArray[i].status;
-                                                             break;
-                                                          }
-                                                       }
-                                                       if (myResult && pluginStatus !== 0) {
-                                                          $('div[data-name="acc_bylampa"]').find('.settings-param__status').removeClass('active error').addClass('active');
-                                                       } else if (pluginStatus === 0) {
-                                                          $('div[data-name="acc_bylampa"]').find('.settings-param__status').removeClass('active error').css('background-color', 'rgb(255, 165, 0)');
-                                                       } else {
-                                                          $('div[data-name="acc_bylampa"]').find('.settings-param__status').removeClass('active error').addClass('error');
-                                                       }
-                                                    }, 100);
-					}
-		});
 
                 Lampa.SettingsApi.addParam({
 					component: 'add_management_plugin',
@@ -3421,15 +2980,15 @@ Lampa.SettingsApi.addComponent({
 					},
 					onChange: function(value) {
 						if (value == '1') {
-							itemON('https://bylampa.github.io/jackett.js', 'Переключение Парсеров', '@AndreyURL54', 'Switch_Parser');
+							itemON('https://v42z.github.io/plugins/jackett.js', 'Переключение Парсеров', '@AndreyURL54', 'Switch_Parser');
 						}
 						if (value == '2') {
-							var pluginToRemoveUrl = "https://bylampa.github.io/jackett.js";
+							var pluginToRemoveUrl = "https://v42z.github.io/plugins/jackett.js";
 							deletePlugin(pluginToRemoveUrl);
 						}
 					},
 					onRender: function (item) {$('.settings-param__name', item).css('color','f3d900'); hideInstall();
-						/*var myResult = checkPlugin('https://bylampa.github.io/jackett.js')
+						/*var myResult = checkPlugin('https://v42z.github.io/plugins/jackett.js')
 						setTimeout(function() {	
 							$('div[data-name="Switch_Parser"]').append('<div class="settings-param__status one"></div>')
 							if (myResult) {
@@ -3438,13 +2997,13 @@ Lampa.SettingsApi.addComponent({
 								$('div[data-name="Switch_Parser"]').find('.settings-param__status').removeClass('active error wait').addClass('error')
 							}
 						}, 100);*/
-						var myResult = checkPlugin('https://bylampa.github.io/jackett.js');
+						var myResult = checkPlugin('https://v42z.github.io/plugins/jackett.js');
                                                 var pluginsArray = Lampa.Storage.get('plugins');
                                                     setTimeout(function() {
                                                        $('div[data-name="Switch_Parser"]').append('<div class="settings-param__status one"></div>');
                                                        var pluginStatus = null;
                                                        for (var i = 0; i < pluginsArray.length; i++) {
-                                                          if (pluginsArray[i].url === 'https://bylampa.github.io/jackett.js') {
+                                                          if (pluginsArray[i].url === 'https://v42z.github.io/plugins/jackett.js') {
                                                              pluginStatus = pluginsArray[i].status;
                                                              break;
                                                           }
@@ -3736,61 +3295,7 @@ Lampa.SettingsApi.addComponent({
                                                     }, 100);	
 					}
 		});
-	        Lampa.SettingsApi.addParam({
-					component: 'add_torrent_plugin',
-					param: {
-						name: 'free_torr',
-						type: 'select',
-						values: {
-							1:	'Установить',
-							2:	'Удалить',
-						},
-					//default: '1',
-					},
-					field: {
-						name: 'Free Torrserver',
-						description: 'Плагин автоматически подставляет torrserver из своей базы'
-					},
-					onChange: function(value) {
-						if (value == '1') {
-							itemON('https://bylampa.github.io/freetorr.js', 'Free Torrserver', '@scabrum', 'free_torr');
-						}
-						if (value == '2') {
-							var pluginToRemoveUrl = "https://bylampa.github.io/freetorr.js";
-							deletePlugin(pluginToRemoveUrl);
-                                                }
-					},
-					onRender: function (item) {$('.settings-param__name', item).css('color','f3d900'); hideInstall();
-						/*var myResult = checkPlugin('https://bylampa.github.io/freetorr.js')
-						setTimeout(function() {	
-							$('div[data-name="free_torr"]').append('<div class="settings-param__status one"></div>')
-							if (myResult) {
-								$('div[data-name="free_torr"]').find('.settings-param__status').removeClass('active error wait').addClass('active')
-							} else {
-								$('div[data-name="free_torr"]').find('.settings-param__status').removeClass('active error wait').addClass('error')
-							}
-						}, 100);*/
-						var myResult = checkPlugin('https://bylampa.github.io/freetorr.js');
-                                                var pluginsArray = Lampa.Storage.get('plugins');
-                                                    setTimeout(function() {
-                                                       $('div[data-name="free_torr"]').append('<div class="settings-param__status one"></div>');
-                                                       var pluginStatus = null;
-                                                       for (var i = 0; i < pluginsArray.length; i++) {
-                                                          if (pluginsArray[i].url === 'https://bylampa.github.io/freetorr.js') {
-                                                             pluginStatus = pluginsArray[i].status;
-                                                             break;
-                                                          }
-                                                       }
-                                                       if (myResult && pluginStatus !== 0) {
-                                                          $('div[data-name="free_torr"]').find('.settings-param__status').removeClass('active error').addClass('active');
-                                                       } else if (pluginStatus === 0) {
-                                                          $('div[data-name="free_torr"]').find('.settings-param__status').removeClass('active error').css('background-color', 'rgb(255, 165, 0)');
-                                                       } else {
-                                                          $('div[data-name="free_torr"]').find('.settings-param__status').removeClass('active error').addClass('error');
-                                                       }
-                                                    }, 100);	
-					}
-		});
+
 
 	        Lampa.SettingsApi.addParam({
 					component: 'add_torrent_plugin',
