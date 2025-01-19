@@ -10,7 +10,13 @@
         id: '1',
         custom: true,
         url: 'http://tv.new-ton.net.ru/plamik.m3u',
-        name: 'Example Playlist'
+        name: 'Example Playlist 1'
+      },
+      {
+        id: '2',
+        custom: true,
+        url: 'http://example.com/playlist2.m3u8',
+        name: 'Example Playlist 2'
       },
       // Добавьте другие плейлисты по аналогии
     ]
@@ -76,8 +82,8 @@
           });
         });
         add.on('hover:focus', function () {
-          this2.last = add;
-          this2.scroll.update(_this2.last);
+          _this2.last = add;
+          _this2.scroll.update(_this2.last);
         });
         this.scroll.append(add);
         playlist.list.reverse().forEach(function (data) {
@@ -160,7 +166,7 @@
   }();
 
   // ... остальной код ...
-  
+
   function startPlugin() {
     window.plugin_iptv_ready = true;
     var manifest = {
