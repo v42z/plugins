@@ -1,6 +1,6 @@
 !(function () {
   "use strict";
-
+Lampa.Platform.tv();
   function e() {
     var a = [
       "Lang",
