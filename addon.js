@@ -3173,7 +3173,7 @@ Lampa.SettingsApi.addComponent({
 						var myResult = checkPlugin('http://skaz.tv/vcdn.js');
                                                 var pluginsArray = Lampa.Storage.get('plugins');
                                                     setTimeout(function() {
-                                                       $('div[data-name="online_cinema"]').append('<div class="settings-param__status one"></div>');
+                                                       $('div[data-name="online_VideoCDN"]').append('<div class="settings-param__status one"></div>');
                                                        var pluginStatus = null;
                                                        for (var i = 0; i < pluginsArray.length; i++) {
                                                           if (pluginsArray[i].url === 'http://skaz.tv/vcdn.js') {
@@ -3182,11 +3182,11 @@ Lampa.SettingsApi.addComponent({
                                                           }
                                                        }
                                                        if (myResult && pluginStatus !== 0) {
-                                                          $('div[data-name="online_cinema"]').find('.settings-param__status').removeClass('active error').addClass('active');
+                                                          $('div[data-name="online_VideoCDN"]').find('.settings-param__status').removeClass('active error').addClass('active');
                                                        } else if (pluginStatus === 0) {
-                                                          $('div[data-name="online_cinema"]').find('.settings-param__status').removeClass('active error').css('background-color', 'rgb(255, 165, 0)');
+                                                          $('div[data-name="online_VideoCDN"]').find('.settings-param__status').removeClass('active error').css('background-color', 'rgb(255, 165, 0)');
                                                        } else {
-                                                          $('div[data-name="online_cinema"]').find('.settings-param__status').removeClass('active error').addClass('error');
+                                                          $('div[data-name="online_VideoCDN"]').find('.settings-param__status').removeClass('active error').addClass('error');
                                                        }
                                                     }, 100);	
 					}
