@@ -2,11 +2,28 @@
     'use strict';
     Lampa.Platform.tv();
 
+    function decodeArray() {
+        return [
+            'Lang', 'complite', '.full-start__tags', 'active', 'episode_number', 'interface', 'origin', ' из ', 'table', '', '',
+            '.full-start__poster,.full-start-new__poster', 'last_episode_to_air', 'console', '(((.+)+)+)+$', 'error',
+            '4942482TqICyq', 'apply', 'lampa', '626770McOlCK', 'prototype', ' ', 'tmdb', '4791357YFtvTO', 'constructor',
+            'log', 'find', 'Noty', 'toString', '{}.constructor("return this")()', '5CAdTUL', 'append', 'warn', 'exception',
+            'search', 'return (function() ', 'season_number', 'show', '● ', '16087hNEtFk', 'source',
+            'Отображение состояния сериала (сезон/серия)', 'full', 'insertAfter', '.card--new_seria', 'render', 'component',
+            'div[data-name="card_interfice_reactions"]', 'next_episode_to_air', '', 'ready', 'translate', 'card',
+            'season_and_seria', '3189SYAXuV', 'get', 'Storage', ' сезон завершен', 'now', 'Ошибка доступа', '4338320JfqSeI',
+            'type', 'info', '.full-start-new__details', 'addParam', 'app', 'length', 'Manifest', 'episode_count', 'bind',
+            'activity', 'Серия ', '3234924lnBXLd', 'Activity', 'innerWidth', 'Listener', 'Сезон: ', 'seasons', 'follow',
+            '1012jnfRhn'
+        ];
+    }
+
     function getWord(index) {
         var words = decodeArray();
         return words[index];
     }
-    
+
+    // Далее следует основной функционал кода
     if (window.appready) {
         initialize();
     } else {
