@@ -1,7 +1,6 @@
 (function() {
     'use strict';
     Lampa.Platform.tv();
-
     function decodeString(index) {
         var strings = [
             'Lang', 'complite', '.full-start__tags', 'active', 'episode_number', 'interface', 'origin', ' из ', 'table', '', '', '.full-start__poster,.full-start-new__poster',
@@ -13,55 +12,55 @@
         ];
         return strings[index - 0x14e];
     }
-
     function initialize() {
         var decoded = decodeString;
-
+        
+        // Replace decodeString calls with actual strings
         Lampa.SettingsApi.add({
-            component: decoded(0x157),
+            component: 'tmdb',
             param: {
-                name: decoded(0x188),
+                name: '1012jnfRhn',
                 type: 'trigger',
                 default: true
             },
             field: {
-                name: decoded(0x17c)
+                name: 'Отображение состояния сериала (сезон/серия)'
             },
             onRender: function(element) {
                 setTimeout(function() {
-                    $('div[data-name="season_and_seria"]').addClass(decoded(0x182));
+                    $('div[data-name="season_and_seria"]').addClass('active');
                 }, 0);
             }
         });
-
+        
         if (Lampa.Storage.get('season_and_seria') !== false) {
-            Lampa.Listener.follow(decoded(0x17d), function(event) {
-                if (Lampa.Activity.active().type === decoded(0x17d)) {
-                    if (event.type === decoded(0x153)) {
-                        var show = Lampa.Activity.active().activity[decoded(0x187)];
-                        if (show[decoded(0x17b)] && show[decoded(0x17b)] === decoded(0x168) && show[decoded(0x14f)] && show['last_episode_to_air'] && show[decoded(0x15e)]['season_number']) {
-                            var seasonNumber = show[decoded(0x15e)][decoded(0x177)];
-                            var episodeNumber = show['last_episode_to_air'][decoded(0x156)];
-                            var nextAirDate = show[decoded(0x183)];
-                            var currentEpisode = nextAirDate && new Date(nextAirDate['air_date']) <= new Date() ? nextAirDate[decoded(0x156)] : show[decoded(0x15e)]['episode_number'];
-                            var episodeCount = show[decoded(0x14f)].find(function(season) {
-                                return season[decoded(0x177)] === seasonNumber;
-                            })[decoded(0x197)];
+            Lampa.Listener.follow('activity', function(event) {
+                if (Lampa.Activity.active().type === 'activity') {
+                    if (event.type === 'show') {
+                        var show = Lampa.Activity.active().activity['source'];
+                        if (show['next_episode_to_air'] && show['next_episode_to_air'] === 'complite' && show['seasons'] && show['last_episode_to_air'] && show['last_episode_to_air']['season_number']) {
+                            var seasonNumber = show['last_episode_to_air']['season_number'];
+                            var episodeNumber = show['last_episode_to_air']['episode_number'];
+                            var nextAirDate = show['next_episode_to_air'];
+                            var currentEpisode = nextAirDate && new Date(nextAirDate['air_date']) <= new Date() ? nextAirDate['episode_number'] : show['last_episode_to_air']['episode_number'];
+                            var episodeCount = show['seasons'].find(function(season) {
+                                return season['season_number'] === seasonNumber;
+                            })['episode_count'];
                             var displayText;
                             if (nextAirDate) {
-                                var nextEpisodeDisplay = decoded(0x19a) + currentEpisode;
-                                displayText = decoded(0x14e) + seasonNumber + '. ' + nextEpisodeDisplay + decoded(0x159) + episodeCount;
+                                var nextEpisodeDisplay = 'Серия ' + currentEpisode;
+                                displayText = 'Сезон: ' + seasonNumber + '. ' + nextEpisodeDisplay + ' из ' + episodeCount;
                             } else {
-                                displayText = seasonNumber + decoded(0x18c);
+                                displayText = seasonNumber + ' сезон завершен';
                             }
-                            if (!$('div[data-name="season_and_seria"]', Lampa.Activity.active().activity[decoded(0x199)]['render']()).length) {
-                                if (window.innerWidth > 0x249) {
-                                    $('div[data-name="season_and_seria"]', Lampa.Activity.active().activity[decoded(0x199)]['render']()).append(decoded(0x15b) + Lampa.Lang.translate(displayText) + decoded(0x15c));
+                            if (!$('div[data-name="season_and_seria"]', Lampa.Activity.active().activity['render']()).length) {
+                                if (window.innerWidth > 585) {
+                                    $('div[data-name="season_and_seria"]', Lampa.Activity.active().activity['render']()).append('<div>' + Lampa.Lang.translate(displayText) + '</div>');
                                 } else {
-                                    if ($('div[data-name="season_and_seria"]', Lampa.Activity.active().activity[decoded(0x180)]()).length) {
-                                        $('div[data-name="season_and_seria"]', Lampa.Activity.active().activity[decoded(0x199)]['render']()).append(decoded(0x167) + Lampa.Lang.translate(displayText) + decoded(0x184));
+                                    if ($('div[data-name="season_and_seria"]', Lampa.Activity.active().activity['render']()).length) {
+                                        $('div[data-name="season_and_seria"]', Lampa.Activity.active().activity['render']()).append('<div class="card">' + Lampa.Lang.translate(displayText) + '</div>');
                                     } else {
-                                        $('div[data-name="season_and_seria"]', Lampa.Activity.active()[decoded(0x199)]['render']()).append(decoded(0x179) + Lampa.Lang.translate(displayText) + '');
+                                        $('div[data-name="season_and_seria"]', Lampa.Activity.active()['render']()).append('<div class="card full">' + Lampa.Lang.translate(displayText) + '');
                                     }
                                 }
                             }
@@ -70,17 +69,15 @@
                 }
             });
         }
-
         if (window['appready']) {
             initialize();
         } else {
-            Lampa.Listener.follow(decoded(0x194), function(event) {
-                if (event[decoded(0x190)] === decoded(0x185)) {
+            Lampa.Listener.follow('ready', function(event) {
+                if (event['type'] === 'app') {
                     initialize();
                 }
             });
         }
     }
-
     initialize();
 })();
