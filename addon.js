@@ -3136,6 +3136,61 @@ Lampa.SettingsApi.addComponent({
 					}
         });
         
+		Lampa.SettingsApi.addParam({
+					component: 'add_online_plugin',
+					param: {
+                               			name: 'online_VideoCDN',
+                   				type: 'select',
+                   				values: {
+							1:	'Установить',
+							2:	'Удалить',
+                   				},
+					//default: '1',
+               				},
+					field: {
+                                  		name: 'Онлайн VideoCDN',
+                                  		description: 'Плагин для просмотра фильмов и сериалов в онлайн'
+					},
+                           		onChange: function(value) {
+					if (value == '1') {
+						itemON('http://skaz.tv/vcdn.js', 'Онлайн VideoCDN', '@VideoCDN', 'online_VideoCDN');
+					}
+					if (value == '2') {
+						var pluginToRemoveUrl = "http://skaz.tv/vcdn.js";
+						deletePlugin(pluginToRemoveUrl);
+					}
+                },
+					onRender: function (item) {$('.settings-param__name', item).css('color','f3d900'); hideInstall();
+						/*var myResult = checkPlugin('https://bwa.to/o')
+						setTimeout(function() {	
+							$('div[data-name="Онлайн_BWA"]').append('<div class="settings-param__status one"></div>')
+							if (myResult) {
+								$('div[data-name="Онлайн_BWA"]').find('.settings-param__status').removeClass('active error wait').addClass('active')
+							} else {
+								$('div[data-name="Онлайн_BWA"]').find('.settings-param__status').removeClass('active error wait').addClass('error')
+							}
+						}, 100);*/
+						var myResult = checkPlugin('http://skaz.tv/vcdn.js');
+                                                var pluginsArray = Lampa.Storage.get('plugins');
+                                                    setTimeout(function() {
+                                                       $('div[data-name="online_cinema"]').append('<div class="settings-param__status one"></div>');
+                                                       var pluginStatus = null;
+                                                       for (var i = 0; i < pluginsArray.length; i++) {
+                                                          if (pluginsArray[i].url === 'http://skaz.tv/vcdn.js') {
+                                                             pluginStatus = pluginsArray[i].status;
+                                                             break;
+                                                          }
+                                                       }
+                                                       if (myResult && pluginStatus !== 0) {
+                                                          $('div[data-name="online_cinema"]').find('.settings-param__status').removeClass('active error').addClass('active');
+                                                       } else if (pluginStatus === 0) {
+                                                          $('div[data-name="online_cinema"]').find('.settings-param__status').removeClass('active error').css('background-color', 'rgb(255, 165, 0)');
+                                                       } else {
+                                                          $('div[data-name="online_cinema"]').find('.settings-param__status').removeClass('active error').addClass('error');
+                                                       }
+                                                    }, 100);	
+					}
+		});
 	        Lampa.SettingsApi.addParam({
 					component: 'add_online_plugin',
 					param: {
