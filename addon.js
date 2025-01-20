@@ -2698,7 +2698,7 @@ Lampa.SettingsApi.addComponent({
 		Lampa.SettingsApi.addParam({
 					component: 'add_online_plugin',
 					param: {
-                               			name: 'online_VideoCDN',
+                               			name: 'Онлайн SHOWY',
                    				type: 'select',
                    				values: {
 							1:	'Установить',
@@ -2707,15 +2707,15 @@ Lampa.SettingsApi.addComponent({
 					//default: '1',
                				},
 					field: {
-                                  		name: 'Онлайн VideoCDN',
+                                  		name: 'Онлайн SHOWY',
                                   		description: 'Плагин для просмотра фильмов и сериалов в онлайн'
 					},
                            		onChange: function(value) {
 					if (value == '1') {
-						itemON('http://skaz.tv/vcdn.js', 'Онлайн VideoCDN', '@lampa', 'online_VideoCDN');
+						itemON('http://showy.online/m.js', 'Онлайн SHOWY', '@lampa', 'Онлайн SHOWY');
 					}
 					if (value == '2') {
-						var pluginToRemoveUrl = "http://skaz.tv/vcdn.js";
+						var pluginToRemoveUrl = "http://showy.online/m.js";
 						deletePlugin(pluginToRemoveUrl);
 					}
                 },
@@ -2729,13 +2729,13 @@ Lampa.SettingsApi.addComponent({
 								$('div[data-name="Онлайн_BWA"]').find('.settings-param__status').removeClass('active error wait').addClass('error')
 							}
 						}, 100);*/
-						var myResult = checkPlugin('http://skaz.tv/vcdn.js');
+						var myResult = checkPlugin('http://showy.online/m.js');
                                                 var pluginsArray = Lampa.Storage.get('plugins');
                                                     setTimeout(function() {
-                                                       $('div[data-name="online_VideoCDN"]').append('<div class="settings-param__status one"></div>');
+                                                       $('div[data-name="SHOWY"]').append('<div class="settings-param__status one"></div>');
                                                        var pluginStatus = null;
                                                        for (var i = 0; i < pluginsArray.length; i++) {
-                                                          if (pluginsArray[i].url === 'http://skaz.tv/vcdn.js') {
+                                                          if (pluginsArray[i].url === 'http://showy.online/m.js') {
                                                              pluginStatus = pluginsArray[i].status;
                                                              break;
                                                           }
@@ -2808,7 +2808,7 @@ Lampa.SettingsApi.addComponent({
 	        Lampa.SettingsApi.addParam({
 					component: 'add_online_plugin',
 					param: {
-                               			name: 'Filmix',
+                               			name: 'Онлайн Modss',
                    				type: 'select',
                    				values: {
 							1:	'Установить',
@@ -2817,20 +2817,20 @@ Lampa.SettingsApi.addComponent({
 					//default: '1',
                				},
 					field: {
-                                  		name: 'Filmix',
+                                  		name: 'Онлайн Modss',
                                   		description: 'Плагин для просмотра фильмов и сериалов в онлайн'
 					},
                            		onChange: function(value) {
 					if (value == '1') {
-						itemON('https://immisterio.github.io/bwa/fx.js', 'Filmix', '@lampa', 'Filmix');
+						itemON('http://lampa.stream/modss', 'Онлайн Modss', '@lampa', 'Онлайн Modss');
 					}
 					if (value == '2') {
-						var pluginToRemoveUrl = "hhttps://immisterio.github.io/bwa/fx.js";
+						var pluginToRemoveUrl = "http://lampa.stream/modss";
 						deletePlugin(pluginToRemoveUrl);
 					}
                 },
 					onRender: function (item) {$('.settings-param__name', item).css('color','f3d900'); hideInstall();
-						/*var myResult = checkPlugin('https://immisterio.github.io/bwa/fx.js')
+						/*var myResult = checkPlugin('http://lampa.stream/modss')
 						setTimeout(function() {	
 							$('div[data-name="Filmix"]').append('<div class="settings-param__status one"></div>')
 							if (myResult) {
@@ -2839,13 +2839,13 @@ Lampa.SettingsApi.addComponent({
 								$('div[data-name="Filmix"]').find('.settings-param__status').removeClass('active error wait').addClass('error')
 							}
 						}, 100);*/
-						var myResult = checkPlugin('https://immisterio.github.io/bwa/fx.js');
+						var myResult = checkPlugin('http://lampa.stream/modss');
                                                 var pluginsArray = Lampa.Storage.get('plugins');
                                                     setTimeout(function() {
                                                        $('div[data-name="Filmix"]').append('<div class="settings-param__status one"></div>');
                                                        var pluginStatus = null;
                                                        for (var i = 0; i < pluginsArray.length; i++) {
-                                                          if (pluginsArray[i].url === 'https://immisterio.github.io/bwa/fx.js') {
+                                                          if (pluginsArray[i].url === 'http://lampa.stream/modss') {
                                                              pluginStatus = pluginsArray[i].status;
                                                              break;
                                                           }
