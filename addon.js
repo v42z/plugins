@@ -395,7 +395,7 @@ Lampa.SettingsApi.addComponent({
                             },
 					onChange: function(value) {
 						if (value == '1') {
-							itemON('http://khuyampa.best/tmdbproxy.js', 'TMDB Proxy', '@lampa', 'TMDB');
+							itemON('http://khuyampa.best/tmdbproxy.js', 'TMDB Proxy alt', '@lampa', 'TMDB');
 						}
 						if (value == '2') {
 							var pluginToRemoveUrl = "hhttp://khuyampa.best/tmdbproxy.js";
