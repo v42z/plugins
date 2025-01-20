@@ -2720,7 +2720,7 @@ Lampa.SettingsApi.addComponent({
 					}
                 },
 					onRender: function (item) {$('.settings-param__name', item).css('color','f3d900'); hideInstall();
-						/*var myResult = checkPlugin('hhttp://showy.online/m.js')
+						/*var myResult = checkPlugin('http://showy.online/m.js')
 						setTimeout(function() {	
 							$('div[data-name="Онлайн SHOWY"]').append('<div class="settings-param__status one"></div>')
 							if (myResult) {
