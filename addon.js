@@ -2695,10 +2695,10 @@ Lampa.SettingsApi.addComponent({
 					}
         });
         
-		Lampa.SettingsApi.addParam({
+	        Lampa.SettingsApi.addParam({
 					component: 'add_online_plugin',
 					param: {
-                               			name: 'Онлайн SHOWY',
+                               			name: 'Онлайн_BWA',
                    				type: 'select',
                    				values: {
 							1:	'Установить',
@@ -2707,45 +2707,45 @@ Lampa.SettingsApi.addComponent({
 					//default: '1',
                				},
 					field: {
-                                  		name: 'Онлайн SHOWY',
+                                  		name: 'Онлайн BWA',
                                   		description: 'Плагин для просмотра фильмов и сериалов в онлайн'
 					},
                            		onChange: function(value) {
 					if (value == '1') {
-						itemON('http://showy.online/m.js', 'Онлайн SHOWY', '@lampa', 'Онлайн SHOWY');
+						itemON('http://bwa.to/rc', 'Онлайн BWA', '@rik', 'Онлайн_BWA');
 					}
 					if (value == '2') {
-						var pluginToRemoveUrl = "http://showy.online/m.js";
+						var pluginToRemoveUrl = "http://bwa.to/rc";
 						deletePlugin(pluginToRemoveUrl);
 					}
                 },
 					onRender: function (item) {$('.settings-param__name', item).css('color','f3d900'); hideInstall();
-						/*var myResult = checkPlugin('http://showy.online/m.js')
+						/*var myResult = checkPlugin('http://bwa.to/rc')
 						setTimeout(function() {	
-							$('div[data-name="Онлайн SHOWY"]').append('<div class="settings-param__status one"></div>')
+							$('div[data-name="Онлайн_BWA"]').append('<div class="settings-param__status one"></div>')
 							if (myResult) {
-								$('div[data-name="Онлайн SHOWY"]').find('.settings-param__status').removeClass('active error wait').addClass('active')
+								$('div[data-name="Онлайн_BWA"]').find('.settings-param__status').removeClass('active error wait').addClass('active')
 							} else {
-								$('div[data-name="Онлайн SHOWY"]').find('.settings-param__status').removeClass('active error wait').addClass('error')
+								$('div[data-name="Онлайн_BWA"]').find('.settings-param__status').removeClass('active error wait').addClass('error')
 							}
 						}, 100);*/
-						var myResult = checkPlugin('http://showy.online/m.js');
+						var myResult = checkPlugin('http://bwa.to/rc');
                                                 var pluginsArray = Lampa.Storage.get('plugins');
                                                     setTimeout(function() {
-                                                       $('div[data-name="SHOWY"]').append('<div class="settings-param__status one"></div>');
+                                                       $('div[data-name="Онлайн_BWA"]').append('<div class="settings-param__status one"></div>');
                                                        var pluginStatus = null;
                                                        for (var i = 0; i < pluginsArray.length; i++) {
-                                                          if (pluginsArray[i].url === 'http://showy.online/m.js') {
+                                                          if (pluginsArray[i].url === 'http://bwa.to/rc') {
                                                              pluginStatus = pluginsArray[i].status;
                                                              break;
                                                           }
                                                        }
                                                        if (myResult && pluginStatus !== 0) {
-                                                          $('div[data-name="Онлайн SHOWY"]').find('.settings-param__status').removeClass('active error').addClass('active');
+                                                          $('div[data-name="Онлайн_BWA"]').find('.settings-param__status').removeClass('active error').addClass('active');
                                                        } else if (pluginStatus === 0) {
-                                                          $('div[data-name="Онлайн SHOWY"]').find('.settings-param__status').removeClass('active error').css('background-color', 'rgb(255, 165, 0)');
+                                                          $('div[data-name="Онлайн_BWA"]').find('.settings-param__status').removeClass('active error').css('background-color', 'rgb(255, 165, 0)');
                                                        } else {
-                                                          $('div[data-name="Онлайн SHOWY"]').find('.settings-param__status').removeClass('active error').addClass('error');
+                                                          $('div[data-name="Онлайн_BWA"]').find('.settings-param__status').removeClass('active error').addClass('error');
                                                        }
                                                     }, 100);	
 					}
