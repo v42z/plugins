@@ -2741,11 +2741,11 @@ Lampa.SettingsApi.addComponent({
                                                           }
                                                        }
                                                        if (myResult && pluginStatus !== 0) {
-                                                          $('div[data-name="online_VideoCDN"]').find('.settings-param__status').removeClass('active error').addClass('active');
+                                                          $('div[data-name="Онлайн SHOWY"]').find('.settings-param__status').removeClass('active error').addClass('active');
                                                        } else if (pluginStatus === 0) {
-                                                          $('div[data-name="online_VideoCDN"]').find('.settings-param__status').removeClass('active error').css('background-color', 'rgb(255, 165, 0)');
+                                                          $('div[data-name="Онлайн SHOWY"]').find('.settings-param__status').removeClass('active error').css('background-color', 'rgb(255, 165, 0)');
                                                        } else {
-                                                          $('div[data-name="online_VideoCDN"]').find('.settings-param__status').removeClass('active error').addClass('error');
+                                                          $('div[data-name="Онлайн SHOWY"]').find('.settings-param__status').removeClass('active error').addClass('error');
                                                        }
                                                     }, 100);	
 					}
@@ -2832,17 +2832,17 @@ Lampa.SettingsApi.addComponent({
 					onRender: function (item) {$('.settings-param__name', item).css('color','f3d900'); hideInstall();
 						/*var myResult = checkPlugin('http://lampa.stream/modss')
 						setTimeout(function() {	
-							$('div[data-name="Filmix"]').append('<div class="settings-param__status one"></div>')
+							$('div[data-name="Онлайн Modss"]').append('<div class="settings-param__status one"></div>')
 							if (myResult) {
-								$('div[data-name="Filmix"]').find('.settings-param__status').removeClass('active error wait').addClass('active')
+								$('div[data-name="Онлайн Modss"]').find('.settings-param__status').removeClass('active error wait').addClass('active')
 							} else {
-								$('div[data-name="Filmix"]').find('.settings-param__status').removeClass('active error wait').addClass('error')
+								$('div[data-name="Онлайн Modss"]').find('.settings-param__status').removeClass('active error wait').addClass('error')
 							}
 						}, 100);*/
 						var myResult = checkPlugin('http://lampa.stream/modss');
                                                 var pluginsArray = Lampa.Storage.get('plugins');
                                                     setTimeout(function() {
-                                                       $('div[data-name="Filmix"]').append('<div class="settings-param__status one"></div>');
+                                                       $('div[data-name="Онлайн Modss"]').append('<div class="settings-param__status one"></div>');
                                                        var pluginStatus = null;
                                                        for (var i = 0; i < pluginsArray.length; i++) {
                                                           if (pluginsArray[i].url === 'http://lampa.stream/modss') {
@@ -2851,11 +2851,11 @@ Lampa.SettingsApi.addComponent({
                                                           }
                                                        }
                                                        if (myResult && pluginStatus !== 0) {
-                                                          $('div[data-name="Filmix"]').find('.settings-param__status').removeClass('active error').addClass('active');
+                                                          $('div[data-name="Онлайн Modss"]').find('.settings-param__status').removeClass('active error').addClass('active');
                                                        } else if (pluginStatus === 0) {
-                                                          $('div[data-name="Filmix"]').find('.settings-param__status').removeClass('active error').css('background-color', 'rgb(255, 165, 0)');
+                                                          $('div[data-name="Онлайн Modss"]').find('.settings-param__status').removeClass('active error').css('background-color', 'rgb(255, 165, 0)');
                                                        } else {
-                                                          $('div[data-name="Filmix"]').find('.settings-param__status').removeClass('active error').addClass('error');
+                                                          $('div[data-name="Онлайн Modss"]').find('.settings-param__status').removeClass('active error').addClass('error');
                                                        }
                                                     }, 100);	
 					}
