@@ -92,6 +92,22 @@ var _0x277422=_0x2d4e;(function(_0x1a1709,_0x4dee0d){var _0x3fbaa2=_0x2d4e,_0x24
     };
     var balansers_with_search = ['eneyida', 'seasonvar', 'lostfilmhd', 'kinotochka', 'kinopub', 'kinoprofi', 'kinokrad', 'kinobase', 'filmix', 'filmixtv', 'redheadsound', 'animevost', 'animego', 'animedia', 'animebesst', 'anilibria', 'rezka', 'rhsprem', 'kodik', 'remux', 'animelib', 'kinoukr'];
 	
+    function account(url) {
+      url = url + '';
+      if (url.indexOf('account_email=') == -1) {
+        var email = Lampa.Storage.get('account_email');
+        if (email) url = Lampa.Utils.addUrlComponent(url, 'account_email=' + encodeURIComponent(email));
+      }
+      if (url.indexOf('uid=') == -1) {
+        var uid = Lampa.Storage.get('lampac_unic_id', '');
+        if (uid) url = Lampa.Utils.addUrlComponent(url, 'uid=' + encodeURIComponent(uid));
+      }
+      if (url.indexOf('token=') == -1) {
+        var token = '';
+        if (token != '') url = Lampa.Utils.addUrlComponent(url, 'token=');
+      }
+      return url;
+    }
 
     function balanserName(j) {
       var bals = j.balanser;
@@ -304,8 +320,7 @@ var _0x277422=_0x2d4e;(function(_0x1a1709,_0x4dee0d){var _0x3fbaa2=_0x2d4e,_0x24
       query.push('source=' + card_source);
 	  query.push('rchtype=' + rchtype);
       query.push('clarification=' + (object.clarification ? 1 : 0));
-      if (Lampa.Storage.get('account_email', '')) query.push('cub_id=' + Lampa.Utils.hash(Lampa.Storage.get('account_email', '')));
-      return url + (url.indexOf('?') &gt;= 0 ? '&amp;' : '?') + query.join('&amp;');
+      
     };
     this.getLastChoiceBalanser = function() {
       var last_select_balanser = Lampa.Storage.cache('online_last_balanser', 3000, {});
