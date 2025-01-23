@@ -882,7 +882,7 @@ Lampa.SettingsApi.addComponent({
 						},
 					field: {
 						name: 'Cub Off',
-						description: 'Плагин убирает элементы, предлагающие оформить cub premium'
+						description: 'Плагин убирает элементы, предлагающие оформить cub premium а так же рекламу в начале видео'
 					},
 					onChange: function(value) {
 						if (value == '1') {
