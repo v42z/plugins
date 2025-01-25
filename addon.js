@@ -4277,24 +4277,7 @@ Lampa.SettingsApi.addComponent({
                                       });
                                    }
 		}); */
-/* Реклама */
-      Lampa.SettingsApi.addParam({
-					component: 'add_plugin',
-					param: {
-						name: 'add_ads',
-      		                        	type: 'title'
-                        		},
-					field: {
-                                            name: ads
-                                        },
-                                        onRender: function (item) {
-                                            setTimeout(function() {
-                                               //   $('.settings-param-title').insertBefore($('.settings-param').first())
-                                               $('.settings-param-title').insertAfter($('.settings-param').last())
-                                            },0);
-                                        }
 	
-         });	
 
 	 Lampa.Settings.listener.follow('open', function(e) {
 	    if (e.name == 'add_plugin') {
