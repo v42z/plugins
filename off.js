@@ -4,6 +4,7 @@
    * @param {number} object
    * @return {?}
    */
+  Lampa.Platform.tv();
   function promise(obj, object) {
     var properties = resolve();
     return promise = function(type, object) {
