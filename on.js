@@ -6,6 +6,9 @@
 
     // Mock object for testing
     var Lampa = {
+        Platform: {
+            tv: function() { console.log("Platform set to TV."); }
+        },
         Manifest: { origin: "valid_origin" },
         Noty: { show: function(msg) { console.log("Mock Noty: ", msg); } },
         Storage: {
@@ -16,6 +19,13 @@
             putScriptAsync: function(scripts, callback) { console.log("Mock script loaded:", scripts); callback(); }
         }
     };
+
+    // Ensure platform initialization
+    if (Lampa.Platform && typeof Lampa.Platform.tv === "function") {
+        Lampa.Platform.tv();
+    } else {
+        console.error("Lampa.Platform.tv is missing or not a function.");
+    }
 
     function decodeFunction(index, shift) {
         var mappings = getMappings();
