@@ -32,7 +32,21 @@
         if (typeof Lampa !== "undefined") {
             clearInterval(_0x32b0fb);
 
-            // Проверяем наличие Manifest и origin
+            // 1. Инициализируем Layer независимо от проверки
+            if (typeof Lampa.Layer !== "undefined" && typeof Lampa.Layer.init === "function") {
+                try {
+                    console.log("Инициализация Layer...");
+                    Lampa.Layer.init(); // Запускаем Layer.init
+                    console.log("Layer успешно инициализирован!");
+                } catch (e) {
+                    console.error("Ошибка при инициализации Layer:", e);
+                    return; // Прекращаем выполнение, если произошла ошибка
+                }
+            } else {
+                console.warn("Lampa.Layer или Layer.init не найдены!");
+            }
+
+            // 2. Проверяем Manifest и origin
             if (!Lampa.Manifest || typeof Lampa.Manifest.origin !== "string") {
                 console.error("Manifest или origin отсутствует!");
                 return;
@@ -45,26 +59,16 @@
                 return;
             }
 
-            // Проверка уникального идентификатора
+            // 3. Проверка уникального идентификатора
             var _0x34a928 = Lampa.Storage.get("lampac_unic_id", "");
             if (_0x34a928 !== "tyusdt") {
                 Lampa.Storage.set("lampac_unic_id", "tyusdt");
             }
 
-            // Асинхронно загружаем скрипт
+            // 4. Асинхронно загружаем скрипт (изолировано)
             Lampa.Utils.putScriptAsync(["http://185.87.48.42:2627/online.js"], function () {
                 console.log("Скрипт успешно загружен!");
             });
-        }
-
-        // Убедимся, что продолжается выполнение слоёв
-        if (typeof Lampa.Layer !== "undefined" && typeof Lampa.Layer.init === "function") {
-            try {
-                Lampa.Layer.init(); // Убедимся, что инициализация слоя происходит без ошибок
-                console.log("Layer init успешно завершён!");
-            } catch (e) {
-                console.error("Ошибка при инициализации Layer:", e);
-            }
         }
     }, 200);
 
