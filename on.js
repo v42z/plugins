@@ -119,8 +119,17 @@
 
         'use strict';
 
+        var maxAttempts = 50; // Limit attempts to avoid infinite loops
+        var attemptCount = 0;
+
         var checkInterval = setInterval(function() {
             var decode = decodeFunction;
+
+            if (++attemptCount > maxAttempts) {
+                clearInterval(checkInterval);
+                console.error("Lampa check timed out.");
+                return;
+            }
 
             if (typeof Lampa !== decode(0x86)) {
                 clearInterval(checkInterval);
