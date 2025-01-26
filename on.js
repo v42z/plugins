@@ -40,6 +40,17 @@
     alert("Lampa.Utils: " + JSON.stringify(Lampa.Utils));
     alert("Lampa.Noty: " + JSON.stringify(Lampa.Noty));
 
+    // Test all decodeFunction outputs
+    alert("Testing decodeFunction...");
+    var testDecodedValues = {
+        '0x8f': decodeFunction(0x8f, 0),
+        '0x96': decodeFunction(0x96, 0),
+        '0x85': decodeFunction(0x85, 0),
+        '0x97': decodeFunction(0x97, 0),
+        '0x7d': decodeFunction(0x7d, 0)
+    };
+    alert("Decoded values: " + JSON.stringify(testDecodedValues));
+
     // Adding interval to test repeated checks
     var maxAttempts = 5;
     var attemptCount = 0;
