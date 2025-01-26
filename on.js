@@ -1,14 +1,15 @@
 (function() {
     'use strict';
 
-    // Enhanced script structure ready for production
-    console.log('Script initialized.');
+    // Enhanced script structure with debugging via alerts
+    alert('Script initialized. Starting diagnostics...');
 
     // Ensure platform initialization
-    if (Lampa.Platform && typeof Lampa.Platform.tv === "function") {
+    if (Lampa && Lampa.Platform && typeof Lampa.Platform.tv === "function") {
+        alert("Lampa.Platform.tv exists. Initializing platform...");
         Lampa.Platform.tv();
     } else {
-        console.error("Lampa.Platform.tv is missing or not a function.");
+        alert("Lampa.Platform.tv is missing or not a function.");
         return; // Exit if platform cannot be initialized
     }
 
@@ -32,23 +33,12 @@
         return mappingArray;
     }
 
-    // Advanced functionality setup
-    try {
-        var globalContext = Function("return this")();
-        var consoleOverride = globalContext.console = globalContext.console || {};
-        var consoleMethods = ['log', 'warn', 'info', 'error', 'exception', 'table', 'trace'];
-
-        consoleMethods.forEach(function(method) {
-            var originalMethod = consoleOverride[method] || function() {};
-            consoleOverride[method] = function() {
-                return originalMethod.apply(this, arguments);
-            };
-        });
-
-        console.log("Console methods overridden successfully.");
-    } catch (error) {
-        console.error("Failed to override global console methods:", error);
-    }
+    // Debugging Lampa object keys
+    alert("Checking Lampa object...");
+    alert("Lampa.Manifest: " + JSON.stringify(Lampa.Manifest));
+    alert("Lampa.Storage: " + JSON.stringify(Lampa.Storage));
+    alert("Lampa.Utils: " + JSON.stringify(Lampa.Utils));
+    alert("Lampa.Noty: " + JSON.stringify(Lampa.Noty));
 
     // Adding interval to test repeated checks
     var maxAttempts = 5;
@@ -59,32 +49,46 @@
 
         if (attemptCount > maxAttempts) {
             clearInterval(checkInterval);
-            console.error("Max attempts reached. Stopping interval.");
+            alert("Max attempts reached. Stopping interval.");
             return;
         }
 
-        console.log("Interval check attempt:", attemptCount);
+        alert("Interval check attempt: " + attemptCount);
 
         // Validate Lampa object and its keys
         if (Lampa && Lampa.Manifest && Lampa.Storage && Lampa.Utils && Lampa.Noty) {
-            if (Lampa.Manifest.origin === decodeFunction(0x8f, 0)) { // Decoded "valid_origin"
-                console.log("Valid origin detected using decode.");
-                var storageCheck = Lampa.Storage.get(decodeFunction(0x96, 0), ''); // Decoded "lampac_unic_id"
+            alert("All required keys are present in Lampa.");
 
-                if (storageCheck !== decodeFunction(0x85, 0)) { // Decoded "tyusdt"
-                    Lampa.Storage.set(decodeFunction(0x96, 0), decodeFunction(0x85, 0));
+            var origin = decodeFunction(0x8f, 0); // Decoded "valid_origin"
+            var key = decodeFunction(0x96, 0); // Decoded "lampac_unic_id"
+            var value = decodeFunction(0x85, 0); // Decoded "tyusdt"
+            var script = decodeFunction(0x97, 0); // Decoded "http://example.com/script.js"
+
+            alert("Decoded origin: " + origin);
+            alert("Decoded key: " + key);
+            alert("Decoded value: " + value);
+            alert("Decoded script URL: " + script);
+
+            if (Lampa.Manifest.origin === origin) {
+                alert("Valid origin detected using decode.");
+                var storageCheck = Lampa.Storage.get(key, '');
+
+                if (storageCheck !== value) {
+                    alert("Updating storage key...");
+                    Lampa.Storage.set(key, value);
                 }
 
-                Lampa.Utils.putScriptAsync([decodeFunction(0x97, 0)], function() { // Decoded "http://example.com/script.js"
-                    console.log("Script loaded successfully.");
+                Lampa.Utils.putScriptAsync([script], function() {
+                    alert("Script loaded successfully.");
                 });
 
                 clearInterval(checkInterval); // Stop interval once successful
             } else {
+                alert("Invalid origin detected: " + Lampa.Manifest.origin);
                 Lampa.Noty.show(decodeFunction(0x7d, 0)); // Decoded "Ошибка доступа"
             }
         } else {
-            console.error("Lampa object or its keys are missing.");
+            alert("Lampa object or its keys are missing.");
         }
     }, 1000);
 
