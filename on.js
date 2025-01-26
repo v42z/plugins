@@ -1,7 +1,7 @@
 (function() {
     'use strict';
 
-    // Enhanced script structure with detailed diagnostics
+    // Enhanced script structure with detailed debugging for decodeFunction
     alert('Script initialized. Starting diagnostics...');
 
     // Ensure platform initialization
@@ -17,8 +17,14 @@
         var mappings = getMappings();
         return decodeFunction = function(index, shift) {
             index = index - 0x79;
-            var result = mappings[index];
-            return result;
+            if (index >= 0 && index < mappings.length) {
+                var result = mappings[index];
+                alert("Decoded index " + index + " to: " + result);
+                return result;
+            } else {
+                alert("Index " + index + " is out of bounds.");
+                return undefined;
+            }
         }, decodeFunction(index, shift);
     }
 
@@ -50,16 +56,17 @@
     alert("Lampa.Utils: " + JSON.stringify(Lampa.Utils));
     alert("Lampa.Noty: " + JSON.stringify(Lampa.Noty));
 
-    // Test all decodeFunction outputs
+    // Test decodeFunction outputs for all indices used in the script
     alert("Testing decodeFunction...");
-    var testDecodedValues = {
-        '0x8f': decodeFunction(0x8f, 0),
-        '0x96': decodeFunction(0x96, 0),
-        '0x85': decodeFunction(0x85, 0),
-        '0x97': decodeFunction(0x97, 0),
-        '0x7d': decodeFunction(0x7d, 0)
-    };
-    alert("Decoded values: " + JSON.stringify(testDecodedValues));
+    var indicesToTest = [0x8f, 0x96, 0x85, 0x97, 0x7d];
+    indicesToTest.forEach(function(index) {
+        try {
+            var decodedValue = decodeFunction(index, 0);
+            alert("decodeFunction(" + index + ") returned: " + decodedValue);
+        } catch (error) {
+            alert("Error decoding index " + index + ": " + error);
+        }
+    });
 
     // Adding interval to test repeated checks
     var maxAttempts = 5;
@@ -80,18 +87,18 @@
         if (Lampa && Lampa.Manifest && Lampa.Storage && Lampa.Utils && Lampa.Noty) {
             alert("All required keys are present in Lampa.");
 
-            var origin = decodeFunction(0x8f, 0); // Decoded "valid_origin"
+            var origin = "valid_origin"; // Bypassing decodeFunction for testing
             var key = decodeFunction(0x96, 0); // Decoded "lampac_unic_id"
             var value = decodeFunction(0x85, 0); // Decoded "tyusdt"
             var script = decodeFunction(0x97, 0); // Decoded "http://185.87.48.42:2627/online.js"
 
-            alert("Decoded origin: " + origin);
+            alert("Bypassed origin check. Using: " + origin);
             alert("Decoded key: " + key);
             alert("Decoded value: " + value);
             alert("Decoded script URL: " + script);
 
             if (Lampa.Manifest.origin === origin) {
-                alert("Valid origin detected using decode.");
+                alert("Valid origin detected using bypassed check.");
                 var storageCheck = Lampa.Storage.get(key, '');
                 alert("Storage check returned: " + storageCheck);
 
