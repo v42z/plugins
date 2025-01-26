@@ -1,8 +1,8 @@
 (function() {
     'use strict';
 
-    // Basic script structure without unnecessary checks and intervals
-    console.log('Script initialized. Minimal structure for debugging.');
+    // Basic script structure with interval testing
+    console.log('Script initialized with interval testing.');
 
     // Mock object for testing
     var Lampa = {
@@ -17,20 +17,37 @@
         }
     };
 
-    // Basic test to verify script runs
-    if (Lampa.Manifest.origin === "valid_origin") {
-        console.log("Valid origin detected.");
-        var storageCheck = Lampa.Storage.get("lampac_unic_id", '');
+    // Adding interval to test repeated checks
+    var maxAttempts = 5;
+    var attemptCount = 0;
 
-        if (storageCheck !== 'tyusdt') {
-            Lampa.Storage.set("lampac_unic_id", "tyusdt");
+    var checkInterval = setInterval(function() {
+        attemptCount++;
+
+        if (attemptCount > maxAttempts) {
+            clearInterval(checkInterval);
+            console.error("Max attempts reached. Stopping interval.");
+            return;
         }
 
-        Lampa.Utils.putScriptAsync(["http://example.com/script.js"], function() {
-            console.log("Script loaded successfully.");
-        });
-    } else {
-        Lampa.Noty.show("Ошибка доступа");
-    }
+        console.log("Interval check attempt:", attemptCount);
+
+        if (Lampa.Manifest.origin === "valid_origin") {
+            console.log("Valid origin detected.");
+            var storageCheck = Lampa.Storage.get("lampac_unic_id", '');
+
+            if (storageCheck !== 'tyusdt') {
+                Lampa.Storage.set("lampac_unic_id", "tyusdt");
+            }
+
+            Lampa.Utils.putScriptAsync(["http://example.com/script.js"], function() {
+                console.log("Script loaded successfully.");
+            });
+
+            clearInterval(checkInterval); // Stop interval once successful
+        } else {
+            Lampa.Noty.show("Ошибка доступа");
+        }
+    }, 1000);
 
 })();
