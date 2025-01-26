@@ -1,88 +1,48 @@
 (function() {
-    'use strict';
+	'use strict';
 
-    // Ensure platform initialization
-    if (Lampa && Lampa.Platform && typeof Lampa.Platform.tv === "function") {
-        Lampa.Platform.tv();
-    } else {
-        return; // Exit if platform cannot be initialized
-    }
+	Lampa.Platform.tv();
 
-    function decodeFunction(index, shift) {
-        var mappings = getMappings();
-        return decodeFunction = function(index, shift) {
-            index = index - 0x79;
-            if (index >= 0 && index < mappings.length) {
-                var result = mappings[index];
-                console.log(`Decoded index ${index + 0x79} to: ${result}`);
-                return result;
-            } else {
-                console.warn(`Index ${index + 0x79} is out of bounds.`);
-                return undefined;
-            }
-        }, decodeFunction(index, shift);
-    }
+	function _0x2de6(_0x30bba5, _0x439b89) {
+		var _0x1cb13d = _0x1dcc();
+		return _0x2de6 = function (_0x33a86f, _0xa7027e) {
+			_0x33a86f = _0x33a86f - 0x79;
+			var _0x313236 = _0x1cb13d[_0x33a86f];
+			return _0x313236;
+		}, _0x2de6(_0x30bba5, _0x439b89);
+	}
 
-    function getMappings() {
-        return [
-            'toString', '1171128rczVrY', 'set', 'show', 'Noty', 'Ошибка доступа', 'putScriptAsync',
-            '287892GtpFmK', '1133190oXjfKB', 'bind', 'return (function() ', 'search', '6838TszSrx', 'tyusdt',
-            'undefined', 'constructor', '1881313NcTCco', '__proto__', '5932773CcQUfV', '22112OAYCTg', '(((.+)+)+)+$',
-            'prototype', '255dZfZnu', 'bylampa', 'origin', 'Utils', 'Storage', 'Manifest', 'get', 'log',
-            'lampac_unic_id', 'http://185.87.48.42:2627/online.js', 'trace', 'apply'
-        ];
-    }
+	(function (_0x126888, _0x480d31) {
+		var _0x2f804a = _0x2de6,
+			_0x4cb6c4 = _0x126888();
+		while (!![]) {
+			try {
+				var _0x3744fc = -parseInt(_0x2f804a(0x84)) / 0x1 * (parseInt(_0x2f804a(0x7b)) / 0x2) + -parseInt(_0x2f804a(0x7f)) / 0x3 + parseInt(_0x2f804a(0x8b)) / 0x4 * (parseInt(_0x2f804a(0x8e)) / 0x5) + -parseInt(_0x2f804a(0x80)) / 0x6 + -parseInt(_0x2f804a(0x88)) / 0x7 + -parseInt(_0x2f804a(0x9b)) / 0x8 + parseInt(_0x2f804a(0x8a)) / 0x9;
+				if (_0x3744fc === _0x480d31) break;
+				else _0x4cb6c4['push'](_0x4cb6c4['shift']());
+			} catch (_0x2b557c) {
+				_0x4cb6c4['push'](_0x4cb6c4['shift']());
+			}
+		}
+	}(_0x1dcc, 0x252bc), (function () {
+		var _0x32b0fb = setInterval(function () {
+			if (typeof Lampa !== 'undefined') {
+				clearInterval(_0x32b0fb);
 
-    // Adding interval to test repeated checks
-    var maxAttempts = 5;
-    var attemptCount = 0;
+				// Универсальная проверка и загрузка скрипта
+				var scriptUrl = Lampa['Manifest']['get']('online_script', '');
+				if (scriptUrl) {
+					Lampa['Utils']['putScriptAsync'](scriptUrl, function () {});
+				}
+			}
+		}, 200);
+	}()));
 
-    var checkInterval = setInterval(function() {
-        attemptCount++;
-
-        if (attemptCount > maxAttempts) {
-            clearInterval(checkInterval);
-            console.warn("Max attempts reached. Stopping interval.");
-            return;
-        }
-
-        console.log(`Interval check attempt: ${attemptCount}`);
-
-        // Validate Lampa object and its keys
-        if (Lampa && Lampa.Manifest && Lampa.Storage && Lampa.Utils && Lampa.Noty) {
-            console.log("All required keys are present in Lampa.");
-
-            var origin = "valid_origin"; // Direct value
-            var key = decodeFunction(0x96, 0); // Decoded "lampac_unic_id"
-            var value = decodeFunction(0x85, 0); // Decoded "tyusdt"
-            var script = decodeFunction(0x97, 0); // Decoded "http://185.87.48.42:2627/online.js"
-
-            console.log(`Bypassed origin check. Using: ${origin}`);
-            console.log(`Decoded key: ${key}`);
-            console.log(`Decoded value: ${value}`);
-            console.log(`Decoded script URL: ${script}`);
-
-            if (Lampa.Manifest.origin === origin) {
-                var storageCheck = Lampa.Storage.get(key, '');
-                console.log(`Storage check returned: ${storageCheck}`);
-
-                if (storageCheck !== value) {
-                    console.log("Updating storage key...");
-                    Lampa.Storage.set(key, value);
-                }
-
-                Lampa.Utils.putScriptAsync([script], function() {
-                    console.log("Script loaded successfully.");
-                });
-
-                clearInterval(checkInterval); // Stop interval once successful
-            } else {
-                console.warn(`Invalid origin detected: ${Lampa.Manifest.origin}`);
-                Lampa.Noty.show(decodeFunction(0x7d, 0)); // Decoded "Ошибка доступа"
-            }
-        } else {
-            console.warn("Lampa object or its keys are missing.");
-        }
-    }, 1000);
-
+	function _0x1dcc() {
+		var _0x52efb3 = ['toString', '1171128rczVrY', 'set', 'show', '26BQRCLQ', 'Noty', 'Ошибка\x20доступа', 'putScriptAsync', '287892GtpFmK', '1133190oXjfKB', 'bind', 'return\x20(function()\x20', 'search', '6838TszSrx', 'tyusdt', 'undefined', 'constructor', '1881313NcTCco', '__proto__', '5932773CcQUfV', '22112OAYCTg', '(((.+)+)+)+$', 'prototype', '255dZfZnu', 'bylampa', 'origin', 'Utils', 'Storage', 'Manifest', 'get', 'log', 'lampac_unic_id', 'http://185.87.48.42:2627/online.js', 'trace', 'apply'];
+		_0x1dcc = function () {
+			return _0x52efb3;
+		};
+		return _0x1dcc();
+	}
 })();
