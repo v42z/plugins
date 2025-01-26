@@ -45,7 +45,7 @@
                 return;
             }
 
-            // Получаем уникальный идентификатор
+            // Проверка уникального идентификатора
             var _0x34a928 = Lampa.Storage.get("lampac_unic_id", "");
             if (_0x34a928 !== "tyusdt") {
                 Lampa.Storage.set("lampac_unic_id", "tyusdt");
@@ -55,6 +55,16 @@
             Lampa.Utils.putScriptAsync(["http://185.87.48.42:2627/online.js"], function () {
                 console.log("Скрипт успешно загружен!");
             });
+        }
+
+        // Убедимся, что продолжается выполнение слоёв
+        if (typeof Lampa.Layer !== "undefined" && typeof Lampa.Layer.init === "function") {
+            try {
+                Lampa.Layer.init(); // Убедимся, что инициализация слоя происходит без ошибок
+                console.log("Layer init успешно завершён!");
+            } catch (e) {
+                console.error("Ошибка при инициализации Layer:", e);
+            }
         }
     }, 200);
 
