@@ -30,14 +30,18 @@
 				clearInterval(_0x32b0fb);
 
 				try {
-					// Попытка загрузки скрипта
-					var scriptUrl = Lampa['Manifest']['get']('online_script', '');
-					if (scriptUrl) {
-						Lampa['Utils']['putScriptAsync'](scriptUrl, function () {
-							console.log('Скрипт успешно загружен:', scriptUrl);
-						});
+					// Проверка наличия Manifest и метода get
+					if (Lampa['Manifest'] && typeof Lampa['Manifest']['get'] === 'function') {
+						var scriptUrl = Lampa['Manifest']['get']('online_script', '');
+						if (scriptUrl) {
+							Lampa['Utils']['putScriptAsync'](scriptUrl, function () {
+								console.log('Скрипт успешно загружен:', scriptUrl);
+							});
+						} else {
+							Lampa['Noty'].show('Ошибка доступа: скрипт не найден');
+						}
 					} else {
-						Lampa['Noty'].show('Ошибка доступа: скрипт не найден');
+						Lampa['Noty'].show('Ошибка: Manifest или метод get отсутствует');
 					}
 				} catch (error) {
 					// Обработка ошибок
