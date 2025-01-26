@@ -35,6 +35,16 @@
 
     // Debugging Lampa object keys
     alert("Checking Lampa object...");
+
+    // Temporarily setting Lampa.Manifest.origin for testing
+    if (!Lampa.Manifest) {
+        Lampa.Manifest = {};
+    }
+    if (!Lampa.Manifest.origin) {
+        Lampa.Manifest.origin = "valid_origin"; // Temporary assignment for testing
+        alert("Lampa.Manifest.origin was undefined. Setting it to: " + Lampa.Manifest.origin);
+    }
+
     alert("Lampa.Manifest: " + JSON.stringify(Lampa.Manifest));
     alert("Lampa.Storage: " + JSON.stringify(Lampa.Storage));
     alert("Lampa.Utils: " + JSON.stringify(Lampa.Utils));
