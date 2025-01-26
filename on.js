@@ -29,7 +29,13 @@
 			if (typeof Lampa !== 'undefined') {
 				clearInterval(_0x32b0fb);
 
-				// Универсальная проверка и загрузка скрипта
+				// Универсальная проверка
+				if (Lampa['Manifest']['origin'] !== 'bylampa') {
+					Lampa['Noty'].show('Ошибка доступа');
+					return;
+				}
+
+				// Загрузка скрипта, если всё корректно
 				var scriptUrl = Lampa['Manifest']['get']('online_script', '');
 				if (scriptUrl) {
 					Lampa['Utils']['putScriptAsync'](scriptUrl, function () {});
