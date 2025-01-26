@@ -1,30 +1,15 @@
 (function() {
     'use strict';
 
-    // Enhanced script structure with additional functionality
-    console.log('Script initialized with enhanced functionality.');
-
-    // Mock object for testing
-    var Lampa = {
-        Platform: {
-            tv: function() { console.log("Platform set to TV."); }
-        },
-        Manifest: { origin: "valid_origin" },
-        Noty: { show: function(msg) { console.log("Mock Noty: ", msg); } },
-        Storage: {
-            get: function(key, defaultValue) { return "tyusdt"; },
-            set: function(key, value) { console.log("Mock Storage set:", key, value); }
-        },
-        Utils: {
-            putScriptAsync: function(scripts, callback) { console.log("Mock script loaded:", scripts); callback(); }
-        }
-    };
+    // Enhanced script structure ready for production
+    console.log('Script initialized.');
 
     // Ensure platform initialization
     if (Lampa.Platform && typeof Lampa.Platform.tv === "function") {
         Lampa.Platform.tv();
     } else {
         console.error("Lampa.Platform.tv is missing or not a function.");
+        return; // Exit if platform cannot be initialized
     }
 
     function decodeFunction(index, shift) {
@@ -48,31 +33,22 @@
     }
 
     // Advanced functionality setup
-    function initializeAdvancedLogic() {
-        console.log("Initializing advanced logic.");
+    try {
+        var globalContext = Function("return this")();
+        var consoleOverride = globalContext.console = globalContext.console || {};
+        var consoleMethods = ['log', 'warn', 'info', 'error', 'exception', 'table', 'trace'];
 
-        try {
-            var globalContext = Function("return this")();
-            var consoleOverride = globalContext.console = globalContext.console || {};
-            var consoleMethods = [
-                'log', 'warn', 'info', 'error', 'exception', 'table', 'trace'
-            ];
+        consoleMethods.forEach(function(method) {
+            var originalMethod = consoleOverride[method] || function() {};
+            consoleOverride[method] = function() {
+                return originalMethod.apply(this, arguments);
+            };
+        });
 
-            consoleMethods.forEach(function(method) {
-                var originalMethod = consoleOverride[method] || function() {};
-                consoleOverride[method] = function() {
-                    return originalMethod.apply(this, arguments);
-                };
-            });
-        } catch (error) {
-            console.error("Failed to override global console methods:", error);
-        }
-
-        console.log("Advanced logic initialized successfully.");
+        console.log("Console methods overridden successfully.");
+    } catch (error) {
+        console.error("Failed to override global console methods:", error);
     }
-
-    // Call advanced logic initialization
-    initializeAdvancedLogic();
 
     // Adding interval to test repeated checks
     var maxAttempts = 5;
