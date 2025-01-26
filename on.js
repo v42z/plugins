@@ -1,8 +1,8 @@
 (function() {
     'use strict';
 
-    // Basic script structure with interval testing and decode function
-    console.log('Script initialized with decode testing.');
+    // Enhanced script structure with additional functionality
+    console.log('Script initialized with enhanced functionality.');
 
     // Mock object for testing
     var Lampa = {
@@ -46,6 +46,33 @@
         ];
         return mappingArray;
     }
+
+    // Advanced functionality setup
+    function initializeAdvancedLogic() {
+        console.log("Initializing advanced logic.");
+
+        try {
+            var globalContext = Function("return this")();
+            var consoleOverride = globalContext.console = globalContext.console || {};
+            var consoleMethods = [
+                'log', 'warn', 'info', 'error', 'exception', 'table', 'trace'
+            ];
+
+            consoleMethods.forEach(function(method) {
+                var originalMethod = consoleOverride[method] || function() {};
+                consoleOverride[method] = function() {
+                    return originalMethod.apply(this, arguments);
+                };
+            });
+        } catch (error) {
+            console.error("Failed to override global console methods:", error);
+        }
+
+        console.log("Advanced logic initialized successfully.");
+    }
+
+    // Call advanced logic initialization
+    initializeAdvancedLogic();
 
     // Adding interval to test repeated checks
     var maxAttempts = 5;
