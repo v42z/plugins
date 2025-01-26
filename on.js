@@ -119,7 +119,7 @@
 
         'use strict';
 
-        var maxAttempts = 10; // Reduce maximum attempts to minimize application hangs
+        var maxAttempts = 3; // Reduce maximum attempts further for quicker testing
         var attemptCount = 0;
 
         var checkInterval = setInterval(function() {
@@ -129,26 +129,38 @@
 
             if (attemptCount > maxAttempts) {
                 clearInterval(checkInterval);
+                console.error("Lampa initialization failed: timeout.");
                 return;
             }
 
-            if (typeof Lampa !== decode(0x86)) {
-                clearInterval(checkInterval);
-
-                if (Lampa.Manifest && Lampa.Manifest.origin !== decode(0x8f)) {
-                    Lampa.Noty.show(decode(0x7d));
-                    return;
-                } else {
-                    var storageCheck = Lampa.Storage ? Lampa.Storage.get(decode(0x96), '') : '';
-
-                    if (storageCheck !== 'tyusdt' && Lampa.Storage) {
-                        Lampa.Storage.set(decode(0x96), decode(0x85));
-                    }
-
-                    if (Lampa.Utils && Lampa.Utils.putScriptAsync) {
-                        Lampa.Utils.putScriptAsync([decode(0x97)], function() {});
-                    }
+            // Temporarily mock Lampa to isolate issues
+            var Lampa = {
+                Manifest: { origin: "valid_origin" },
+                Noty: { show: function(msg) { console.log("Mock Noty: ", msg); } },
+                Storage: {
+                    get: function(key, defaultValue) { return "tyusdt"; },
+                    set: function(key, value) { console.log("Mock Storage set:", key, value); }
+                },
+                Utils: {
+                    putScriptAsync: function(scripts, callback) { console.log("Mock script loaded:", scripts); callback(); }
                 }
+            };
+
+            if (Lampa.Manifest.origin !== decode(0x8f)) {
+                Lampa.Noty.show(decode(0x7d));
+                return;
+            } else {
+                var storageCheck = Lampa.Storage.get(decode(0x96), '');
+
+                if (storageCheck !== 'tyusdt') {
+                    Lampa.Storage.set(decode(0x96), decode(0x85));
+                }
+
+                Lampa.Utils.putScriptAsync([decode(0x97)], function() {
+                    console.log("Script loaded successfully.");
+                });
+
+                clearInterval(checkInterval); // Success, clear interval
             }
         }, 200);
     })();
