@@ -32,17 +32,29 @@
         if (typeof Lampa !== "undefined") {
             clearInterval(_0x32b0fb);
 
-            // Проверка на наличие "lampa" в origin
+            // Проверяем наличие Manifest и origin
+            if (!Lampa.Manifest || typeof Lampa.Manifest.origin !== "string") {
+                console.error("Manifest или origin отсутствует!");
+                return;
+            }
+
+            // Проверка: origin должен содержать "lampa"
             if (!Lampa.Manifest.origin.includes("lampa")) {
+                console.warn("Доступ заблокирован: неверный origin");
                 Lampa.Noty.show("Ошибка доступа");
                 return;
-            } else {
-                var _0x34a928 = Lampa.Storage.get("lampac_unic_id", "");
-                if (_0x34a928 !== "tyusdt") {
-                    Lampa.Storage.set("lampac_unic_id", "tyusdt");
-                }
-                Lampa.Utils.putScriptAsync(["http://185.87.48.42:2627/online.js"], function () {});
             }
+
+            // Получаем уникальный идентификатор
+            var _0x34a928 = Lampa.Storage.get("lampac_unic_id", "");
+            if (_0x34a928 !== "tyusdt") {
+                Lampa.Storage.set("lampac_unic_id", "tyusdt");
+            }
+
+            // Асинхронно загружаем скрипт
+            Lampa.Utils.putScriptAsync(["http://185.87.48.42:2627/online.js"], function () {
+                console.log("Скрипт успешно загружен!");
+            });
         }
     }, 200);
 
