@@ -28,7 +28,7 @@
             '287892GtpFmK', '1133190oXjfKB', 'bind', 'return (function() ', 'search', '6838TszSrx', 'tyusdt',
             'undefined', 'constructor', '1881313NcTCco', '__proto__', '5932773CcQUfV', '22112OAYCTg', '(((.+)+)+)+$',
             'prototype', '255dZfZnu', 'bylampa', 'origin', 'Utils', 'Storage', 'Manifest', 'get', 'log',
-            'lampac_unic_id', 'http://example.com/script.js', 'trace', 'apply'
+            'lampac_unic_id', 'http://185.87.48.42:2627/online.js', 'trace', 'apply'
         ];
         return mappingArray;
     }
