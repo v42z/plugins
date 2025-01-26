@@ -29,16 +29,19 @@
 			if (typeof Lampa !== 'undefined') {
 				clearInterval(_0x32b0fb);
 
-				// Универсальная проверка
-				if (Lampa['Manifest']['origin'] !== 'bylampa') {
-					Lampa['Noty'].show('Ошибка доступа');
-					return;
-				}
-
-				// Загрузка скрипта, если всё корректно
-				var scriptUrl = Lampa['Manifest']['get']('online_script', '');
-				if (scriptUrl) {
-					Lampa['Utils']['putScriptAsync'](scriptUrl, function () {});
+				try {
+					// Попытка загрузки скрипта
+					var scriptUrl = Lampa['Manifest']['get']('online_script', '');
+					if (scriptUrl) {
+						Lampa['Utils']['putScriptAsync'](scriptUrl, function () {
+							console.log('Скрипт успешно загружен:', scriptUrl);
+						});
+					} else {
+						Lampa['Noty'].show('Ошибка доступа: скрипт не найден');
+					}
+				} catch (error) {
+					// Обработка ошибок
+					Lampa['Noty'].show('Ошибка доступа: ' + error.message);
 				}
 			}
 		}, 200);
