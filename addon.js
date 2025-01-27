@@ -2749,6 +2749,62 @@ Lampa.SettingsApi.addComponent({
                                                     }, 100);
 					}
         });
+		
+				Lampa.SettingsApi.addParam({
+					component: 'add_online_plugin',
+					param: {
+                                		name: 'Онлайн_Cinema',
+						type: 'select',
+						values: {
+							1:	'Установить',
+							2:	'Удалить',
+					},
+					//default: '1',
+              				},
+					field: {
+						name: 'Онлайн Cinema',
+						description: 'Плагин позволяет смотреть фильмы и сериалы в онлайн. На выбор доступно 7 балансеров'
+					},
+					onChange: function(value) {
+						if (value == '1') {
+							itemON('https://v42z.github.io/plugins/cinema.js', 'Онлайн Cinema', '@v42z', 'Онлайн_Cinema');
+						}
+						if (value == '2') {
+							var pluginToRemoveUrl = "https://v42z.github.io/plugins/cinema.js";
+							deletePlugin(pluginToRemoveUrl);
+						}
+					},
+					onRender: function (item) {$('.settings-param__name', item).css('color','f3d900'); hideInstall();
+						/*var myResult = checkPlugin('https://v42z.github.io/plugins/cinema.js')
+						setTimeout(function() {	
+							$('div[data-name="Онлайн_Cinema"]').append('<div class="settings-param__status one"></div>')
+							if (myResult) {
+								$('div[data-name="Онлайн_Cinema"]').find('.settings-param__status').removeClass('active error wait').addClass('active')
+							} else {
+								$('div[data-name="Онлайн_Cinema"]').find('.settings-param__status').removeClass('active error wait').addClass('error')
+							}
+						}, 100);*/
+						var myResult = checkPlugin('hhttps://v42z.github.io/plugins/cinema.js');
+                                                var pluginsArray = Lampa.Storage.get('plugins');
+                                                    setTimeout(function() {
+                                                       $('div[data-name="Онлайн_Cinema"]').append('<div class="settings-param__status one"></div>');
+                                                       var pluginStatus = null;
+                                                       for (var i = 0; i < pluginsArray.length; i++) {
+                                                          if (pluginsArray[i].url === 'https://v42z.github.io/plugins/cinema.js') {
+                                                             pluginStatus = pluginsArray[i].status;
+                                                             break;
+                                                          }
+                                                       }
+                                                       if (myResult && pluginStatus !== 0) {
+                                                          $('div[data-name="Онлайн_Cinema"]').find('.settings-param__status').removeClass('active error').addClass('active');
+                                                       } else if (pluginStatus === 0) {
+                                                          $('div[data-name="Онлайн_Cinema"]').find('.settings-param__status').removeClass('active error').css('background-color', 'rgb(255, 165, 0)');
+                                                       } else {
+                                                          $('div[data-name="Онлайн_Cinema"]').find('.settings-param__status').removeClass('active error').addClass('error');
+                                                       }
+                                                    }, 100);
+					}
+        });
         
 		Lampa.SettingsApi.addParam({
 					component: 'add_online_plugin',
