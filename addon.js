@@ -2762,12 +2762,12 @@ Lampa.SettingsApi.addComponent({
 					//default: '1',
               				},
 					field: {
-						name: 'Онлайн_Cinema',
+						name: 'Онлайн Cinema',
 						description: 'Плагин для просмотра фильмов и сериалов в онлайн'
 					},
 					onChange: function(value) {
 						if (value == '1') {
-							itemON('https://v42z.github.io/plugins/cinema.js', 'Онлайн_Cinema', '@v42z', 'Онлайн_Cinema');
+							itemON('https://v42z.github.io/plugins/cinema.js', 'Онлайн Cinema', '@v42z', 'Онлайн_Cinema');
 						}
 						if (value == '2') {
 							var pluginToRemoveUrl = "https://v42z.github.io/plugins/cinema.js";
@@ -2784,7 +2784,7 @@ Lampa.SettingsApi.addComponent({
 								$('div[data-name="Онлайн_Cinema"]').find('.settings-param__status').removeClass('active error wait').addClass('error')
 							}
 						}, 100);*/
-						var myResult = checkPlugin('hhttps://v42z.github.io/plugins/cinema.js');
+						var myResult = checkPlugin('https://v42z.github.io/plugins/cinema.js');
                                                 var pluginsArray = Lampa.Storage.get('plugins');
                                                     setTimeout(function() {
                                                        $('div[data-name="Онлайн_Cinema"]').append('<div class="settings-param__status one"></div>');
