@@ -2763,7 +2763,7 @@ Lampa.SettingsApi.addComponent({
               				},
 					field: {
 						name: 'Онлайн Cinema',
-						description: 'Плагин позволяет смотреть фильмы и сериалы в онлайн. На выбор доступно 7 балансеров'
+						description: 'Плагин для просмотра фильмов и сериалов в онлайн'
 					},
 					onChange: function(value) {
 						if (value == '1') {
