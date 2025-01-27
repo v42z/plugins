@@ -2762,12 +2762,12 @@ Lampa.SettingsApi.addComponent({
 					//default: '1',
               				},
 					field: {
-						name: 'Онлайн Cinema',
+						name: 'Онлайн_Cinema',
 						description: 'Плагин для просмотра фильмов и сериалов в онлайн'
 					},
 					onChange: function(value) {
 						if (value == '1') {
-							itemON('https://v42z.github.io/plugins/cinema.js', 'Онлайн Cinema', '@v42z', 'Онлайн_Cinema');
+							itemON('https://v42z.github.io/plugins/cinema.js', 'Онлайн_Cinema', '@v42z', 'Онлайн_Cinema');
 						}
 						if (value == '2') {
 							var pluginToRemoveUrl = "https://v42z.github.io/plugins/cinema.js";
