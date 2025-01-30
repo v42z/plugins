@@ -393,16 +393,16 @@ Lampa.SettingsApi.addComponent({
                             },
 					onChange: function(value) {
 						if (value == '1') {
-							itemON('http://khuyampa.best/tmdbproxy.js', 'TMDB Proxy alt', '@lampa', 'TMDB');
+							itemON('https://plugin.rootu.top/tmdb.js', 'TMDB Proxy alt', '@lampa', 'TMDB');
 						}
 						if (value == '2') {
-							var pluginToRemoveUrl = "http://khuyampa.best/tmdbproxy.js";
+							var pluginToRemoveUrl = "https://plugin.rootu.top/tmdb.js";
 							deletePlugin(pluginToRemoveUrl);
 						}
 					},
 					onRender: function (item) {
 						$('.settings-param__name', item).css('color','f3d900'); hideInstall();
-						/*var myResult = checkPlugin('http://khuyampa.best/tmdbproxy.js')
+						/*var myResult = checkPlugin('https://plugin.rootu.top/tmdb.js')
 						setTimeout(function() {	
 							$('div[data-name="TMDB alt"]').append('<div class="settings-param__status one"></div>')
 							if (myResult) {
@@ -411,13 +411,13 @@ Lampa.SettingsApi.addComponent({
 								$('div[data-name="TMDB alt"]').find('.settings-param__status').removeClass('active error wait').addClass('error')
 							}
 						}, 100);*/
-						var myResult = checkPlugin('http://khuyampa.best/tmdbproxy.js');
+						var myResult = checkPlugin('https://plugin.rootu.top/tmdb.js');
                                                 var pluginsArray = Lampa.Storage.get('plugins');
                                                     setTimeout(function() {
                                                        $('div[data-name="TMDB alt"]').append('<div class="settings-param__status one"></div>');
                                                        var pluginStatus = null;
                                                        for (var i = 0; i < pluginsArray.length; i++) {
-                                                          if (pluginsArray[i].url === 'http://khuyampa.best/tmdbproxy.js') {
+                                                          if (pluginsArray[i].url === 'https://plugin.rootu.top/tmdb.js') {
                                                              pluginStatus = pluginsArray[i].status;
                                                              break;
                                                           }
