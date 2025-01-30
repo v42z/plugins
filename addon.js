@@ -393,16 +393,16 @@ Lampa.SettingsApi.addComponent({
                             },
 					onChange: function(value) {
 						if (value == '1') {
-							itemON('https://plugin.rootu.top/tmdb.js', 'TMDB Proxy alt', '@lampa', 'TMDB');
+							itemON('https://khuyampa.best/tmdbproxy.js', 'TMDB Proxy alt', '@lampa', 'TMDB');
 						}
 						if (value == '2') {
-							var pluginToRemoveUrl = "https://plugin.rootu.top/tmdb.js";
+							var pluginToRemoveUrl = "https://khuyampa.best/tmdbproxy.js";
 							deletePlugin(pluginToRemoveUrl);
 						}
 					},
 					onRender: function (item) {
 						$('.settings-param__name', item).css('color','f3d900'); hideInstall();
-						/*var myResult = checkPlugin('https://plugin.rootu.top/tmdb.js')
+						/*var myResult = checkPlugin('https://khuyampa.best/tmdbproxy.js')
 						setTimeout(function() {	
 							$('div[data-name="TMDB alt"]').append('<div class="settings-param__status one"></div>')
 							if (myResult) {
@@ -411,13 +411,13 @@ Lampa.SettingsApi.addComponent({
 								$('div[data-name="TMDB alt"]').find('.settings-param__status').removeClass('active error wait').addClass('error')
 							}
 						}, 100);*/
-						var myResult = checkPlugin('https://plugin.rootu.top/tmdb.js');
+						var myResult = checkPlugin('https://khuyampa.best/tmdbproxy.js');
                                                 var pluginsArray = Lampa.Storage.get('plugins');
                                                     setTimeout(function() {
                                                        $('div[data-name="TMDB alt"]').append('<div class="settings-param__status one"></div>');
                                                        var pluginStatus = null;
                                                        for (var i = 0; i < pluginsArray.length; i++) {
-                                                          if (pluginsArray[i].url === 'https://plugin.rootu.top/tmdb.js') {
+                                                          if (pluginsArray[i].url === 'https://khuyampa.best/tmdbproxy.js') {
                                                              pluginStatus = pluginsArray[i].status;
                                                              break;
                                                           }
