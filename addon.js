@@ -3203,15 +3203,15 @@ Lampa.SettingsApi.addComponent({
 					},
 					onChange: function(value) {
 						if (value == '1') {
-							itemON('http://cub.red/plugin/tracks', 'Tracks', '@lampa', 'Tracks');
+							itemON('https://v42z.github.io/plugins/tracks.js', 'Tracks', '@lampa', 'Tracks');
 						}
 						if (value == '2') {
-							var pluginToRemoveUrl = "http://cub.red/plugin/tracks";
+							var pluginToRemoveUrl = "https://v42z.github.io/plugins/tracks.js";
 							deletePlugin(pluginToRemoveUrl);
 						}
 					},
 					onRender: function (item) {$('.settings-param__name', item).css('color','f3d900'); hideInstall();
-						/*var myResult = checkPlugin('http://cub.red/plugin/tracks')
+						/*var myResult = checkPlugin('https://v42z.github.io/plugins/tracks.js')
 						setTimeout(function() {	
 							$('div[data-name="Tracks"]').append('<div class="settings-param__status one"></div>')
 							if (myResult) {
@@ -3220,13 +3220,13 @@ Lampa.SettingsApi.addComponent({
 								$('div[data-name="Tracks"]').find('.settings-param__status').removeClass('active error wait').addClass('error')
 							}
 						}, 100);*/
-						var myResult = checkPlugin('http://cub.red/plugin/tracks');
+						var myResult = checkPlugin('https://v42z.github.io/plugins/tracks.js');
                                                 var pluginsArray = Lampa.Storage.get('plugins');
                                                     setTimeout(function() {
                                                        $('div[data-name="Tracks"]').append('<div class="settings-param__status one"></div>');
                                                        var pluginStatus = null;
                                                        for (var i = 0; i < pluginsArray.length; i++) {
-                                                          if (pluginsArray[i].url === 'http://cub.red/plugin/tracks') {
+                                                          if (pluginsArray[i].url === 'https://v42z.github.io/plugins/tracks.js') {
                                                              pluginStatus = pluginsArray[i].status;
                                                              break;
                                                           }
