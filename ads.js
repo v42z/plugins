@@ -16,8 +16,8 @@
     // Функция для добавления категории мультфильмов в меню
     function addCartoonCategory() {
         const NEW_ITEM_SOURCES = ["tmdb", "cub"];
-        const ITEM_TV_SELECTOR = '[data-action="tv"]';
-        const ITEM_MOVE_TIMEOUT = 2000;
+        const ITEM_TV_SELECTOR = '[data-action="tv"]'; // Селектор элемента "TV"
+        const ITEM_MOVE_TIMEOUT = 200; // Задержка для перемещения
 
         function moveItemAfter(item, after) {
             return setTimeout(() => {
@@ -30,7 +30,10 @@
             const NEW_ITEM_SELECTOR = `[${NEW_ITEM_ATTR}]`;
             const NEW_ITEM_TEXT = Lampa.Lang.translate('nc_cartoon');
 
-            const field = $(`<div>${NEW_ITEM_TEXT}</div>`);
+            // Создание нового элемента
+            const field = $(`<div data-action="nc_cartoon">${NEW_ITEM_TEXT}</div>`);
+
+            // Добавление обработчика события наведения
             field.on("hover:enter", function () {
                 const currentSource = Lampa.Activity.active().source;
                 const source = NEW_ITEM_SOURCES.includes(currentSource) ? currentSource : NEW_ITEM_SOURCES[0];
@@ -39,7 +42,7 @@
                     url: "movie",
                     title: `${NEW_ITEM_TEXT} - ${source.toUpperCase()}`,
                     component: "category",
-                    genres: 16,
+                    genres: 16, // Жанр "анимация" (ID 16)
                     id: 16,
                     source: source,
                     card_type: true,
@@ -47,7 +50,10 @@
                 });
             });
 
+            // Вставка нового элемента после элемента "TV"
             Lampa.Menu.render().find(ITEM_TV_SELECTOR).after(field);
+
+            // Перемещение элемента через таймаут
             moveItemAfter(NEW_ITEM_SELECTOR, ITEM_TV_SELECTOR);
         }
     }
@@ -57,7 +63,7 @@
         Lampa.SettingsApi.addComponent({
             component: "addCategory",
             name: Lampa.Lang.translate('nc_cartoon'),
-            icon: '\n' + '\n' + '\n' + '\n' + '\n' + ''
+            icon: ''
         });
 
         Lampa.SettingsApi.addParam({
