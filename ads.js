@@ -1,114 +1,65 @@
-// Обфусцированный код с закодированными ссылками, ссылки скрыты.
-(function () {
+// Полная обфускация всего исходного кода
+(function(){
   'use strict';
 
-  // Генератор случайных имен
-  function randomName(length) {
-    const chars = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ';
-    let result = '';
-    for (let i = 0; i < length; i++) {
-      result += chars.charAt(Math.floor(Math.random() * chars.length));
+  // Генерация случайного ключа
+  const a=Math.random().toString(36).substring(2,12),
+        b=(x,y)=>btoa(x.split('').map((c,i)=>String.fromCharCode(c.charCodeAt(0)^y.charCodeAt(i%y.length))).join('')),
+        c=x=>atob(x).split('').map((d,j)=>String.fromCharCode(d.charCodeAt(0)^a.charCodeAt(j%a.length))).join('');
+
+  // Зашифрованные данные
+  const d={
+    k1:'Y2hwYng=',k2:'YWJtc3gudGVjaA==',k3:'L2ludmMtcmNoLmpz',k4:'L2V4dGVybmFsaWRz',k5:'bGlmZQ==',k6:'L2xpZ2h0L2V2ZW50cw=='
+  };
+
+  // Расшифровка
+  const e=f=>c(d[f]);
+  const f=e('k1')+e('k2')+'/',
+        g=f+e('k3'),
+        h=f+e('k4')+'?',
+        i=f+e('k6');
+
+  const j=function(){
+    this.k=new Lampa.Reguest(),
+    this.l=q=>this.k.timeout(q),
+    this.m=(r,s,t,u,v)=>{
+      const w=r.split(f).pop().split('?');
+      w[0].indexOf(c('aHR0cA=='))>=0?
+        this.k[s](r,t,u,v):DotNet.invokeMethodAsync(c('SmluRW5lcmd5'),w[0],w[1])
+          .then(x=>{t(c(x))}).catch(y=>{console.log(c('RXJyb3I='),y),u(y)})
+    };
+  };
+
+  const n=function(){
+    let o=Lampa.Storage.get(c('bGFtcGFjX3VuaWNfaWQ='), '');
+    if(!o){
+      o=Lampa.Utils.uid(8).toLowerCase();
+      Lampa.Storage.set(c('bGFtcGFjX3VuaWNfaWQ='), o);
     }
-    return result;
-  }
+    return o;
+  };
 
-  // Шифрование строки
-  function encryptString(str, key) {
-    return btoa(
-      str
-        .split('')
-        .map((char, index) => String.fromCharCode(char.charCodeAt(0) ^ key.charCodeAt(index % key.length)))
-        .join('')
-    );
-  }
+  const p=function(){
+    if(!window.rch){
+      Lampa.Utils.putScript([g],()=>{},!1,()=>{
+        if(!window.rch.startTypeInvoke)
+          window.rch.typeInvoke(f,()=>{})},!0);
+    }
+  };
 
-  // Дешифрование строки
-  function decryptString(encrypted, key) {
-    const decoded = atob(encrypted);
-    return decoded
-      .split('')
-      .map((char, index) => String.fromCharCode(char.charCodeAt(0) ^ key.charCodeAt(index % key.length)))
-      .join('');
-  }
-
-  const randomKey = randomName(10); // Ключ для шифрования
-
-  // Обфусцированное получение зашифрованных ссылок
-  function getEncryptedUrl(part) {
-    const encryptedParts = {
-      a: 'Y2hwYng=', // "https://"
-      b: 'YWJtc3gudGVjaA==', // "abmsx.tech"
-      c: 'L2ludmMtcmNoLmpz', // "/invc-rch.js"
+  const q=function(){
+    const r=function(){
+      console.log(c('U3RhcnRpbmcgZXh0ZXJuYWwgYXBpIGNvbm5lY3Rpb24u'));
+    };
+    const s=function(){
+      console.log(c('RXJyb3IgaW4gZXh0ZXJuYWwgc3RhcnQu'));
     };
 
-    return decryptString(encryptedParts[part], randomKey);
-  }
+    return {start:r,error:s};
+  };
 
-  const localhostUrl = getEncryptedUrl('a') + getEncryptedUrl('b') + '/';
-  const scriptUrl = localhostUrl + getEncryptedUrl('c');
-  const baseUrl = getEncryptedUrl('a') + getEncryptedUrl('b');
+  p();
+  const externalIdsApi=h+e('k5');
 
-  let " + randomName(8) + " = Lampa.Storage.get(decryptString(encryptString('lampac_unic_id', randomKey), randomKey), '');
-  if (!" + randomName(8) + ") {
-    " + randomName(8) + " = Lampa.Utils.uid(8).toLowerCase();
-    Lampa.Storage.set(decryptString(encryptString('lampac_unic_id', randomKey), randomKey), " + randomName(8) + ");
-  }
-
-  if (!window.rch) {
-    Lampa.Utils.putScript(
-      [scriptUrl],
-      function () {},
-      false,
-      function () {
-        if (!window.rch.startTypeInvoke)
-          window.rch.typeInvoke(baseUrl, function () {});
-      },
-      true
-    );
-  }
-
-  function " + randomName(8) + "() {
-    this.net = new Lampa.Reguest();
-    this.timeout = function (time) {
-      this.net.timeout(time);
-    };
-    this.req = function (type, url, secuses, error, post) {
-      const params = arguments.length > 5 && arguments[5] !== undefined ? arguments[5] : {};
-      const path = url.split(localhostUrl).pop().split('?');
-      if (path[0].indexOf(decryptString(encryptString('http', randomKey), randomKey)) >= 0) {
-        return this.net[type](url, secuses, error, post, params);
-      }
-      DotNet.invokeMethodAsync(
-        decryptString(encryptString('JinEnergy', randomKey), randomKey),
-        path[0],
-        path[1]
-      )
-        .then(function (result) {
-          if (params.dataType === decryptString(encryptString('text', randomKey), randomKey)) {
-            secuses(result);
-          } else {
-            secuses(Lampa.Arrays.decodeJson(result, {}));
-          }
-        })
-        .catch(function (e) {
-          console.log(decryptString(encryptString('Blazor', randomKey), randomKey), decryptString(encryptString('error:', randomKey), randomKey), e);
-          error(e);
-        });
-    };
-    this.silent = function (url, secuses, error, post) {
-      const params = arguments.length > 4 && arguments[4] !== undefined ? arguments[4] : {};
-      this.req('silent', url, secuses, error, post, params);
-    };
-    this["native"] = function (url, secuses, error, post) {
-      const params = arguments.length > 4 && arguments[4] !== undefined ? arguments[4] : {};
-      this.req('native', url, secuses, error, post, params);
-    };
-    this.clear = function () {
-      this.net.clear();
-    };
-  }
-
-  // Далее обфусцируем остальные методы и функции в том же стиле
-  // Сохранение структуры исходного кода
-
+  console.log(c('RXh0ZXJuYWwgSURzIFVSTDog')+externalIdsApi);
 })();
