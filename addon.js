@@ -4097,78 +4097,7 @@ Lampa.SettingsApi.addComponent({
 					}
 		});
 
-                Lampa.SettingsApi.addParam({
-					component: 'add_sisi_plugin',
-					param: {
-						name: 'sisi_durex',
-						type: 'select',
-						values: {
-							1:	'Установить',
-							2:	'Удалить',
-						},
-						//default: '1',
-					},
-					field: {
-						name: 'Клубничка Durex',
-						description: 'Замена Клубнички BWA'
-					},
-					onChange: function(value) {
-						if (value == '1') {
-							itemON('http://durex.monster/sisi.js', 'Клубничка Durex', '@rik', 'sisi_durex');
-						}
-						if (value == '2') {
-							var pluginToRemoveUrl = "http://durex.monster/sisi.js";
-							deletePlugin(pluginToRemoveUrl);
-						}
-					},
-					onRender: function (item) {$('.settings-param__name', item).css('color','f3d900'); hideInstall();
-						/*var myResult = checkPlugin('http://bwa-cloud.cfhttp.top/sisi.js')
-						setTimeout(function() {	
-							$('div[data-name="Nyam"]').append('<div class="settings-param__status one"></div>')
-							if (myResult) {
-								$('div[data-name="Nyam"]').find('.settings-param__status').removeClass('active error wait').addClass('active')
-							} else {
-								$('div[data-name="Nyam"]').find('.settings-param__status').removeClass('active error wait').addClass('error')
-							}
-						}, 100);*/
-						var myResult = checkPlugin('http://durex.monster/sisi.js');
-                                                var pluginsArray = Lampa.Storage.get('plugins');
-                                                    setTimeout(function() {
-                                                       $('div[data-name="sisi_durex"]').append('<div class="settings-param__status one"></div>');
-                                                       var pluginStatus = null;
-                                                       for (var i = 0; i < pluginsArray.length; i++) {
-                                                          if (pluginsArray[i].url === 'http://durex.monster/sisi.js') {
-                                                             pluginStatus = pluginsArray[i].status;
-                                                             break;
-                                                          }
-                                                       }
-                                                       if (myResult && pluginStatus !== 0) {
-                                                          $('div[data-name="sisi_durex"]').find('.settings-param__status').removeClass('active error').addClass('active');
-                                                       } else if (pluginStatus === 0) {
-                                                          $('div[data-name="sisi_durex"]').find('.settings-param__status').removeClass('active error').css('background-color', 'rgb(255, 165, 0)');
-                                                       } else {
-                                                          $('div[data-name="sisi_durex"]').find('.settings-param__status').removeClass('active error').addClass('error');
-                                                       }
-                                                    }, 100);	
-					}
-		});
-	
-	        /*Lampa.SettingsApi.addParam({
-                                  component: 'add_sisi_plugin',
-                                  param: {
-                                         name: 'Reboot_sisi_plugin',
-                                         type: 'static',
-                                  },
-                                  field: {
-                                         name: '<div class="settings-folder" style="padding:0!important"><div style="display: block; margin: 0 auto;height:2.3em;padding-right:.1em"><svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg" version="1.1" fill="#ffffff"><g id="SVGRepo_bgCarrier" stroke-width="0"></g><g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g><g id="SVGRepo_iconCarrier"> <g style="fill:none;stroke:#ffffff;stroke-width:12px;stroke-linecap:round;stroke-linejoin:round;"> <path d="m 50,10 0,35"></path> <path d="M 20,29 C 4,52 15,90 50,90 85,90 100,47 74,20"></path> </g> <path style="fill:#ffffff;" d="m 2,21 29,-2 2,29"></path> </g></svg></div></div>',
-					 description: '<div style="text-align: center;">Нажмите для перезагрузки Lampa</div>',
-	                           },
-                                   onRender: function (item) {
-                                      item.on('hover:enter', function(){
-                                         location.reload();
-                                      });
-                                   }
-		}); */
+
 	
 
 	 Lampa.Settings.listener.follow('open', function(e) {
