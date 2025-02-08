@@ -30,7 +30,7 @@
             const NEW_ITEM_SELECTOR = `[${NEW_ITEM_ATTR}]`;
             const NEW_ITEM_TEXT = Lampa.Lang.translate('nc_cartoon');
 
-            const field = $(/* html */ `<div>${NEW_ITEM_TEXT}</div>`);
+            const field = $(`<div>${NEW_ITEM_TEXT}</div>`);
             field.on("hover:enter", function () {
                 const currentSource = Lampa.Activity.active().source;
                 const source = NEW_ITEM_SOURCES.includes(currentSource) ? currentSource : NEW_ITEM_SOURCES[0];
