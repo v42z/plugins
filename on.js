@@ -1444,8 +1444,8 @@
     window.lampac_plugin = true;
     var manifst = {
       type: 'video',
-      version: '1.0',
-      name: '4m1k online',
+      version: '2',
+      name: '4m1k',
       description: 'Плагин для просмотра онлайн сериалов и фильмов',
       component: 'lampac',
       onContextMenu: function onContextMenu(object) {
@@ -1477,9 +1477,9 @@
     Lampa.Manifest.plugins = manifst;
     Lampa.Lang.add({
       lampac_watch: { //
-        ru: 'Онлайн 4am1k',
-        en: 'Online 4am1k',
-        uk: 'Онлайн 4am1k',
+        ru: 'Онлайн 4m1k',
+        en: 'Online 4m1k',
+        uk: 'Онлайн 4m1k',
         zh: '在线观看'
       },
       lampac_video: { //
