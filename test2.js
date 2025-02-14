@@ -235,12 +235,6 @@
           }, 1000 * json.keepalive);
 		}
       };
-      if (typeof signalR == 'undefined') {
-        Lampa.Utils.putScript(["https://abmsx.tech/signalr-6.0.25_es5.js"], function() {}, false, function() {
-          load();
-        }, true);
-      } else load();
-    };
     this.externalids = function() {
       return new Promise(function(resolve, reject) {
         if (!object.movie.imdb_id || !object.movie.kinopoisk_id) {
