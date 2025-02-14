@@ -3,7 +3,7 @@
 
   var Defined = {
     api: 'lampac',
-    localhost: 'https://abmsx.tech/',
+    localhost: 'http://ab2024.ru/',
     apn: ''
   };
 
@@ -14,9 +14,9 @@
   }
 
   if (!window.rch) {
-    Lampa.Utils.putScript(["https://abmsx.tech/invc-rch.js"], function() {}, false, function() {
+    Lampa.Utils.putScript(["http://ab2024.ru/invc-rch.js"], function() {}, false, function() {
       if (!window.rch.startTypeInvoke)
-        window.rch.typeInvoke('https://abmsx.tech', function() {});
+        window.rch.typeInvoke('http://ab2024.ru', function() {});
     }, true);
   }
 
@@ -225,7 +225,7 @@
         }
         hubConnection = new signalR.HubConnectionBuilder().withUrl(json.ws).build();
         hubConnection.start().then(function() {
-          window.rch.Registry('https://abmsx.tech', hubConnection, function() {
+          window.rch.Registry('http://ab2024.ru', hubConnection, function() {
             console.log('RCH', 'hubConnection start');
             if (!noreset) _this2.find();
             else noreset()
@@ -242,7 +242,7 @@
 		}
       };
       if (typeof signalR == 'undefined') {
-        Lampa.Utils.putScript(["https://abmsx.tech/signalr-6.0.25_es5.js"], function() {}, false, function() {
+        Lampa.Utils.putScript(["http://ab2024.ru/signalr-6.0.25_es5.js"], function() {}, false, function() {
           load();
         }, true);
       } else load();
@@ -336,9 +336,12 @@
     };
     this.lifeSource = function() {
       var _this3 = this;
+      var isFilm = false;
+      
       return new Promise(function(resolve, reject) {
         var url = _this3.requestParams(Defined.localhost + 'lifeevents?memkey=' + (_this3.memkey || ''));
         var red = false;
+        isFilm = url.indexOf('serial=0') > -1
         var gou = function gou(json, any) {
           if (json.accsdb) return reject(json);
           var last_balanser = _this3.getLastChoiceBalanser();
@@ -356,12 +359,22 @@
             }
           }
         };
+        
+        function isLargeScreen() {
+            return window.matchMedia("(min-width: 768px)").matches;
+        }
+        
         var fin = function fin(call) {
           network.timeout(3000);
           network.silent(account(url), function(json) {
             life_wait_times++;
             filter_sources = [];
             sources = {};
+            if (!isFilm || !isLargeScreen()) {
+                json.online = json.online.filter(function(j) {
+                    return j.balanser !== 'filmix' && j.balanser !== 'kinopub'
+                })
+            }
             json.online.forEach(function(j) {
               var name = balanserName(j);
               sources[name] = {
@@ -1444,8 +1457,8 @@
     window.lampac_plugin = true;
     var manifst = {
       type: 'video',
-      version: '2',
-      name: '4m1K',
+      version: '1.4.3',
+      name: 'Lampac',
       description: 'Плагин для просмотра онлайн сериалов и фильмов',
       component: 'lampac',
       onContextMenu: function onContextMenu(object) {
@@ -1477,9 +1490,9 @@
     Lampa.Manifest.plugins = manifst;
     Lampa.Lang.add({
       lampac_watch: { //
-        ru: 'Онлайн 4am1k',
-        en: 'Online 4am1k',
-        uk: 'Онлайн 4am1k',
+        ru: 'Смотреть онлайн',
+        en: 'Watch online',
+        uk: 'Дивитися онлайн',
         zh: '在线观看'
       },
       lampac_video: { //
@@ -1615,21 +1628,10 @@
     }
     Lampa.Listener.follow('full', function(e) {
       if (e.type == 'complite') {
-        setTimeout(function(){
-                $(".view--online", Lampa.Activity.active().activity.render()).empty().append('<svg id="Icons" enable-background="new 0 0 32 32" viewBox="0 0 32 32" xmlns="http://www.w3.org/2000/svg"><g><path fill="currentColor" d="m31.6 5.2c-.2-.2-.6-.2-.9-.2-9.6 2.6-19.8 2.6-29.4 0-.3 0-.7 0-.9.2-.3.2-.4.5-.4.8v20c0 .3.1.6.4.8.2.2.6.2.9.2 9.6-2.6 19.8-2.6 29.5 0h.3c.2 0 .4-.1.6-.2.2-.2.4-.5.4-.8v-20c-.1-.3-.2-.6-.5-.8zm-17.6 14.8c0 .6-.4 1-1 1s-1-.4-1-1v-2h-4c-.4 0-.8-.2-.9-.6-.2-.4-.1-.8.2-1.1l5-5c.1-.1.2-.2.3-.2.2-.1.5-.1.8 0 .2.1.4.3.5.5.1.1.1.3.1.4zm8.8-.6c.3.4.2 1.1-.2 1.4-.2.1-.4.2-.6.2-.3 0-.6-.1-.8-.4l-3-4c-.1-.2-.2-.4-.2-.6v4c0 .6-.4 1-1 1s-1-.4-1-1v-8c0-.6.4-1 1-1s1 .4 1 1v4c0-.2.1-.4.2-.6l3-4c.3-.4 1-.5 1.4-.2s.5 1 .2 1.4l-2.5 3.4z"></path><path fill="currentColor" d="m12 16v-1.6l-1.6 1.6z"></path></g></svg>&nbsp&nbsp4m1K');
-        }, 5);
-        if (Lampa.Storage.get('card_interfice_type') === 'new') {
-                addButton({
-                    render: e.object.activity.render().find('.button--play'),
-                    movie: e.data.movie
-                });
-         }
-         else {
-                addButton({
-                    render: e.object.activity.render().find('.view--torrent'),
-                    movie: e.data.movie
-                });
-         }
+        addButton({
+          render: e.object.activity.render().find('.view--torrent'),
+          movie: e.data.movie
+        });
       }
     });
     try {
