@@ -1,19 +1,15 @@
 (function() {
   'use strict';
-
   var Defined = {
     api: 'lampac',
     localhost: 'https://abmsx.tech/',
     apn: ''
   };
-
   var unic_id = Lampa.Storage.get('lampac_unic_id', '');
   if (!unic_id) {
-	unic_id = Lampa.Utils.uid(8).toLowerCase();
-	Lampa.Storage.set('lampac_unic_id', unic_id);
+    unic_id = Lampa.Utils.uid(8).toLowerCase();
+    Lampa.Storage.set('lampac_unic_id', unic_id);
   }
-
-
   function BlazorNet() {
     this.net = new Lampa.Reguest();
     this.timeout = function(time) {
@@ -43,10 +39,8 @@
       this.net.clear();
     };
   }
-
   var Network = Lampa.Reguest;
   //var Network = Defined.api.indexOf('pwa') == 0 && typeof Blazor !== 'undefined' ? BlazorNet : Lampa.Reguest;
-
   function component(object) {
     var network = new Network();
     var scroll = new Lampa.Scroll({
@@ -79,7 +73,6 @@
       voice: []
     };
     var balansers_with_search = ['kinotochka', 'kinopub', 'lumex', 'filmix', 'filmixtv', 'redheadsound', 'animevost', 'animego', 'animedia', 'animebesst', 'anilibria', 'rezka', 'rhsprem', 'kodik', 'remux', 'animelib', 'kinoukr', 'rc/filmix', 'rc/fxapi', 'rc/kinopub', 'rc/rhs', 'vcdn'];
-
     function account(url) {
       url = url + '';
       if (url.indexOf('account_email=') == -1) {
@@ -90,61 +83,42 @@
         var uid = Lampa.Storage.get('lampac_unic_id', '');
         if (uid) url = Lampa.Utils.addUrlComponent(url, 'uid=' + encodeURIComponent(uid));
       }
-      if (url.indexOf('token=') == -1) {
-        var token = '';
-        if (token != '') url = Lampa.Utils.addUrlComponent(url, 'token=');
-      }
-
-      url = Lampa.Utils.addUrlComponent(url, 'ab_token=' + Lampa.Storage.get('token'));
-      
       return url;
     }
-
     function balanserName(j) {
       var bals = j.balanser;
       var name = j.name.split(' ')[0];
       return (bals || name).toLowerCase();
     }
-
-	function clarificationSearchAdd(value){
-		var id = Lampa.Utils.hash(object.movie.number_of_seasons ? object.movie.original_name : object.movie.original_title)
-		var all = Lampa.Storage.get('clarification_search','{}')
-
-		all[id] = value
-
-		Lampa.Storage.set('clarification_search',all)
-	}
-
-	function clarificationSearchDelete(){
-		var id = Lampa.Utils.hash(object.movie.number_of_seasons ? object.movie.original_name : object.movie.original_title)
-		var all = Lampa.Storage.get('clarification_search','{}')
-
-		delete all[id]
-
-		Lampa.Storage.set('clarification_search',all)
-	}
-
-	function clarificationSearchGet(){
-		var id = Lampa.Utils.hash(object.movie.number_of_seasons ? object.movie.original_name : object.movie.original_title)
-		var all = Lampa.Storage.get('clarification_search','{}')
-
-		return all[id]
-	}
-
+    function clarificationSearchAdd(value){
+      var id = Lampa.Utils.hash(object.movie.number_of_seasons ? object.movie.original_name : object.movie.original_title)
+      var all = Lampa.Storage.get('clarification_search','{}')
+      all[id] = value
+      Lampa.Storage.set('clarification_search',all)
+    }
+    function clarificationSearchDelete(){
+      var id = Lampa.Utils.hash(object.movie.number_of_seasons ? object.movie.original_name : object.movie.original_title)
+      var all = Lampa.Storage.get('clarification_search','{}')
+      delete all[id]
+      Lampa.Storage.set('clarification_search',all)
+    }
+    function clarificationSearchGet(){
+      var id = Lampa.Utils.hash(object.movie.number_of_seasons ? object.movie.original_name : object.movie.original_title)
+      var all = Lampa.Storage.get('clarification_search','{}')
+      return all[id]
+    }
     this.initialize = function() {
       var _this = this;
       this.loading(true);
       filter.onSearch = function(value) {
-
-		clarificationSearchAdd(value)
-
+        clarificationSearchAdd(value)
         Lampa.Activity.replace({
           search: value,
           clarification: true
         });
       };
       filter.onBack = function() {
-        _this.start();
+        this.start();
       };
       filter.render().find('.selector').on('hover:enter', function() {
         clearInterval(balanser_timer);
@@ -153,9 +127,8 @@
       filter.onSelect = function(type, a, b) {
         if (type == 'filter') {
           if (a.reset) {
-			  clarificationSearchDelete()
-
-            _this.replaceChoice({
+            clarificationSearchDelete()
+            this.replaceChoice({
               season: 0,
               voice: 0,
               voice_url: '',
@@ -164,8 +137,8 @@
             setTimeout(function() {
               Lampa.Select.close();
               Lampa.Activity.replace({
-				  clarification: 0
-			  });
+                clarification: 0
+              });
             }, 10);
           } else {
             var url = filter_find[a.stype][b.index].url;
@@ -175,15 +148,15 @@
               choice.voice_url = url;
             }
             choice[a.stype] = b.index;
-            _this.saveChoice(choice);
-            _this.reset();
-            _this.request(url);
+            this.saveChoice(choice);
+            this.reset();
+            this.request(url);
             setTimeout(Lampa.Select.close, 10);
           }
         } else if (type == 'sort') {
           Lampa.Select.close();
           object.lampac_custom_select = a.source;
-          _this.changeBalanser(a.source);
+          this.changeBalanser(a.source);
         }
       };
       if (filter.addButtonBack) filter.addButtonBack();
@@ -199,16 +172,15 @@
         return _this.createSource();
       }).then(function(json) {
         if (!balansers_with_search.find(function(b) {
-            return balanser.slice(0, b.length) == b;
-          })) {
+          return balanser.slice(0, b.length) == b;
+        })) {
           filter.render().find('.filter--search').addClass('hide');
         }
-        _this.search();
+        this.search();
       })["catch"](function(e) {
-        _this.noConnectToServer(e);
+        this.noConnectToServer(e);
       });
     };
-
     this.externalids = function() {
       return new Promise(function(resolve, reject) {
         if (!object.movie.imdb_id || !object.movie.kinopoisk_id) {
@@ -256,7 +228,6 @@
       query.push('original_language=' + (object.movie.original_language || ''));
       query.push('year=' + ((object.movie.release_date || object.movie.first_air_date || '0000') + '').slice(0, 4));
       query.push('source=' + card_source);
-	  query.push('rchtype=' + (window.rch ? window.rch.type : ''));
       query.push('clarification=' + (object.clarification ? 1 : 0));
       if (Lampa.Storage.get('account_email', '')) query.push('cub_id=' + Lampa.Utils.hash(Lampa.Storage.get('account_email', '')));
       return url + (url.indexOf('?') >= 0 ? '&' : '?') + query.join('&');
@@ -373,8 +344,8 @@
         network.silent(account(url), function(json) {
           if (json.accsdb) return reject(json);
           if (json.life) {
-			_this4.memkey = json.memkey
-            filter.render().find('.filter--sort').append('<span class="lampac-balanser-loader" style="width: 1.2em; height: 1.2em; margin-top: 0; background: url(./img/loader.svg) no-repeat 50% 50%; background-size: contain; margin-left: 0.5em"></span>');
+            _this4.memkey = json.memkey
+            filter.render().find('.filter--sort').append('');
             _this4.lifeSource().then(_this4.startSource).then(resolve)["catch"](reject);
           } else {
             _this4.startSource(json).then(resolve)["catch"](reject);
@@ -414,7 +385,7 @@
     };
     this.parseJsonDate = function(str, name) {
       try {
-        var html = $('<div>' + str + '</div>');
+        var html = $('' + str + '');
         var elems = [];
         html.find(name).each(function() {
           var item = $(this);
@@ -446,26 +417,22 @@
       }
     };
     this.getFileUrl = function(file, call) {
-	  var _this = this;
-
+      var _this = this;
       function addAbToken(string) {
         return string + '&ab_token=' + Lampa.Storage.get('token');
       }
-
       if (file.stream && file.stream.indexOf('alloha') >= 0) {
         file.stream = addAbToken(file.stream);
       }
-
       if (file.url && file.url.indexOf('alloha') >= 0) {
         file.url = addAbToken(file.url);
       }
-
       if(Lampa.Storage.field('player') !== 'inner' && file.stream && Lampa.Platform.is('apple')){
-		  var newfile = Lampa.Arrays.clone(file)
-		  newfile.method = 'play'
-		  newfile.url = file.stream
-		  call(newfile, {});
-	  }
+        var newfile = Lampa.Arrays.clone(file)
+        newfile.method = 'play'
+        newfile.url = file.stream
+        call(newfile, {});
+      }
       else if (file.method == 'play') call(file, {});
       else {
         Lampa.Loading.start(function() {
@@ -474,17 +441,16 @@
           network.clear();
         });
         network["native"](account(file.url), function(json) {
-			if(json.rch){
-				_this.rch(json,function(){
-					Lampa.Loading.stop();
-
-					_this.getFileUrl(file, call)
-				})
-			}
-			else{
-				Lampa.Loading.stop();
-				call(json, json);
-			}
+          if(json.rch){
+            _this.rch(json,function(){
+              Lampa.Loading.stop();
+              _this.getFileUrl(file, call)
+            })
+          }
+          else{
+            Lampa.Loading.stop();
+            call(json, json);
+          }
         }, function() {
           Lampa.Loading.stop();
           call(false, {});
@@ -520,18 +486,18 @@
       var _this5 = this;
       this.draw(videos, {
         onEnter: function onEnter(item, html) {
-          _this5.getFileUrl(item, function(json, json_call) {
+          this5.getFileUrl(item, function(json, json_call) {
             if (json && json.url) {
               var playlist = [];
               var first = _this5.toPlayElement(item);
               first.url = json.url;
-			  first.headers = json.headers;
+              first.headers = json.headers;
               first.quality = json_call.quality || item.qualitys;
               first.subtitles = json.subtitles;
-			  first.vast_url = json.vast_url;
-			  first.vast_msg = json.vast_msg;
-              _this5.appendAPN(first);
-              _this5.setDefaultQuality(first);
+              first.vast_url = json.vast_url;
+              first.vast_msg = json.vast_msg;
+              this5.appendAPN(first);
+              this5.setDefaultQuality(first);
               if (item.season) {
                 videos.forEach(function(elem) {
                   var cell = _this5.toPlayElement(elem);
@@ -540,16 +506,16 @@
                     if (elem.method == 'call') {
                       if (Lampa.Storage.field('player') !== 'inner') {
                         cell.url = elem.stream;
-						delete cell.quality
+                        delete cell.quality
                       } else {
                         cell.url = function(call) {
-                          _this5.getFileUrl(elem, function(stream, stream_json) {
+                          this5.getFileUrl(elem, function(stream, stream_json) {
                             if (stream.url) {
                               cell.url = stream.url;
                               cell.quality = stream_json.quality || elem.qualitys;
                               cell.subtitles = stream.subtitles;
-                              _this5.appendAPN(cell);
-                              _this5.setDefaultQuality(cell);
+                              this5.appendAPN(cell);
+                              this5.setDefaultQuality(cell);
                               elem.mark();
                             } else {
                               cell.url = '';
@@ -566,8 +532,8 @@
                       cell.url = elem.url;
                     }
                   }
-                  _this5.appendAPN(cell);
-                  _this5.setDefaultQuality(cell);
+                  this5.appendAPN(cell);
+                  this5.setDefaultQuality(cell);
                   playlist.push(cell);
                 }); //Lampa.Player.playlist(playlist)
               } else {
@@ -578,7 +544,7 @@
                 Lampa.Player.play(first);
                 Lampa.Player.playlist(playlist);
                 item.mark();
-                _this5.updateBalanser(balanser);
+                this5.updateBalanser(balanser);
               } else {
                 Lampa.Noty.show(Lampa.Lang.translate('lampac_nolink'));
               }
@@ -586,7 +552,7 @@
           }, true);
         },
         onContextMenu: function onContextMenu(item, html, data, call) {
-          _this5.getFileUrl(item, function(stream) {
+          this5.getFileUrl(item, function(stream) {
             call({
               file: stream.url,
               quality: item.qualitys
@@ -721,7 +687,7 @@
         var name = elem.title || elem.text;
         elem.title = name;
         elem.time = elem.time || '';
-        elem.info = info.join('<span class="online-prestige-split">●</span>');
+        elem.info = info.join('●');
         var item = Lampa.Template.get('lampac_prestige_folder', elem);
         item.on('hover:enter', function() {
           _this6.reset();
@@ -732,7 +698,7 @@
         });
         scroll.append(item);
       });
-	  this.filter({
+      this.filter({
         season: filter_find.season.map(function(s) {
           return s.title;
         }),
