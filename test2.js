@@ -208,33 +208,7 @@
         _this.noConnectToServer(e);
       });
     };
-    this.rch = function(json, noreset) {
-      var _this2 = this;
-      var load = function load() {
-        if (hubConnection) {
-          clearTimeout(hub_timer);
-          hubConnection.stop();
-          hubConnection = null;
-		  console.log('RCH', 'hubConnection stop');
-        }
-        hubConnection = new signalR.HubConnectionBuilder().withUrl(json.ws).build();
-        hubConnection.start().then(function() {
-          window.rch.Registry('https://abmsx.tech', hubConnection, function() {
-            console.log('RCH', 'hubConnection start');
-            if (!noreset) _this2.find();
-            else noreset()
-          });
-        })["catch"](function(err) {
-          console.log('RCH', err.toString());
-          return console.error(err.toString());
-        });
-		if (json.keepalive > 0) {
-          hub_timer = setTimeout(function() {
-            hubConnection.stop();
-			hubConnection = null;
-          }, 1000 * json.keepalive);
-		}
-      };
+
     this.externalids = function() {
       return new Promise(function(resolve, reject) {
         if (!object.movie.imdb_id || !object.movie.kinopoisk_id) {
