@@ -75,7 +75,7 @@
 
     function account(url) {
       url = url + '';
-      if (url.indexOf('account_email=') == -1) {
+       {
         var email = Lampa.Storage.get('account_email');
         
       }
