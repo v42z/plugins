@@ -1,15 +1,21 @@
 (function() {
   'use strict';
+
   var Defined = {
     api: 'lampac',
-    localhost: 'https://abmsx.tech/',
+    localhost: 'https://akter-black.com/',
     apn: ''
   };
-  var unic_id = Lampa.Storage.get('lampac_unic_id', '');
-  if (!unic_id) {
-    unic_id = Lampa.Utils.uid(8).toLowerCase();
-    Lampa.Storage.set('lampac_unic_id', unic_id);
+
+
+
+  if (!window.rch) {
+    Lampa.Utils.putScript(["https://akter-black.com/invc-rch.js"], function() {}, false, function() {
+      if (!window.rch.startTypeInvoke)
+        window.rch.typeInvoke('https://akter-black.com', function() {});
+    }, true);
   }
+
   function BlazorNet() {
     this.net = new Lampa.Reguest();
     this.timeout = function(time) {
@@ -39,8 +45,10 @@
       this.net.clear();
     };
   }
+
   var Network = Lampa.Reguest;
   //var Network = Defined.api.indexOf('pwa') == 0 && typeof Blazor !== 'undefined' ? BlazorNet : Lampa.Reguest;
+
   function component(object) {
     var network = new Network();
     var scroll = new Lampa.Scroll({
@@ -73,6 +81,7 @@
       voice: []
     };
     var balansers_with_search = ['kinotochka', 'kinopub', 'lumex', 'filmix', 'filmixtv', 'redheadsound', 'animevost', 'animego', 'animedia', 'animebesst', 'anilibria', 'rezka', 'rhsprem', 'kodik', 'remux', 'animelib', 'kinoukr', 'rc/filmix', 'rc/fxapi', 'rc/kinopub', 'rc/rhs', 'vcdn'];
+
     function account(url) {
       url = url + '';
       if (url.indexOf('account_email=') == -1) {
@@ -83,42 +92,61 @@
         var uid = Lampa.Storage.get('lampac_unic_id', '');
         if (uid) url = Lampa.Utils.addUrlComponent(url, 'uid=' + encodeURIComponent(uid));
       }
+      if (url.indexOf('token=') == -1) {
+        var token = '';
+        if (token != '') url = Lampa.Utils.addUrlComponent(url, 'token=');
+      }
+
+      url = Lampa.Utils.addUrlComponent(url, 'ab_token=' + Lampa.Storage.get('token'));
+      
       return url;
     }
+
     function balanserName(j) {
       var bals = j.balanser;
       var name = j.name.split(' ')[0];
       return (bals || name).toLowerCase();
     }
-    function clarificationSearchAdd(value){
-      var id = Lampa.Utils.hash(object.movie.number_of_seasons ? object.movie.original_name : object.movie.original_title)
-      var all = Lampa.Storage.get('clarification_search','{}')
-      all[id] = value
-      Lampa.Storage.set('clarification_search',all)
-    }
-    function clarificationSearchDelete(){
-      var id = Lampa.Utils.hash(object.movie.number_of_seasons ? object.movie.original_name : object.movie.original_title)
-      var all = Lampa.Storage.get('clarification_search','{}')
-      delete all[id]
-      Lampa.Storage.set('clarification_search',all)
-    }
-    function clarificationSearchGet(){
-      var id = Lampa.Utils.hash(object.movie.number_of_seasons ? object.movie.original_name : object.movie.original_title)
-      var all = Lampa.Storage.get('clarification_search','{}')
-      return all[id]
-    }
+
+	function clarificationSearchAdd(value){
+		var id = Lampa.Utils.hash(object.movie.number_of_seasons ? object.movie.original_name : object.movie.original_title)
+		var all = Lampa.Storage.get('clarification_search','{}')
+
+		all[id] = value
+
+		Lampa.Storage.set('clarification_search',all)
+	}
+
+	function clarificationSearchDelete(){
+		var id = Lampa.Utils.hash(object.movie.number_of_seasons ? object.movie.original_name : object.movie.original_title)
+		var all = Lampa.Storage.get('clarification_search','{}')
+
+		delete all[id]
+
+		Lampa.Storage.set('clarification_search',all)
+	}
+
+	function clarificationSearchGet(){
+		var id = Lampa.Utils.hash(object.movie.number_of_seasons ? object.movie.original_name : object.movie.original_title)
+		var all = Lampa.Storage.get('clarification_search','{}')
+
+		return all[id]
+	}
+
     this.initialize = function() {
       var _this = this;
       this.loading(true);
       filter.onSearch = function(value) {
-        clarificationSearchAdd(value)
+
+		clarificationSearchAdd(value)
+
         Lampa.Activity.replace({
           search: value,
           clarification: true
         });
       };
       filter.onBack = function() {
-        this.start();
+        _this.start();
       };
       filter.render().find('.selector').on('hover:enter', function() {
         clearInterval(balanser_timer);
@@ -127,8 +155,9 @@
       filter.onSelect = function(type, a, b) {
         if (type == 'filter') {
           if (a.reset) {
-            clarificationSearchDelete()
-            this.replaceChoice({
+			  clarificationSearchDelete()
+
+            _this.replaceChoice({
               season: 0,
               voice: 0,
               voice_url: '',
@@ -137,8 +166,8 @@
             setTimeout(function() {
               Lampa.Select.close();
               Lampa.Activity.replace({
-                clarification: 0
-              });
+				  clarification: 0
+			  });
             }, 10);
           } else {
             var url = filter_find[a.stype][b.index].url;
@@ -148,15 +177,15 @@
               choice.voice_url = url;
             }
             choice[a.stype] = b.index;
-            this.saveChoice(choice);
-            this.reset();
-            this.request(url);
+            _this.saveChoice(choice);
+            _this.reset();
+            _this.request(url);
             setTimeout(Lampa.Select.close, 10);
           }
         } else if (type == 'sort') {
           Lampa.Select.close();
           object.lampac_custom_select = a.source;
-          this.changeBalanser(a.source);
+          _this.changeBalanser(a.source);
         }
       };
       if (filter.addButtonBack) filter.addButtonBack();
@@ -172,14 +201,47 @@
         return _this.createSource();
       }).then(function(json) {
         if (!balansers_with_search.find(function(b) {
-          return balanser.slice(0, b.length) == b;
-        })) {
+            return balanser.slice(0, b.length) == b;
+          })) {
           filter.render().find('.filter--search').addClass('hide');
         }
-        this.search();
+        _this.search();
       })["catch"](function(e) {
-        this.noConnectToServer(e);
+        _this.noConnectToServer(e);
       });
+    };
+    this.rch = function(json, noreset) {
+      var _this2 = this;
+      var load = function load() {
+        if (hubConnection) {
+          clearTimeout(hub_timer);
+          hubConnection.stop();
+          hubConnection = null;
+		  console.log('RCH', 'hubConnection stop');
+        }
+        hubConnection = new signalR.HubConnectionBuilder().withUrl(json.ws).build();
+        hubConnection.start().then(function() {
+          window.rch.Registry('https://akter-black.com', hubConnection, function() {
+            console.log('RCH', 'hubConnection start');
+            if (!noreset) _this2.find();
+            else noreset()
+          });
+        })["catch"](function(err) {
+          console.log('RCH', err.toString());
+          return console.error(err.toString());
+        });
+		if (json.keepalive > 0) {
+          hub_timer = setTimeout(function() {
+            hubConnection.stop();
+			hubConnection = null;
+          }, 1000 * json.keepalive);
+		}
+      };
+      if (typeof signalR == 'undefined') {
+        Lampa.Utils.putScript(["https://akter-black.com/signalr-6.0.25_es5.js"], function() {}, false, function() {
+          load();
+        }, true);
+      } else load();
     };
     this.externalids = function() {
       return new Promise(function(resolve, reject) {
@@ -228,6 +290,7 @@
       query.push('original_language=' + (object.movie.original_language || ''));
       query.push('year=' + ((object.movie.release_date || object.movie.first_air_date || '0000') + '').slice(0, 4));
       query.push('source=' + card_source);
+	  query.push('rchtype=' + (window.rch ? window.rch.type : ''));
       query.push('clarification=' + (object.clarification ? 1 : 0));
       if (Lampa.Storage.get('account_email', '')) query.push('cub_id=' + Lampa.Utils.hash(Lampa.Storage.get('account_email', '')));
       return url + (url.indexOf('?') >= 0 ? '&' : '?') + query.join('&');
@@ -269,9 +332,12 @@
     };
     this.lifeSource = function() {
       var _this3 = this;
+      var isFilm = false;
+      
       return new Promise(function(resolve, reject) {
         var url = _this3.requestParams(Defined.localhost + 'lifeevents?memkey=' + (_this3.memkey || ''));
         var red = false;
+        isFilm = url.indexOf('serial=0') > -1
         var gou = function gou(json, any) {
           if (json.accsdb) return reject(json);
           var last_balanser = _this3.getLastChoiceBalanser();
@@ -289,12 +355,38 @@
             }
           }
         };
+        
+        function is4k(data) {
+            return data.name.indexOf('2160') > -1
+        }
+        
+        function isLargeScreen() {
+            return window.matchMedia("(min-width: 768px)").matches;
+        }
+        
         var fin = function fin(call) {
           network.timeout(3000);
           network.silent(account(url), function(json) {
             life_wait_times++;
             filter_sources = [];
             sources = {};
+            // if (!isFilm || !isLargeScreen()) {
+            //     console.log('json.online', json.online)
+            //     json.online = json.online.filter(function(j) {
+            //         return j.balanser !== 'filmix' && j.balanser !== 'kinopub'
+            //     })
+            // }
+            // probuem 4k
+            // if (!isLargeScreen()) {
+                console.log('json.online', json.online)
+                json.online = json.online.filter(function(j) {
+                    if (j.balanser === 'filmix' || j.balanser === 'kinopub') {
+                        return is4k(j) && isLargeScreen()
+                    }
+
+                    return true
+                })
+            // }
             json.online.forEach(function(j) {
               var name = balanserName(j);
               sources[name] = {
@@ -344,8 +436,8 @@
         network.silent(account(url), function(json) {
           if (json.accsdb) return reject(json);
           if (json.life) {
-            _this4.memkey = json.memkey
-            filter.render().find('.filter--sort').append('');
+			_this4.memkey = json.memkey
+            filter.render().find('.filter--sort').append('<span class="lampac-balanser-loader" style="width: 1.2em; height: 1.2em; margin-top: 0; background: url(./img/loader.svg) no-repeat 50% 50%; background-size: contain; margin-left: 0.5em"></span>');
             _this4.lifeSource().then(_this4.startSource).then(resolve)["catch"](reject);
           } else {
             _this4.startSource(json).then(resolve)["catch"](reject);
@@ -385,7 +477,7 @@
     };
     this.parseJsonDate = function(str, name) {
       try {
-        var html = $('' + str + '');
+        var html = $('<div>' + str + '</div>');
         var elems = [];
         html.find(name).each(function() {
           var item = $(this);
@@ -417,22 +509,26 @@
       }
     };
     this.getFileUrl = function(file, call) {
-      var _this = this;
+	  var _this = this;
+
       function addAbToken(string) {
         return string + '&ab_token=' + Lampa.Storage.get('token');
       }
+
       if (file.stream && file.stream.indexOf('alloha') >= 0) {
         file.stream = addAbToken(file.stream);
       }
+
       if (file.url && file.url.indexOf('alloha') >= 0) {
         file.url = addAbToken(file.url);
       }
+
       if(Lampa.Storage.field('player') !== 'inner' && file.stream && Lampa.Platform.is('apple')){
-        var newfile = Lampa.Arrays.clone(file)
-        newfile.method = 'play'
-        newfile.url = file.stream
-        call(newfile, {});
-      }
+		  var newfile = Lampa.Arrays.clone(file)
+		  newfile.method = 'play'
+		  newfile.url = file.stream
+		  call(newfile, {});
+	  }
       else if (file.method == 'play') call(file, {});
       else {
         Lampa.Loading.start(function() {
@@ -441,16 +537,17 @@
           network.clear();
         });
         network["native"](account(file.url), function(json) {
-          if(json.rch){
-            _this.rch(json,function(){
-              Lampa.Loading.stop();
-              _this.getFileUrl(file, call)
-            })
-          }
-          else{
-            Lampa.Loading.stop();
-            call(json, json);
-          }
+			if(json.rch){
+				_this.rch(json,function(){
+					Lampa.Loading.stop();
+
+					_this.getFileUrl(file, call)
+				})
+			}
+			else{
+				Lampa.Loading.stop();
+				call(json, json);
+			}
         }, function() {
           Lampa.Loading.stop();
           call(false, {});
@@ -486,18 +583,18 @@
       var _this5 = this;
       this.draw(videos, {
         onEnter: function onEnter(item, html) {
-          this5.getFileUrl(item, function(json, json_call) {
+          _this5.getFileUrl(item, function(json, json_call) {
             if (json && json.url) {
               var playlist = [];
               var first = _this5.toPlayElement(item);
               first.url = json.url;
-              first.headers = json.headers;
+			  first.headers = json.headers;
               first.quality = json_call.quality || item.qualitys;
               first.subtitles = json.subtitles;
-              first.vast_url = json.vast_url;
-              first.vast_msg = json.vast_msg;
-              this5.appendAPN(first);
-              this5.setDefaultQuality(first);
+			  first.vast_url = json.vast_url;
+			  first.vast_msg = json.vast_msg;
+              _this5.appendAPN(first);
+              _this5.setDefaultQuality(first);
               if (item.season) {
                 videos.forEach(function(elem) {
                   var cell = _this5.toPlayElement(elem);
@@ -506,16 +603,16 @@
                     if (elem.method == 'call') {
                       if (Lampa.Storage.field('player') !== 'inner') {
                         cell.url = elem.stream;
-                        delete cell.quality
+						delete cell.quality
                       } else {
                         cell.url = function(call) {
-                          this5.getFileUrl(elem, function(stream, stream_json) {
+                          _this5.getFileUrl(elem, function(stream, stream_json) {
                             if (stream.url) {
                               cell.url = stream.url;
                               cell.quality = stream_json.quality || elem.qualitys;
                               cell.subtitles = stream.subtitles;
-                              this5.appendAPN(cell);
-                              this5.setDefaultQuality(cell);
+                              _this5.appendAPN(cell);
+                              _this5.setDefaultQuality(cell);
                               elem.mark();
                             } else {
                               cell.url = '';
@@ -532,8 +629,8 @@
                       cell.url = elem.url;
                     }
                   }
-                  this5.appendAPN(cell);
-                  this5.setDefaultQuality(cell);
+                  _this5.appendAPN(cell);
+                  _this5.setDefaultQuality(cell);
                   playlist.push(cell);
                 }); //Lampa.Player.playlist(playlist)
               } else {
@@ -544,7 +641,7 @@
                 Lampa.Player.play(first);
                 Lampa.Player.playlist(playlist);
                 item.mark();
-                this5.updateBalanser(balanser);
+                _this5.updateBalanser(balanser);
               } else {
                 Lampa.Noty.show(Lampa.Lang.translate('lampac_nolink'));
               }
@@ -552,7 +649,7 @@
           }, true);
         },
         onContextMenu: function onContextMenu(item, html, data, call) {
-          this5.getFileUrl(item, function(stream) {
+          _this5.getFileUrl(item, function(stream) {
             call({
               file: stream.url,
               quality: item.qualitys
@@ -687,7 +784,7 @@
         var name = elem.title || elem.text;
         elem.title = name;
         elem.time = elem.time || '';
-        elem.info = info.join('●');
+        elem.info = info.join('<span class="online-prestige-split">●</span>');
         var item = Lampa.Template.get('lampac_prestige_folder', elem);
         item.on('hover:enter', function() {
           _this6.reset();
@@ -698,7 +795,7 @@
         });
         scroll.append(item);
       });
-      this.filter({
+	  this.filter({
         season: filter_find.season.map(function(s) {
           return s.title;
         }),
@@ -1372,8 +1469,8 @@
     window.lampac_plugin = true;
     var manifst = {
       type: 'video',
-      version: '2',
-      name: '4m1K',
+      version: '1.4.3',
+      name: 'Lampac',
       description: 'Плагин для просмотра онлайн сериалов и фильмов',
       component: 'lampac',
       onContextMenu: function onContextMenu(object) {
@@ -1405,9 +1502,9 @@
     Lampa.Manifest.plugins = manifst;
     Lampa.Lang.add({
       lampac_watch: { //
-        ru: 'Онлайн 4am1k',
-        en: 'Online 4am1k',
-        uk: 'Онлайн 4am1k',
+        ru: 'Смотреть онлайн',
+        en: 'Watch online',
+        uk: 'Дивитися онлайн',
         zh: '在线观看'
       },
       lampac_video: { //
@@ -1543,21 +1640,10 @@
     }
     Lampa.Listener.follow('full', function(e) {
       if (e.type == 'complite') {
-        setTimeout(function(){
-                $(".view--online", Lampa.Activity.active().activity.render()).empty().append('<svg id="Icons" enable-background="new 0 0 32 32" viewBox="0 0 32 32" xmlns="http://www.w3.org/2000/svg"><g><path fill="currentColor" d="m31.6 5.2c-.2-.2-.6-.2-.9-.2-9.6 2.6-19.8 2.6-29.4 0-.3 0-.7 0-.9.2-.3.2-.4.5-.4.8v20c0 .3.1.6.4.8.2.2.6.2.9.2 9.6-2.6 19.8-2.6 29.5 0h.3c.2 0 .4-.1.6-.2.2-.2.4-.5.4-.8v-20c-.1-.3-.2-.6-.5-.8zm-17.6 14.8c0 .6-.4 1-1 1s-1-.4-1-1v-2h-4c-.4 0-.8-.2-.9-.6-.2-.4-.1-.8.2-1.1l5-5c.1-.1.2-.2.3-.2.2-.1.5-.1.8 0 .2.1.4.3.5.5.1.1.1.3.1.4zm8.8-.6c.3.4.2 1.1-.2 1.4-.2.1-.4.2-.6.2-.3 0-.6-.1-.8-.4l-3-4c-.1-.2-.2-.4-.2-.6v4c0 .6-.4 1-1 1s-1-.4-1-1v-8c0-.6.4-1 1-1s1 .4 1 1v4c0-.2.1-.4.2-.6l3-4c.3-.4 1-.5 1.4-.2s.5 1 .2 1.4l-2.5 3.4z"></path><path fill="currentColor" d="m12 16v-1.6l-1.6 1.6z"></path></g></svg>&nbsp&nbsp4m1K');
-        }, 5);
-        if (Lampa.Storage.get('card_interfice_type') === 'new') {
-                addButton({
-                    render: e.object.activity.render().find('.button--play'),
-                    movie: e.data.movie
-                });
-         }
-         else {
-                addButton({
-                    render: e.object.activity.render().find('.view--torrent'),
-                    movie: e.data.movie
-                });
-         }
+        addButton({
+          render: e.object.activity.render().find('.view--torrent'),
+          movie: e.data.movie
+        });
       }
     });
     try {
