@@ -7,15 +7,6 @@
     apn: ''
   };
 
-
-
-  if (!window.rch) {
-    Lampa.Utils.putScript(["https://akter-black.com/invc-rch.js"], function() {}, false, function() {
-      if (!window.rch.startTypeInvoke)
-        window.rch.typeInvoke('https://akter-black.com', function() {});
-    }, true);
-  }
-
   function BlazorNet() {
     this.net = new Lampa.Reguest();
     this.timeout = function(time) {
