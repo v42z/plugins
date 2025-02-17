@@ -49,8 +49,8 @@
     };
   }
 
-  var Network = Lampa.Reguest;
-  //var Network = Defined.api.indexOf('pwa') == 0 && typeof Blazor !== 'undefined' ? BlazorNet : Lampa.Reguest;
+  //var Network = Lampa.Reguest;
+  var Network = Defined.api.indexOf('pwa') == 0 && typeof Blazor !== 'undefined' ? BlazorNet : Lampa.Reguest;
 
   function component(object) {
     var network = new Network();
