@@ -6,7 +6,7 @@
     localhost: 'https://lam.akter-black.com/',
     apn: '8'
   };
-	
+
   function BlazorNet() {
     this.net = new Lampa.Reguest();
     this.timeout = function(time) {
@@ -1466,7 +1466,7 @@
       lampac_watch: { //
         ru: 'Онлайн',
         en: 'Online',
-        uk: 'Онлайн ',
+        uk: 'Онлайн',
         zh: '在线观看'
       },
       lampac_video: { //
