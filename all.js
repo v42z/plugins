@@ -20,7 +20,7 @@
     var plugins = Lampa.Storage.get('plugins', '[]');
 
     // Флаг, указывающий, были ли изменения в списке плагинов
-    var updatePlugins = false;
+    var updatePlugins = true;
 
     // Функция для проверки наличия URL в массиве плагинов
     function isPluginInstalled(url) {
