@@ -19,17 +19,16 @@
 
     // Список URL плагинов, которые нужно установить
     var newPlugins = [
-        'https://lv42z.github.io/plugins/addon.js',
-        'https://lv42z.github.io/plugins/on.js',
-        'https://lv42z.github.io/plugins/start.js'
-	    'https://lv42z.github.io/plugins/cuboff.js'
-	    'https://lv42z.github.io/plugins/foreign.js'
-	    'https://lv42z.github.io/plugins/logo.js'
-	    'https://lv42z.github.io/plugins/nots.js'
-	    'https://lv42z.github.io/plugins/rusmovies.js'
-	    'https://lv42z.github.io/plugins/seaseps.js'
-	    'https://lv42z.github.io/plugins/source.js'
-	    'https://lv42z.github.io/plugins/cinema.js'
+        'https://v42z.github.io/plugins/addon.js',
+        'https://v42z.github.io/plugins/on.js',
+        'https://v42z.github.io/plugins/start.js'
+	    'https://v42z.github.io/plugins/cuboff.js'
+	    'https://v42z.github.io/plugins/foreign.js'
+	    'https://v42z.github.io/plugins/logo.js'
+	    'https://v42z.github.io/plugins/rusmovies.js'
+	    'https://v42z.github.io/plugins/seaseps.js'
+	    'https://v42z.github.io/plugins/source.js'
+	    'https://v42z.github.io/plugins/cinema.js'
     ];
 
     // Получаем текущий список плагинов
