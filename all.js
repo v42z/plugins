@@ -23,7 +23,13 @@
         'https://v42z.github.io/plugins/cinema.js',
         'https://v42z.github.io/plugins/start.js',
         'https://v42z.github.io/plugins/logo.js',
-        'https://v42z.github.io/plugins/rusmovies.js'
+        'https://v42z.github.io/plugins/rusmovies.js',
+        'https://v42z.github.io/plugins/cuboff.js',
+        'https://v42z.github.io/plugins/foreign.js',
+        'https://v42z.github.io/plugins/jackett.js',
+        'https://v42z.github.io/plugins/seaseps.js',
+        'https://v42z.github.io/plugins/source.js',
+        
     ];
 
     // Получаем текущий список плагинов
