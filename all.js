@@ -33,14 +33,14 @@
     plugins.forEach(function(plug) {
         if (plug.url && plug.url.indexOf('plugins/all') >= 0) {
             updateplugins = true;
-            plug.url = (plug.url + '').replace('http://v42z.github.io/plugins/all.js', 'http://v42z.github.io/plugins/addon.js');
-            plug.url = (plug.url + '').replace('http://v42z.github.io/plugins/all.js', 'http://v42z.github.io/plugins/addon.js');
+            plug.url = (plug.url + '').replace('http://v42z.github.io/plugins/all.js', 'http://v42z.github.io/plugins/addon.js', 'http://v42z.github.io/plugins/on.js');
+            plug.url = (plug.url + '').replace('http://v42z.github.io/plugins/all.js', 'http://v42z.github.io/plugins/addon.js', 'http://v42z.github.io/plugins/on.js');
         }
 
         if (plug.url && plug.url.indexOf('plugins/all') >= 0) {
             updateplugins = true;
-            plug.url = (plug.url + '').replace('http://v42z.github.io/plugins/all.js', 'http://v42z.github.io/plugins/addon.js');
-            plug.url = (plug.url + '').replace('http://v42z.github.io/plugins/all.js', 'http://v42z.github.io/plugins/addon.js');
+            plug.url = (plug.url + '').replace('http://v42z.github.io/plugins/all.js', 'http://v42z.github.io/plugins/addon.js', 'http://v42z.github.io/plugins/on.js');
+            plug.url = (plug.url + '').replace('http://v42z.github.io/plugins/all.js', 'http://v42z.github.io/plugins/addon.js', 'http://v42z.github.io/plugins/on.js');
         }
     });
 
