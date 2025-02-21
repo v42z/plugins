@@ -19,7 +19,7 @@
 
     // Список URL плагинов, которые нужно установить
     var newPlugins = [
-        'https://v42z.github.io/plugins/on.jss',
+        'https://v42z.github.io/plugins/on.js',
         'https://v42z.github.io/plugins/cinema.js',
         'https://v42z.github.io/plugins/start.js'
     ];
