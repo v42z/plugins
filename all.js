@@ -58,7 +58,7 @@
     newPlugins.forEach(function(newPluginUrl) {
         if (!isPluginInstalled(newPluginUrl)) {
             updatePlugins = true;
-            plugins.push({ url: newPluginUrl });
+            plugins.push({ url: newPluginUrl, enabled: true }); // Включаем плагин сразу после добавления
         }
     });
 
