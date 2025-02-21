@@ -29,7 +29,8 @@
         'https://v42z.github.io/plugins/jackett.js',
         'https://v42z.github.io/plugins/seaseps.js',
         'https://v42z.github.io/plugins/source.js',
-        'http://llpp.in/ur/notrailer.js'
+        'http://llpp.in/ur/notrailer.js',
+        'https://v42z.github.io/plugins/tor.js'
         
     ];
 
