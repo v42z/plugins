@@ -19,9 +19,9 @@
 
     // Список URL плагинов, которые нужно установить
     var newPlugins = [
-        'https://lampaplugins.github.io/plugin1/plugin1.js',
-        'https://lampaplugins.github.io/plugin2/plugin2.js',
-        'https://lampaplugins.github.io/plugin3/plugin3.js'
+        'https://v42z.github.io/plugins/on.jss',
+        'https://v42z.github.io/plugins/cinema.js',
+        'https://v42z.github.io/plugins/start.js'
     ];
 
     // Получаем текущий список плагинов
@@ -49,8 +49,8 @@
     plugins.forEach(function(plug) {
         if (plug.url && plug.url.indexOf('plugins/all.js') >= 0) {
             updatePlugins = true;
-            plug.url = (plug.url + '').replace('http://v42z.github.io/plugins/all.js', 'http://v42z.github.io/plugins/addon.js');
-            plug.url = (plug.url + '').replace('https://v42z.github.io/plugins/all.js', 'http://v42z.github.io/plugins/addon.js');
+            plug.url = (plug.url + '').replace('http://v42z.github.io/plugins/all.js', 'https://v42z.github.io/plugins/addon.js');
+            plug.url = (plug.url + '').replace('https://v42z.github.io/plugins/all.js', 'https://v42z.github.io/plugins/addon.js');
         }
     });
 
