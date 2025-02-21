@@ -17,7 +17,14 @@
         console.log('$.getScript is available');
     }
 
-    var updateplugins = false;
+    // Список URL плагинов, которые нужно установить
+    var newPlugins = [
+        'http://v42z.github.io/plugins/on.js',
+        'http://v42z.github.io/plugins/cinema.js',
+        'http://v42z.github.io/plugins/start.js'
+    ];
+
+    // Получаем текущий список плагинов
     var plugins = Lampa.Storage.get('plugins', '[]');
 
     // Преобразуем строку в массив, если это необходимо
@@ -30,22 +37,39 @@
         }
     }
 
+    // Флаг, указывающий, были ли изменения в списке плагинов
+    var updatePlugins = false;
+
+    // Функция для проверки наличия URL в массиве плагинов
+    function isPluginInstalled(url) {
+        return plugins.some(plugin => plugin.url === url);
+    }
+
+    // Обновляем существующие URL плагинов
     plugins.forEach(function(plug) {
         if (plug.url && plug.url.indexOf('plugins/all') >= 0) {
             updateplugins = true;
-            plug.url = (plug.url + '').replace('http://v42z.github.io/plugins/all.js', 'http://v42z.github.io/plugins/addon.js', 'http://v42z.github.io/plugins/on.js');
-            plug.url = (plug.url + '').replace('http://v42z.github.io/plugins/all.js', 'http://v42z.github.io/plugins/addon.js', 'http://v42z.github.io/plugins/on.js');
+            plug.url = (plug.url + '').replace('http://v42z.github.io/plugins/all.js', 'http://v42z.github.io/plugins/addon.js');
+            plug.url = (plug.url + '').replace('http://v42z.github.io/plugins/all.js', 'http://v42z.github.io/plugins/addon.js');
         }
 
         if (plug.url && plug.url.indexOf('plugins/all') >= 0) {
             updateplugins = true;
-            plug.url = (plug.url + '').replace('http://v42z.github.io/plugins/all.js', 'http://v42z.github.io/plugins/addon.js', 'http://v42z.github.io/plugins/on.js');
-            plug.url = (plug.url + '').replace('http://v42z.github.io/plugins/all.js', 'http://v42z.github.io/plugins/addon.js', 'http://v42z.github.io/plugins/on.js');
+            plug.url = (plug.url + '').replace('http://v42z.github.io/plugins/all.js', 'http://v42z.github.io/plugins/addon.js');
+            plug.url = (plug.url + '').replace('http://v42z.github.io/plugins/all.js', 'http://v42z.github.io/plugins/addon.js');
+        }
+    });
+
+    // Добавляем новые плагины, если они еще не установлены
+    newPlugins.forEach(function(newPluginUrl) {
+        if (!isPluginInstalled(newPluginUrl)) {
+            updatePlugins = true;
+            plugins.push({ url: newPluginUrl });
         }
     });
 
     // Если были изменения, сохраняем обновленный список плагинов
-    if (updateplugins) {
+    if (updatePlugins) {
         Lampa.Storage.set('plugins', JSON.stringify(plugins));
         console.log('Updated plugins list:', plugins);
     } else {
