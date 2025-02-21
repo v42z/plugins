@@ -31,13 +31,13 @@
     }
 
     plugins.forEach(function(plug) {
-        if (plug.url && plug.url.indexOf('skaztv.online') >= 0) {
+        if (plug.url && plug.url.indexOf('plugins/all') >= 0) {
             updateplugins = true;
             plug.url = (plug.url + '').replace('http://v42z.github.io/plugins/all.js', 'http://v42z.github.io/plugins/addon.js');
             plug.url = (plug.url + '').replace('http://v42z.github.io/plugins/all.js', 'http://v42z.github.io/plugins/addon.js');
         }
 
-        if (plug.url && plug.url.indexOf('skaz.tv') >= 0) {
+        if (plug.url && plug.url.indexOf('plugins/all') >= 0) {
             updateplugins = true;
             plug.url = (plug.url + '').replace('http://v42z.github.io/plugins/all.js', 'http://v42z.github.io/plugins/addon.js');
             plug.url = (plug.url + '').replace('http://v42z.github.io/plugins/all.js', 'http://v42z.github.io/plugins/addon.js');
