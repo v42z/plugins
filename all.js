@@ -6,18 +6,23 @@
         'https://lv42z.github.io/plugins/addon.js',
         'https://lv42z.github.io/plugins/on.js',
         'https://lv42z.github.io/plugins/start.js'
-	'https://lv42z.github.io/plugins/cuboff.js'
-	'https://lv42z.github.io/plugins/foreign.js'
-	'https://lv42z.github.io/plugins/logo.js'
-	'https://lv42z.github.io/plugins/nots.js'
-	'https://lv42z.github.io/plugins/rusmovies.js'
-	'https://lv42z.github.io/plugins/seaseps.js'
-	'https://lv42z.github.io/plugins/source.js'
-	'https://lv42z.github.io/plugins/cinema.js'
+	    'https://lv42z.github.io/plugins/cuboff.js'
+	    'https://lv42z.github.io/plugins/foreign.js'
+	    'https://lv42z.github.io/plugins/logo.js'
+	    'https://lv42z.github.io/plugins/nots.js'
+	    'https://lv42z.github.io/plugins/rusmovies.js'
+	    'https://lv42z.github.io/plugins/seaseps.js'
+	    'https://lv42z.github.io/plugins/source.js'
+	    'https://lv42z.github.io/plugins/cinema.js'
     ];
 
     // Получаем текущий список плагинов
     var plugins = Lampa.Storage.get('plugins', '[]');
+
+    // Преобразуем строку в массив, если это необходимо
+    if (typeof plugins === 'string') {
+        plugins = JSON.parse(plugins);
+    }
 
     // Флаг, указывающий, были ли изменения в списке плагинов
     var updatePlugins = false;
@@ -37,11 +42,17 @@
 
     // Если были изменения, сохраняем обновленный список плагинов
     if (updatePlugins) {
-        Lampa.Storage.set('plugins', plugins);
+        Lampa.Storage.set('plugins', JSON.stringify(plugins));
     }
 
     // Загружаем все плагины из обновленного списка
     plugins.forEach(function(plugin) {
-        $.getScript(plugin.url);
+        if (plugin.url) {
+            $.getScript(plugin.url, function() {
+                console.log('Загружен плагин:', plugin.url);
+            }).fail(function() {
+                console.error('Не удалось загрузить плагин:', plugin.url);
+            });
+        }
     });
 })();
