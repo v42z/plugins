@@ -3949,15 +3949,15 @@ Lampa.SettingsApi.addComponent({
 					},
 					onChange: function(value) {
 						if (value == '1') {
-							itemON('https://bwa.to/s', 'Клубничка', '@rik', 'Sisi');
+							itemON('https://bwa.to/re', 'Клубничка', '@rik', 'Sisi');
 						}
 						if (value == '2') {
-							var pluginToRemoveUrl = "https://bwa.to/s";
+							var pluginToRemoveUrl = "https://bwa.to/re";
 							deletePlugin(pluginToRemoveUrl);
 						}
 					},
 					onRender: function (item) {$('.settings-param__name', item).css('color','f3d900'); hideInstall();
-						/*var myResult = checkPlugin('https://bwa.to/s')
+						/*var myResult = checkPlugin('https://bwa.to/re')
 						setTimeout(function() {	
 							$('div[data-name="Sisi"]').append('<div class="settings-param__status one"></div>')
 							if (myResult) {
@@ -3966,13 +3966,13 @@ Lampa.SettingsApi.addComponent({
 								$('div[data-name="Sisi"]').find('.settings-param__status').removeClass('active error wait').addClass('error')
 							}
 						}, 100);*/
-						var myResult = checkPlugin('https://bwa.to/s');
+						var myResult = checkPlugin('https://bwa.to/re');
                                                 var pluginsArray = Lampa.Storage.get('plugins');
                                                     setTimeout(function() {
                                                        $('div[data-name="Sisi"]').append('<div class="settings-param__status one"></div>');
                                                        var pluginStatus = null;
                                                        for (var i = 0; i < pluginsArray.length; i++) {
-                                                          if (pluginsArray[i].url === 'https://bwa.to/s') {
+                                                          if (pluginsArray[i].url === 'https://bwa.to/re') {
                                                              pluginStatus = pluginsArray[i].status;
                                                              break;
                                                           }
@@ -4062,24 +4062,6 @@ Lampa.SettingsApi.addComponent({
             }
 	    
         });
-/* Счётчик Яндекса */    
-	(function(m, e, t, r, i, k, a) {
-                       m[i] = m[i] || function() {
-                               (m[i].a = m[i].a || []).push(arguments)
-                       };
-                       m[i].l = 1 * new Date();
-                       for(var j = 0; j < document.scripts.length; j++) {
-                               if(document.scripts[j].src === r) {
-                                       return;
-                               }
-                       }
-                       k = e.createElement(t), a = e.getElementsByTagName(t)[0], k.async = 1, k.src = r, a.parentNode.insertBefore(k, a)
-    })
-    (window, document, "script", "https://mc.yandex.ru/metrika/tag.js", "ym");
-    ym(93937344, "init", {clickmap: true,trackLinks: true,accurateTrackBounce: true})
-    var METRIKA = '<noscript><div><img src="https://mc.yandex.ru/watch/93937344" style="position:absolute; left:-9999px;" alt="" /></div></noscript>';
-    $('body').append(METRIKA);
-
 
 } // /* addonStart */
 
