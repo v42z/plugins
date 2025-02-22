@@ -1,18 +1,14 @@
 (function () {
   'use strict';
 
-  // Инициализируем платформу для TV
   Lampa.Platform.tv();
 
-  // Основная функция плагина, отвечающая за рендеринг шаблона и стилей
   function initCardify() {
-    // Если текущая платформа не TV, выводим сообщение и прекращаем выполнение
     if (!Lampa.Platform.screen('tv')) {
       console.log('Cardify: not a TV platform');
       return;
     }
     
-    // Добавляем шаблон для полноэкранного старта (full_start_new)
     Lampa.Template.add("full_start_new",
       "<div class=\"full-start-new cardify\">" +
       "  <div class=\"full-start-new__body\">" +
@@ -118,7 +114,6 @@
     });
   }
   
-  // Запускаем инициализацию, когда приложение готово
   if (window.appready) {
     initCardify();
   } else {
