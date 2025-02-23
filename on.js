@@ -305,6 +305,19 @@
           };
         });
         filter_sources = Lampa.Arrays.getKeys(sources);
+        var lowPriorityBalancers = ['filmix', 'filmixtv', 'kinopub'];
+
+        filter_sources.sort(function(a, b) {
+
+            if (a === 'zetflix') return -1;
+            if (b === 'zetflix') return 1;
+
+            var aLow = lowPriorityBalancers.indexOf(a) !== -1;
+            var bLow = lowPriorityBalancers.indexOf(b) !== -1;
+            if (aLow && !bLow) return 1;
+            if (bLow && !aLow) return -1;
+            return 0;
+        });
         if (filter_sources.length) {
           var last_select_balanser = Lampa.Storage.cache('online_last_balanser', 3000, {});
           if (last_select_balanser[object.movie.id]) {
@@ -312,15 +325,22 @@
           } else {
             balanser = Lampa.Storage.get('online_balanser', filter_sources[0]);
           }
-          if (!sources[balanser]) balanser = filter_sources[0];
-          if (!sources[balanser].show && !object.lampac_custom_select) balanser = filter_sources[0];
-          source = sources[balanser].url;
-          resolve(json);
+            if (lowPriorityBalancers.indexOf(balanser) !== -1 && filter_sources.some(function(item) {
+                return lowPriorityBalancers.indexOf(item) === -1;
+            })) {
+                balanser = filter_sources.find(function(item) {
+                    return lowPriorityBalancers.indexOf(item) === -1;
+                });
+            }
+            if (!sources[balanser]) balanser = filter_sources[0];
+            if (!sources[balanser].show && !object.lampac_custom_select) balanser = filter_sources[0];
+            source = sources[balanser].url;
+            resolve(json);
         } else {
-          reject();
+            reject();
         }
-      });
-    };
+    });
+};
     this.lifeSource = function() {
       var _this3 = this;
       return new Promise(function(resolve, reject) {
@@ -630,6 +650,10 @@
     };
     this.parse = function(str) {
       var json = Lampa.Arrays.decodeJson(str, {});
+	   if (json && json.accsdb && json.msg && json.msg.indexOf('@Abcinema_bot') !== -1) {
+        json.msg = '';
+        json.accsdb = false;
+    }
       if (Lampa.Arrays.isObject(str) && str.rch) json = str;
       if (json.rch) return this.rch(json);
       try {
@@ -729,7 +753,7 @@
           }
         }
       } catch (e) {
-        console.log('Lampac', 'error', e.stack);
+
         this.doesNotAnswer(e);
       }
     };
