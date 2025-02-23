@@ -2930,7 +2930,7 @@ Lampa.SettingsApi.addComponent({
 					},
 					onChange: function(value) {
 						if (value == '1') {
-							itemON('https://v42z.github.io/plugins/jackett.js', 'Переключение Парсеров', '@AndreyURL54', 'Switch_Parser');
+							itemON('https://v42z.github.io/plugins/jackett.js', 'Переключение Парсеров', '@4m1K', 'Switch_Parser');
 						}
 						if (value == '2') {
 							var pluginToRemoveUrl = "https://v42z.github.io/plugins/jackett.js";
@@ -3533,7 +3533,7 @@ Lampa.SettingsApi.addComponent({
 					},
 					onChange: function(value) {
 						if (value == '1') {
-							itemON('https://bylampa.github.io/tv.js', 'Hack TV', '@scabrum', 'Hack_TV');
+							itemON('https://bylampa.github.io/tv.js', 'Hack TV', '@lampa', 'Hack_TV');
 						}
 						if (value == '2') {
 							var pluginToRemoveUrl = "https://v42z.github.io/plugins/tv.js";
