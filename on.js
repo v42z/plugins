@@ -4,7 +4,7 @@
   var Defined = {
     api: 'lampac',
     localhost: 'https://lam.akter-black.com/',
-    apn: '10'
+    apn: ''
   };
   
     var unic_id = Lampa.Storage.get('lampac_unic_id', '');
@@ -286,9 +286,9 @@
       if (balanser && balanser.toLowerCase() === 'filmixtv') {
         url = "http://rc.bwa.to/rc/fxapi";
       }
-    else if (balanser && balanser.toLowerCase() === 'fancdn') {
-       url = "http://vcdn3.skaz.tv/lite/fancdn";
-   }
+	else if (balanser && balanser.toLowerCase() === 'fancdn') {
+         url = "http://vcdn2.skaz.tv/lite/fancdn";
+     }
       var query = [];
       var card_source = object.movie.source || 'tmdb'; 
       query.push('id=' + object.movie.id);
@@ -324,6 +324,9 @@
 	if(name === "pidtor") {
        j.name = "Torrent - 2160";
    }
+	if(name === "mirage") {
+        j.name = "Alloha - 2160";
+    }
       sources[name] = {
         url: j.url,
         name: j.name,
@@ -403,6 +406,9 @@
 	  if(name === "pidtor") {
           j.name = "Torrent - 2160";
        }
+	if(name === "mirage") {
+        j.name = "Alloha - 2160";
+    }
            sources[name] = {
            url: j.url,
             name: j.name,
