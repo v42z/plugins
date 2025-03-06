@@ -286,9 +286,6 @@
       if (balanser && balanser.toLowerCase() === 'filmixtv') {
         url = "http://rc.bwa.to/rc/fxapi";
       }
-	else if (balanser && balanser.toLowerCase() === 'fancdn') {
-         url = "http://vcdn2.skaz.tv/lite/fancdn";
-     }
       var query = [];
       var card_source = object.movie.source || 'tmdb'; 
       query.push('id=' + object.movie.id);
@@ -307,7 +304,7 @@
     };
   
     this.getLastChoiceBalanser = function() {
-      var last_select_balanser = Lampa.Storage.cache('online_last_balanser', 2000, {});
+      var last_select_balanser = Lampa.Storage.cache('online_last_balanser', 1000, {});
       if (last_select_balanser[object.movie.id]) {
         return last_select_balanser[object.movie.id];
       } else {
@@ -347,7 +344,7 @@
       return 0;
     });
     if (filter_sources.length) {
-      var last_select_balanser = Lampa.Storage.cache('online_last_balanser', 3000, {});
+      var last_select_balanser = Lampa.Storage.cache('online_last_balanser', 1000, {});
       if (last_select_balanser[object.movie.id]) {
         balanser = last_select_balanser[object.movie.id];
       } else {
