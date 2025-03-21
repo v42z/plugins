@@ -284,7 +284,7 @@
     };
     this.requestParams = function(url) {
       if (balanser && balanser.toLowerCase() === 'filmixtv') {
-        url = "http://rc.bwa.to/rc/fxapi";
+        url = "http://filmixapp.cyou/api/v2/search?story=%D0%A0%D0%B0%D0%B7%D0%B4%D0%B5%D0%BB%D0%B5%D0%BD%D0%B8%D0%B5&user_dev_apk=2.0.1&user_dev_id=waoqeEEMtP8skyG4&user_dev_name=Lampa&user_dev_os=11&user_dev_vendor=FXAPI&user_dev_token=5c8dc18ea0cd702ac1338ff9aa321d55";
       }
       var query = [];
       var card_source = object.movie.source || 'tmdb'; 
