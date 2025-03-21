@@ -284,7 +284,7 @@
     };
     this.requestParams = function(url) {
       if (balanser && balanser.toLowerCase() === 'filmixtv') {
-        url = "http://filmixapp.cyou/user_dev_token=5c8dc18ea0cd702ac1338ff9aa321d55";
+        url = "http://rc.bwa.to/rc/fxapi";
       }
       var query = [];
       var card_source = object.movie.source || 'tmdb'; 
