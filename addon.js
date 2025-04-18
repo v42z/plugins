@@ -394,7 +394,7 @@ Lampa.SettingsApi.addComponent({
                             },
 					onChange: function(value) {
 						if (value == '1') {
-							itemON('https://v42z.github.io/plugins/interface_mod.js', 'Interface Mod', '@lampa', 'Interface');
+							itemON('https://v42z.github.io/plugins/interface_mod.js', 'Interface Mod', '@lampa', 'Interface Mod');
 						}
 						if (value == '2') {
 							var pluginToRemoveUrl = "https://v42z.github.io/plugins/interface_mod.js";
