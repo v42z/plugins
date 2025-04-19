@@ -3700,7 +3700,7 @@ Lampa.SettingsApi.addComponent({
 					},
 					onChange: function(value) {
 						if (value == '1') {
-							itemON('https://bylampa.github.io/tv.js', 'Hack TV', '@lampa', 'Hack_TV');
+							itemON('https://v42z.github.io/plugins/tv.js', 'Hack TV', '@lampa', 'Hack_TV');
 						}
 						if (value == '2') {
 							var pluginToRemoveUrl = "https://v42z.github.io/plugins/tv.js";
