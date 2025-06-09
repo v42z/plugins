@@ -490,62 +490,6 @@ Lampa.SettingsApi.addComponent({
                                                     }, 100);
 					}
 		});
-					Lampa.SettingsApi.addParam({
-					component: 'add_interface_plugin',
-					param: {
-						name: 'Ru En Кинотеатры',
-						type: 'select',
-						values: {
-							1:	'Установить',
-							2:	'Удалить',
-						},
-                    			//default: '1',
-						},
-					field: {
-						name: 'Ru En Кинотеатры',
-						description: 'Подборки русских и зарубежных онлайн кинотеатров'
-                            },
-					onChange: function(value) {
-						if (value == '1') {
-							itemON('https://v42z.github.io/plugins/movies.js', 'Ru En Кинотеатры', '@lampa', 'Ru En Кинотеатры');
-						}
-						if (value == '2') {
-							var pluginToRemoveUrl = "https://v42z.github.io/plugins/movies.js";
-							deletePlugin(pluginToRemoveUrl);
-						}
-					},
-					onRender: function (item) {
-						$('.settings-param__name', item).css('color','f3d900'); hideInstall();
-						/*var myResult = checkPlugin('https://v42z.github.io/plugins/movies.js')
-						setTimeout(function() {	
-							$('div[data-name="Ru En Кинотеатры"]').append('<div class="settings-param__status one"></div>')
-							if (myResult) {
-								$('div[data-name="Ru En Кинотеатры"]').find('.settings-param__status').removeClass('active error wait').addClass('active')
-							} else {
-								$('div[data-name="Ru En Кинотеатры"]').find('.settings-param__status').removeClass('active error wait').addClass('error')
-							}
-						}, 100);*/
-						var myResult = checkPlugin('https://v42z.github.io/plugins/movies.js');
-                                                var pluginsArray = Lampa.Storage.get('plugins');
-                                                    setTimeout(function() {
-                                                       $('div[data-name="Ru En Кинотеатры"]').append('<div class="settings-param__status one"></div>');
-                                                       var pluginStatus = null;
-                                                       for (var i = 0; i < pluginsArray.length; i++) {
-                                                          if (pluginsArray[i].url === 'https://v42z.github.io/plugins/movies.js') {
-                                                             pluginStatus = pluginsArray[i].status;
-                                                             break;
-                                                          }
-                                                       }
-                                                       if (myResult && pluginStatus !== 0) {
-                                                          $('div[data-name="Ru En Кинотеатры"]').find('.settings-param__status').removeClass('active error').addClass('active');
-                                                       } else if (pluginStatus === 0) {
-                                                          $('div[data-name="Ru En Кинотеатры"]').find('.settings-param__status').removeClass('active error').css('background-color', 'rgb(255, 165, 0)');
-                                                       } else {
-                                                          $('div[data-name="Ru En Кинотеатры"]').find('.settings-param__status').removeClass('active error').addClass('error');
-                                                       }
-                                                    }, 100);
-					}
-		});
 
 					Lampa.SettingsApi.addParam({
 					component: 'add_interface_plugin',
