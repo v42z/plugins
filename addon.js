@@ -2752,63 +2752,6 @@ Lampa.SettingsApi.addComponent({
 					}
 		});
                  
-		/*Lampa.SettingsApi.addParam({
-					component: 'add_online_plugin',
-					param: {
-						name: 'Modss',
-						type: 'select',
-					values: {
-						1:	'Установить',
-						2:	'Удалить',
-					},
-					//default: '1',
-					},
-					field: {
-						name: 'Modss',
-						description: 'Плагин позволяет смотреть фильмы и сериалы в онлайн. На выбор доступно 17 балансеров и различные дополнения через меню настроек Modss. VIP 4K можно подключить через телеграм-бота @modssmy_bot'
-					},
-					onChange: function(value) {
-						if (value == '1') {
-							itemON('http://lampa.stream/modss', 'Modss', '@Nikolai4', 'Modss');
-						}
-						if (value == '2') {
-							var pluginToRemoveUrl = "http://lampa.stream/modss";
-							deletePlugin(pluginToRemoveUrl);
-						}
-					},
-					onRender: function (item) {$('.settings-param__name', item).css('color','f3d900'); hideInstall();
-						/*var myResult = checkPlugin('http://lampa.stream/modss')
-						setTimeout(function() {	
-							$('div[data-name="Modss"]').append('<div class="settings-param__status one"></div>')
-							if (myResult) {
-								$('div[data-name="Modss"]').find('.settings-param__status').removeClass('active error wait').addClass('active')
-							} else {
-								$('div[data-name="Modss"]').find('.settings-param__status').removeClass('active error wait').addClass('error')
-							}
-						}, 100);*/
-						/*var myResult = checkPlugin('http://lampa.stream/modss');
-                                                var pluginsArray = Lampa.Storage.get('plugins');
-                                                    setTimeout(function() {
-                                                       $('div[data-name="Modss"]').append('<div class="settings-param__status one"></div>');
-                                                       var pluginStatus = null;
-                                                       for (var i = 0; i < pluginsArray.length; i++) {
-                                                          if (pluginsArray[i].url === 'http://lampa.stream/modss') {
-                                                             pluginStatus = pluginsArray[i].status;
-                                                             break;
-                                                          }
-                                                       }
-                                                       if (myResult && pluginStatus !== 0) {
-                                                          $('div[data-name="Modss"]').find('.settings-param__status').removeClass('active error').addClass('active');
-                                                       } else if (pluginStatus === 0) {
-                                                          $('div[data-name="Modss"]').find('.settings-param__status').removeClass('active error').css('background-color', 'rgb(255, 165, 0)');
-                                                       } else {
-                                                          $('div[data-name="Modss"]').find('.settings-param__status').removeClass('active error').addClass('error');
-                                                       }
-                                                    }, 100);
-					}
-        });*/
-
-        
 		Lampa.SettingsApi.addParam({
 					component: 'add_online_plugin',
 					param: {
