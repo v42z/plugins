@@ -44,134 +44,156 @@ Lampa.Modal.open({
 
 /* Функция анимации установки плагина */	
 function showLoadingBar() {
-  // Создаем элемент для полосы загрузки
-  var loadingBar = document.createElement('div');
-  loadingBar.className = 'loading-bar';
-  loadingBar.style.position = 'fixed';
-  loadingBar.style.top = '50%';
-  loadingBar.style.left = '50%';
-  loadingBar.style.transform = 'translate(-50%, -50%)'; // Центрируем по центру
-  loadingBar.style.zIndex = '9999';
-  loadingBar.style.display = 'none';
-  loadingBar.style.width = '30em';
-  loadingBar.style.height = '2.5em'; 
-  loadingBar.style.backgroundColor = '#595959';
-  loadingBar.style.borderRadius = '4em';
+  // Создаем контейнер для анимации
+  var loadingContainer = document.createElement('div');
+  loadingContainer.className = 'loading-container';
+  loadingContainer.style.position = 'fixed';
+  loadingContainer.style.top = '50%';
+  loadingContainer.style.left = '50%';
+  loadingContainer.style.transform = 'translate(-50%, -50%)';
+  loadingContainer.style.zIndex = '9999';
+  loadingContainer.style.width = '25em';
+  loadingContainer.style.height = '3em';
+  loadingContainer.style.background = 'rgba(0, 0, 0, 0.8)';
+  loadingContainer.style.borderRadius = '8px';
+  loadingContainer.style.display = 'flex';
+  loadingContainer.style.alignItems = 'center';
+  loadingContainer.style.justifyContent = 'center';
+  loadingContainer.style.boxShadow = '0 4px 15px rgba(0, 0, 0, 0.3)';
 
-  // Создаем элемент для индикатора загрузки
-  var loadingIndicator = document.createElement('div');
-  loadingIndicator.className = 'loading-indicator';
-  loadingIndicator.style.position = 'absolute';
-  loadingIndicator.style.left = '0';
-  loadingIndicator.style.top = '0';
-  loadingIndicator.style.bottom = '0';
-  loadingIndicator.style.width = '0';
-  loadingIndicator.style.backgroundColor = '#64e364';
-  loadingIndicator.style.borderRadius = '4em';
+  // Создаем элемент прогресс-бара
+  var progressBar = document.createElement('div');
+  progressBar.className = 'progress-bar';
+  progressBar.style.width = '0%';
+  progressBar.style.height = '100%';
+  progressBar.style.background = 'linear-gradient(90deg, #00cc00, #66ff66)';
+  progressBar.style.borderRadius = '8px';
 
-  // Создаем элемент для отображения процента загрузки
-  var loadingPercentage = document.createElement('div');
-  loadingPercentage.className = 'loading-percentage';
-  loadingPercentage.style.position = 'absolute';
-  loadingPercentage.style.top = '50%';
-  loadingPercentage.style.left = '50%';
-  loadingPercentage.style.transform = 'translate(-50%, -50%)';
-  loadingPercentage.style.color = '#fff';
-  loadingPercentage.style.fontWeight = 'bold';
-  loadingPercentage.style.fontSize = '1.7em';
+  // Создаем текст для процентов
+  var loadingText = document.createElement('div');
+  loadingText.className = 'loading-text';
+  loadingText.style.position = 'absolute';
+  loadingText.style.color = '#fff';
+  loadingText.style.fontWeight = 'bold';
+  loadingText.style.fontSize = '1.5em';
+  loadingText.textContent = '0%';
 
   // Добавляем элементы на страницу
-  loadingBar.appendChild(loadingIndicator);
-  loadingBar.appendChild(loadingPercentage);
-  document.body.appendChild(loadingBar);
+  loadingContainer.appendChild(progressBar);
+  loadingContainer.appendChild(loadingText);
+  document.body.appendChild(loadingContainer);
 
-  // Отображаем полосу загрузки
-  loadingBar.style.display = 'block';
+  // Добавляем CSS-анимацию
+  var style = document.createElement('style');
+  style.textContent = `
+    @keyframes fillProgress {
+      from { width: 0%; }
+      to { width: 100%; }
+    }
+    .progress-bar {
+      animation: fillProgress 1s ease-in-out forwards;
+    }
+  `;
+  document.head.appendChild(style);
 
-  // Анимация с использованием setTimeout
+  // Обновляем текст процентов
   var startTime = Date.now();
   var duration = 1000; // 1 секунда
   var interval = setInterval(function() {
-  var elapsed = Date.now() - startTime;
-  var progress = Math.min((elapsed / duration) * 100, 100);
-
-    loadingIndicator.style.width = progress + '%';
-    loadingPercentage.textContent = Math.round(progress) + '%';
-
+    var elapsed = Date.now() - startTime;
+    var progress = Math.min((elapsed / duration) * 100, 100);
+    loadingText.textContent = Math.round(progress) + '%';
     if (elapsed >= duration) {
       clearInterval(interval);
-      setTimeout(function() {
-        loadingBar.style.display = 'none';
-        loadingBar.parentNode.removeChild(loadingBar);
-      }, 250);
     }
   }, 16);
+
+  // Удаляем через 1.2 секунды
+  setTimeout(() => {
+    loadingContainer.style.opacity = '0';
+    loadingContainer.style.transition = 'opacity 0.2s ease';
+    setTimeout(() => {
+      loadingContainer.remove();
+      document.head.removeChild(style);
+    }, 200);
+  }, 1200);
 }
 
 /* Функция анимации удаления плагина */	
 function showDeletedBar() {
-  // Создаем элемент для полосы загрузки
-  var loadingBar = document.createElement('div');
-  loadingBar.className = 'loading-bar';
-  loadingBar.style.position = 'fixed';
-  loadingBar.style.top = '50%';
-  loadingBar.style.left = '50%';
-  loadingBar.style.transform = 'translate(-50%, -50%)'; // Центрируем по центру
-  loadingBar.style.zIndex = '9999';
-  loadingBar.style.display = 'none';
-  loadingBar.style.width = '30em';
-  loadingBar.style.height = '2.5em';
-  loadingBar.style.backgroundColor = '#595959';
-  loadingBar.style.borderRadius = '4em';
+  // Создаем контейнер для анимации
+  var loadingContainer = document.createElement('div');
+  loadingContainer.className = 'loading-container';
+  loadingContainer.style.position = 'fixed';
+  loadingContainer.style.top = '50%';
+  loadingContainer.style.left = '50%';
+  loadingContainer.style.transform = 'translate(-50%, -50%)';
+  loadingContainer.style.zIndex = '9999';
+  loadingContainer.style.width = '25em';
+  loadingContainer.style.height = '3em';
+  loadingContainer.style.background = 'rgba(0, 0, 0, 0.8)';
+  loadingContainer.style.borderRadius = '8px';
+  loadingContainer.style.display = 'flex';
+  loadingContainer.style.alignItems = 'center';
+  loadingContainer.style.justifyContent = 'center';
+  loadingContainer.style.boxShadow = '0 4px 15px rgba(0, 0, 0, 0.3)';
 
-  // Создаем элемент для индикатора загрузки
-  var loadingIndicator = document.createElement('div');
-  loadingIndicator.className = 'loading-indicator';
-  loadingIndicator.style.position = 'absolute';
-  loadingIndicator.style.left = '0';
-  loadingIndicator.style.top = '0';
-  loadingIndicator.style.bottom = '0';
-  loadingIndicator.style.width = '0';
-  loadingIndicator.style.backgroundColor = '#ff2121';
-  loadingIndicator.style.borderRadius = '4em';
+  // Создаем элемент прогресс-бара
+  var progressBar = document.createElement('div');
+  progressBar.className = 'progress-bar';
+  progressBar.style.width = '100%';
+  progressBar.style.height = '100%';
+  progressBar.style.background = 'linear-gradient(90deg, #ff3333, #ff6666)';
+  progressBar.style.borderRadius = '8px';
 
-  // Создаем элемент для отображения процента загрузки
-  var loadingPercentage = document.createElement('div');
-  loadingPercentage.className = 'loading-percentage';
-  loadingPercentage.style.position = 'absolute';
-  loadingPercentage.style.top = '50%';
-  loadingPercentage.style.left = '50%';
-  loadingPercentage.style.transform = 'translate(-50%, -50%)';
-  loadingPercentage.style.color = '#fff';
-  loadingPercentage.style.fontWeight = 'bold';
-  loadingPercentage.style.fontSize = '1.7em';
+  // Создаем текст для процентов
+  var loadingText = document.createElement('div');
+  loadingText.className = 'loading-text';
+  loadingText.style.position = 'absolute';
+  loadingText.style.color = '#fff';
+  loadingText.style.fontWeight = 'bold';
+  loadingText.style.fontSize = '1.5em';
+  loadingText.textContent = '100%';
 
   // Добавляем элементы на страницу
-  loadingBar.appendChild(loadingIndicator);
-  loadingBar.appendChild(loadingPercentage);
-  document.body.appendChild(loadingBar);
+  loadingContainer.appendChild(progressBar);
+  loadingContainer.appendChild(loadingText);
+  document.body.appendChild(loadingContainer);
 
-  // Отображаем полосу загрузки
-  loadingBar.style.display = 'block';
+  // Добавляем CSS-анимацию
+  var style = document.createElement('style');
+  style.textContent = `
+    @keyframes reduceProgress {
+      from { width: 100%; }
+      to { width: 0%; }
+    }
+    .progress-bar {
+      animation: reduceProgress 1s ease-in-out forwards;
+    }
+  `;
+  document.head.appendChild(style);
 
-  // Анимация с использованием setTimeout
+  // Обновляем текст процентов
   var startTime = Date.now();
   var duration = 1000; // 1 секунда
   var interval = setInterval(function() {
-  var elapsed = Date.now() - startTime;
-  var progress = 100 - Math.min((elapsed / duration) * 100, 100);
-
-    loadingIndicator.style.width = progress + '%';
-    loadingPercentage.textContent = Math.round(progress) + '%';
-
+    var elapsed = Date.now() - startTime;
+    var progress = 100 - Math.min((elapsed / duration) * 100, 100);
+    loadingText.textContent = Math.round(progress) + '%';
     if (elapsed >= duration) {
       clearInterval(interval);
-      setTimeout(function() {
-        loadingBar.style.display = 'none';
-        loadingBar.parentNode.removeChild(loadingBar);
-      }, 250);
     }
   }, 16);
+
+  // Удаляем через 1.2 секунды
+  setTimeout(() => {
+    loadingContainer.style.opacity = '0';
+    loadingContainer.style.transition = 'opacity 0.2s ease';
+    setTimeout(() => {
+      loadingContainer.remove();
+      document.head.removeChild(style);
+    }, 200);
+  }, 1200);
 }
 	
 /* Следим за настройками */
@@ -377,7 +399,7 @@ Lampa.SettingsApi.addComponent({
 					}
 		});
 
-				Lampa.SettingsApi.addParam({
+			Lampa.SettingsApi.addParam({
 					component: 'add_interface_plugin',
 					param: {
 						name: 'TMDB Alt',
@@ -434,7 +456,7 @@ Lampa.SettingsApi.addComponent({
 					}
 		});
 
-			Lampa.SettingsApi.addParam({
+				Lampa.SettingsApi.addParam({
 					component: 'add_interface_plugin',
 					param: {
 						name: 'Interface Mod',
@@ -490,6 +512,7 @@ Lampa.SettingsApi.addComponent({
                                                     }, 100);
 					}
 		});
+
 
 					Lampa.SettingsApi.addParam({
 					component: 'add_interface_plugin',
@@ -547,54 +570,6 @@ Lampa.SettingsApi.addComponent({
                                                     }, 100);
 					}
 		});
-       
-		/*Lampa.SettingsApi.addParam({
-					component: 'add_interface_plugin',
-					param: {
-						name: 'Feedback',
-						type: 'select',
-						values: {
-							1:	'Установить',
-							2:	'Удалить',
-						},
-					//default: '1',
-						},
-					field: {
-						name: 'Отзывы',
-						description: 'Добавляет в карточке кнопку с отзывами'
-					},
-					onChange: function(value) {
-						if (value == '1') {
-							itemON('http://newtv.mail66.org/o.js', 'Отзывы', '@elenatv99', 'Feedback');
-						}
-						if (value == '2') {
-							var pluginToRemoveUrl = "http://newtv.mail66.org/o.js";
-							deletePlugin(pluginToRemoveUrl);
-						}
-					},
-					onRender: function (item) {$('.settings-param__name', item).css('color','f3d900'); hideInstall()
-						
-						var myResult = checkPlugin('http://newtv.mail66.org/o.js');
-                                                var pluginsArray = Lampa.Storage.get('plugins');
-                                                    setTimeout(function() {
-                                                       $('div[data-name="Feedback"]').append('<div class="settings-param__status one"></div>');
-                                                       var pluginStatus = null;
-                                                       for (var i = 0; i < pluginsArray.length; i++) {
-                                                          if (pluginsArray[i].url === 'http://newtv.mail66.org/o.js') {
-                                                             pluginStatus = pluginsArray[i].status;
-                                                             break;
-                                                          }
-                                                       }
-                                                       if (myResult && pluginStatus !== 0) {
-                                                          $('div[data-name="Feedback"]').find('.settings-param__status').removeClass('active error').addClass('active');
-                                                       } else if (pluginStatus === 0) {
-                                                          $('div[data-name="Feedback"]').find('.settings-param__status').removeClass('active error').css('background-color', 'rgb(255, 165, 0)');
-                                                       } else {
-                                                          $('div[data-name="Feedback"]').find('.settings-param__status').removeClass('active error').addClass('error');
-                                                       }
-                                                    }, 100);
-					}
-		});*/
        
 		Lampa.SettingsApi.addParam({
 					component: 'add_interface_plugin',
@@ -898,7 +873,7 @@ Lampa.SettingsApi.addComponent({
 						}
 					},
 			                onRender: function (item) {$('.settings-param__name', item).css('color','f3d900'); hideInstall()
-						/*var myResult = checkPlugin('hhttps://v42z.github.io/plugins/weather.js')
+						/*var myResult = checkPlugin('https://v42z.github.io/plugins/weather.js')
 						setTimeout(function() {	
 							$('div[data-name="Weather"]').append('<div class="settings-param__status one"></div>')
 							if (myResult) {
@@ -953,7 +928,7 @@ Lampa.SettingsApi.addComponent({
 						}
 					},
 			                onRender: function (item) {$('.settings-param__name', item).css('color','f3d900'); hideInstall()
-						/*var myResult = checkPlugin('hhttps://v42z.github.io/plugins/cuboff.js')
+						/*var myResult = checkPlugin('https://v42z.github.io/plugins/cuboff.js')
 						setTimeout(function() {	
 							$('div[data-name="Cub_off"]').append('<div class="settings-param__status one"></div>')
 							if (myResult) {
@@ -1105,7 +1080,7 @@ Lampa.SettingsApi.addComponent({
 					//default: '1',
 						},
 					field: {
-						name: 'Дополнительный источник Кинопоиск (KP)',
+				name: 'Дополнительный источник Кинопоиск (KP)',
 						description: 'Плагин добавляет источник Кинопоиск (KP) для получения информации о фильмах'
 					},
 					onChange: function(value) {
@@ -1395,7 +1370,7 @@ Lampa.SettingsApi.addComponent({
 							}
 						},
 						onRender: function (item) {$('.settings-param__name', item).css('color','f3d900'); hideInstall()
-							/*var myResult = checkPlugin('')
+							/*var myResult = checkPlugin('https://lampame.github.io/main/shikimori.js')
 							setTimeout(function() {	
 								$('div[data-name="Shikimori"]').append('<div class="settings-param__status one"></div>')
 								if (myResult) {
@@ -1451,7 +1426,7 @@ Lampa.SettingsApi.addComponent({
 							}
 						},
 						onRender: function (item) {$('.settings-param__name', item).css('color','f3d900'); hideInstall()
-							/*var myResult = checkPlugin('')
+							/*var myResult = checkPlugin('https://v42z.github.io/plugins/nots.js')
 							setTimeout(function() {	
 								$('div[data-name="ts_del"]').append('<div class="settings-param__status one"></div>')
 								if (myResult) {
@@ -1507,13 +1482,13 @@ Lampa.SettingsApi.addComponent({
 						}
 					},
 			                onRender: function (item) {$('.settings-param__name', item).css('color','f3d900'); hideInstall()
-						/*var myResult = checkPlugin('https://v42z.github.io/plugins/weather.js')
+						/*var myResult = checkPlugin('https://v42z.github.io/plugins/rusmovies.js')
 						setTimeout(function() {	
-							$('div[data-name="Weather"]').append('<div class="settings-param__status one"></div>')
+							$('div[data-name="rus_movie"]').append('<div class="settings-param__status one"></div>')
 							if (myResult) {
-								$('div[data-name="Weather"]').find('.settings-param__status').removeClass('active error wait').addClass('active')
+								$('div[data-name="rus_movie"]').find('.settings-param__status').removeClass('active error wait').addClass('active')
 							} else {
-								$('div[data-name="Weather"]').find('.settings-param__status').removeClass('active error wait').addClass('error')
+								$('div[data-name="rus_movie"]').find('.settings-param__status').removeClass('active error wait').addClass('error')
 							}
 						}, 100);*/
 						var myResult = checkPlugin('https://v42z.github.io/plugins/rusmovies.js');
@@ -1563,13 +1538,13 @@ Lampa.SettingsApi.addComponent({
 						}
 					},
 			                onRender: function (item) {$('.settings-param__name', item).css('color','f3d900'); hideInstall()
-						/*var myResult = checkPlugin('https://v42z.github.io/plugins/weather.js')
+						/*var myResult = checkPlugin('https://v42z.github.io/plugins/quality.js')
 						setTimeout(function() {	
-							$('div[data-name="Weather"]').append('<div class="settings-param__status one"></div>')
+							$('div[data-name="in_qual"]').append('<div class="settings-param__status one"></div>')
 							if (myResult) {
-								$('div[data-name="Weather"]').find('.settings-param__status').removeClass('active error wait').addClass('active')
+								$('div[data-name="in_qual"]').find('.settings-param__status').removeClass('active error wait').addClass('active')
 							} else {
-								$('div[data-name="Weather"]').find('.settings-param__status').removeClass('active error wait').addClass('error')
+								$('div[data-name="in_qual"]').find('.settings-param__status').removeClass('active error wait').addClass('error')
 							}
 						}, 100);*/
 						var myResult = checkPlugin('https://v42z.github.io/plugins/quality.js');
@@ -1621,11 +1596,11 @@ Lampa.SettingsApi.addComponent({
 			                onRender: function (item) {$('.settings-param__name', item).css('color','f3d900'); hideInstall()
 						/*var myResult = checkPlugin('https://v42z.github.io/plugins/logo.js')
 						setTimeout(function() {	
-							$('div[data-name="Weather"]').append('<div class="settings-param__status one"></div>')
+							$('div[data-name="logo_title"]').append('<div class="settings-param__status one"></div>')
 							if (myResult) {
-								$('div[data-name="Weather"]').find('.settings-param__status').removeClass('active error wait').addClass('active')
+								$('div[data-name="logo_title"]').find('.settings-param__status').removeClass('active error wait').addClass('active')
 							} else {
-								$('div[data-name="Weather"]').find('.settings-param__status').removeClass('active error wait').addClass('error')
+								$('div[data-name="logo_title"]').find('.settings-param__status').removeClass('active error wait').addClass('error')
 							}
 						}, 100);*/
 						var myResult = checkPlugin('https://v42z.github.io/plugins/logo.js');
@@ -1675,13 +1650,13 @@ Lampa.SettingsApi.addComponent({
 						}
 					},
 			                onRender: function (item) {$('.settings-param__name', item).css('color','f3d900'); hideInstall()
-						/*var myResult = checkPlugin('https://v42z.github.io/plugins/logo.js')
+						/*var myResult = checkPlugin('https://lampame.github.io/main/trakttv.js')
 						setTimeout(function() {	
-							$('div[data-name="Weather"]').append('<div class="settings-param__status one"></div>')
+							$('div[data-name="trakt"]').append('<div class="settings-param__status one"></div>')
 							if (myResult) {
-								$('div[data-name="Weather"]').find('.settings-param__status').removeClass('active error wait').addClass('active')
+								$('div[data-name="trakt"]').find('.settings-param__status').removeClass('active error wait').addClass('active')
 							} else {
-								$('div[data-name="Weather"]').find('.settings-param__status').removeClass('active error wait').addClass('error')
+								$('div[data-name="trakt"]').find('.settings-param__status').removeClass('active error wait').addClass('error')
 							}
 						}, 100);*/
 						var myResult = checkPlugin('https://lampame.github.io/main/trakttv.js');
@@ -1731,13 +1706,13 @@ Lampa.SettingsApi.addComponent({
 						}
 					},
 			                onRender: function (item) {$('.settings-param__name', item).css('color','f3d900'); hideInstall()
-						/*var myResult = checkPlugin('https://v42z.github.io/plugins/logo.js')
+						/*var myResult = checkPlugin('https://and7ey.github.io/lampa/head_filter.js)
 						setTimeout(function() {	
-							$('div[data-name="Weather"]').append('<div class="settings-param__status one"></div>')
+							$('div[data-name="head_filter"]').append('<div class="settings-param__status one"></div>')
 							if (myResult) {
-								$('div[data-name="Weather"]').find('.settings-param__status').removeClass('active error wait').addClass('active')
+								$('div[data-name="head_filter"]').find('.settings-param__status').removeClass('active error wait').addClass('active')
 							} else {
-								$('div[data-name="Weather"]').find('.settings-param__status').removeClass('active error wait').addClass('error')
+								$('div[data-name="head_filter"]').find('.settings-param__status').removeClass('active error wait').addClass('error')
 							}
 						}, 100);*/
 						var myResult = checkPlugin('https://and7ey.github.io/lampa/head_filter.js');
@@ -1787,13 +1762,13 @@ Lampa.SettingsApi.addComponent({
 						}
 					},
 			                onRender: function (item) {$('.settings-param__name', item).css('color','f3d900'); hideInstall()
-						/*var myResult = checkPlugin('https://v42z.github.io/plugins/logo.js')
+						/*var myResult = checkPlugin('https://v42z.github.io/plugins/cardify.js')
 						setTimeout(function() {	
-							$('div[data-name="Weather"]').append('<div class="settings-param__status one"></div>')
+							$('div[data-name="cardify"]').append('<div class="settings-param__status one"></div>')
 							if (myResult) {
-								$('div[data-name="Weather"]').find('.settings-param__status').removeClass('active error wait').addClass('active')
+								$('div[data-name="cardify"]').find('.settings-param__status').removeClass('active error wait').addClass('active')
 							} else {
-								$('div[data-name="Weather"]').find('.settings-param__status').removeClass('active error wait').addClass('error')
+								$('div[data-name="cardify"]').find('.settings-param__status').removeClass('active error wait').addClass('error')
 							}
 						}, 100);*/
 						var myResult = checkPlugin('https://v42z.github.io/plugins/cardify.js');
@@ -1844,13 +1819,13 @@ Lampa.SettingsApi.addComponent({
 						}
 					},
 			                onRender: function (item) {$('.settings-param__name', item).css('color','f3d900'); hideInstall()
-						/*var myResult = checkPlugin('https://v42z.github.io/plugins/weather.js')
+						/*var myResult = checkPlugin('https://v42z.github.io/plugins/foreign.js')
 						setTimeout(function() {	
-							$('div[data-name="Weather"]').append('<div class="settings-param__status one"></div>')
+							$('div[data-name="inter_movie"]').append('<div class="settings-param__status one"></div>')
 							if (myResult) {
-								$('div[data-name="Weather"]').find('.settings-param__status').removeClass('active error wait').addClass('active')
+								$('div[data-name="inter_movie"]').find('.settings-param__status').removeClass('active error wait').addClass('active')
 							} else {
-								$('div[data-name="Weather"]').find('.settings-param__status').removeClass('active error wait').addClass('error')
+								$('div[data-name="inter_movie"]').find('.settings-param__status').removeClass('active error wait').addClass('error')
 							}
 						}, 100);*/
 						var myResult = checkPlugin('https://v42z.github.io/plugins/foreign.js');
@@ -1875,7 +1850,7 @@ Lampa.SettingsApi.addComponent({
 					}
 		});
 
-		        Lampa.SettingsApi.addParam({
+			        Lampa.SettingsApi.addParam({
 					component: 'add_interface_plugin',
 					param: {
 						name: 'rate_lampa',
@@ -1902,11 +1877,11 @@ Lampa.SettingsApi.addComponent({
 			                onRender: function (item) {$('.settings-param__name', item).css('color','f3d900'); hideInstall()
 						/*var myResult = checkPlugin('https://v42z.github.io/plugins/lampa_rate.js')
 						setTimeout(function() {	
-							$('div[data-name="Weather"]').append('<div class="settings-param__status one"></div>')
+							$('div[data-name="rate_lampa"]').append('<div class="settings-param__status one"></div>')
 							if (myResult) {
-								$('div[data-name="Weather"]').find('.settings-param__status').removeClass('active error wait').addClass('active')
+								$('div[data-name="rate_lampa"]').find('.settings-param__status').removeClass('active error wait').addClass('active')
 							} else {
-								$('div[data-name="Weather"]').find('.settings-param__status').removeClass('active error wait').addClass('error')
+								$('div[data-name="rate_lampa"]').find('.settings-param__status').removeClass('active error wait').addClass('error')
 							}
 						}, 100);*/
 						var myResult = checkPlugin('https://v42z.github.io/plugins/lampa_rate.js');
@@ -1957,13 +1932,13 @@ Lampa.SettingsApi.addComponent({
 						}
 					},
 			                onRender: function (item) {$('.settings-param__name', item).css('color','f3d900'); hideInstall()
-						/*var myResult = checkPlugin('https://v42z.github.io/plugins/weather.js')
+						/*var myResult = checkPlugin('https://v42z.github.io/plugins/seaseps.js')
 						setTimeout(function() {	
-							$('div[data-name="Weather"]').append('<div class="settings-param__status one"></div>')
+							$('div[data-name="eps_and_seas"]').append('<div class="settings-param__status one"></div>')
 							if (myResult) {
-								$('div[data-name="Weather"]').find('.settings-param__status').removeClass('active error wait').addClass('active')
+								$('div[data-name="eps_and_seas"]').find('.settings-param__status').removeClass('active error wait').addClass('active')
 							} else {
-								$('div[data-name="Weather"]').find('.settings-param__status').removeClass('active error wait').addClass('error')
+								$('div[data-name="eps_and_seas"]').find('.settings-param__status').removeClass('active error wait').addClass('error')
 							}
 						}, 100);*/
 						var myResult = checkPlugin('https://v42z.github.io/plugins/seaseps.js');
@@ -1986,26 +1961,7 @@ Lampa.SettingsApi.addComponent({
                                                        }
                                                     }, 100);
 					}
-		});
-
-	
-	      /*  Lampa.SettingsApi.addParam({
-                                  component: 'add_interface_plugin',
-                                  param: {
-                                         name: 'Reboot_interface_plugin',
-                                         type: 'static',
-                                  },
-                                  field: {
-                                         name: '<div class="settings-folder" style="padding:0!important"><div style="display: block; margin: 0 auto;height:2.3em;padding-right:.1em"><svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg" version="1.1" fill="#ffffff"><g id="SVGRepo_bgCarrier" stroke-width="0"></g><g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g><g id="SVGRepo_iconCarrier"> <g style="fill:none;stroke:#ffffff;stroke-width:12px;stroke-linecap:round;stroke-linejoin:round;"> <path d="m 50,10 0,35"></path> <path d="M 20,29 C 4,52 15,90 50,90 85,90 100,47 74,20"></path> </g> <path style="fill:#ffffff;" d="m 2,21 29,-2 2,29"></path> </g></svg></div></div>',
-					 description: '<div style="text-align: center;">Нажмите для перезагрузки Lampa</div>',
-	                           },
-                                   onRender: function (item) {
-                                      item.on('hover:enter', function(){
-                                         location.reload();
-                                      });
-                                   }
-	        });*/
-	        
+		});  
 
         Lampa.Settings.listener.follow('open', function (e) {
 					if (e.name == 'main') {
@@ -2562,13 +2518,13 @@ Lampa.SettingsApi.addComponent({
 						}	
 					},
 					onRender: function (item) {$('.settings-param__name', item).css('color','f3d900');  hideInstall()
-						/*var myResult = checkPlugin('http://193.233.134.21/plugins/setprotect')
+						/*var myResult = checkPlugin('https://v42z.github.io/plugins/menusort.js')
 						setTimeout(function() {	
-							$('div[data-name="setprotect"]').append('<div class="settings-param__status one"></div>')
+							$('div[data-name="Sort_mainmenu"]').append('<div class="settings-param__status one"></div>')
 							if (myResult) {
-								$('div[data-name="setprotect"]').find('.settings-param__status').removeClass('active error wait').addClass('active')
+								$('div[data-name="Sort_mainmenu"]').find('.settings-param__status').removeClass('active error wait').addClass('active')
 							} else {
-								$('div[data-name="setprotect"]').find('.settings-param__status').removeClass('active error wait').addClass('error')
+								$('div[data-name="Sort_mainmenu"]').find('.settings-param__status').removeClass('active error wait').addClass('error')
 							}
 						}, 100);*/
 						var myResult = checkPlugin('https://v42z.github.io/plugins/menusort.js');
@@ -2675,13 +2631,13 @@ Lampa.SettingsApi.addComponent({
 						}
 					},
 					onRender: function (item) {$('.settings-param__name', item).css('color','f3d900'); hideInstall();
-						/*var myResult = checkPlugin('https://v42z.github.io/plugins/redirect.js')
+						/*var myResult = checkPlugin('https://lampame.github.io/main/infuseSave.js')
 						setTimeout(function() {	
-							$('div[data-name="Redirect"]').append('<div class="settings-param__status one"></div>')
+							$('div[data-name="infuse_save"]').append('<div class="settings-param__status one"></div>')
 							if (myResult) {
-								$('div[data-name="Redirect"]').find('.settings-param__status').removeClass('active error wait').addClass('active')
+								$('div[data-name="infuse_save"]').find('.settings-param__status').removeClass('active error wait').addClass('active')
 							} else {
-								$('div[data-name="Redirect"]').find('.settings-param__status').removeClass('active error wait').addClass('error')
+								$('div[data-name="infuse_save"]').find('.settings-param__status').removeClass('active error wait').addClass('error')
 							}
 						}, 100);*/
 						var myResult = checkPlugin('https://lampame.github.io/main/infuseSave.js');
@@ -2705,23 +2661,6 @@ Lampa.SettingsApi.addComponent({
                                                     }, 100);
 					}
 		});
-	
-	      /*  Lampa.SettingsApi.addParam({
-                                  component: 'add_management_plugin',
-                                  param: {
-                                         name: 'Reboot_management_plugin',
-                                         type: 'static',
-                                  },
-                                  field: {
-                                         name: '<div class="settings-folder" style="padding:0!important"><div style="display: block; margin: 0 auto;height:2.3em;padding-right:.1em"><svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg" version="1.1" fill="#ffffff"><g id="SVGRepo_bgCarrier" stroke-width="0"></g><g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g><g id="SVGRepo_iconCarrier"> <g style="fill:none;stroke:#ffffff;stroke-width:12px;stroke-linecap:round;stroke-linejoin:round;"> <path d="m 50,10 0,35"></path> <path d="M 20,29 C 4,52 15,90 50,90 85,90 100,47 74,20"></path> </g> <path style="fill:#ffffff;" d="m 2,21 29,-2 2,29"></path> </g></svg></div></div>',
-					 description: '<div style="text-align: center;">Нажмите для перезагрузки Lampa</div>',
-	                           },
-                                   onRender: function (item) {
-                                      item.on('hover:enter', function(){
-                                         location.reload();
-                                      });
-                                   }
-	        });*/
 
         Lampa.Settings.listener.follow('open', function (e) {
 					if (e.name == 'main') {
@@ -2752,7 +2691,7 @@ Lampa.SettingsApi.addComponent({
 					}
 		});
 
-	   		Lampa.SettingsApi.addParam({
+		   		Lampa.SettingsApi.addParam({
 					component: 'add_online_plugin',
 					param: {
                                 		name: 'Smotret24',
@@ -2807,7 +2746,7 @@ Lampa.SettingsApi.addComponent({
                                                     }, 100);
 					}
         });
-                 
+        
 		Lampa.SettingsApi.addParam({
 					component: 'add_online_plugin',
 					param: {
@@ -3087,25 +3026,7 @@ Lampa.SettingsApi.addComponent({
                                                     }, 100);	
 					}
 		});
-
-
-	
-	       /* Lampa.SettingsApi.addParam({
-                                  component: 'add_online_plugin',
-                                  param: {
-                                         name: 'Reboot_online_plugin',
-                                         type: 'static',
-                                  },
-                                  field: {
-                                         name: '<div class="settings-folder" style="padding:0!important"><div style="display: block; margin: 0 auto;height:2.3em;padding-right:.1em"><svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg" version="1.1" fill="#ffffff"><g id="SVGRepo_bgCarrier" stroke-width="0"></g><g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g><g id="SVGRepo_iconCarrier"> <g style="fill:none;stroke:#ffffff;stroke-width:12px;stroke-linecap:round;stroke-linejoin:round;"> <path d="m 50,10 0,35"></path> <path d="M 20,29 C 4,52 15,90 50,90 85,90 100,47 74,20"></path> </g> <path style="fill:#ffffff;" d="m 2,21 29,-2 2,29"></path> </g></svg></div></div>',
-					 description: '<div style="text-align: center;">Нажмите для перезагрузки Lampa</div>',
-	                           },
-                                   onRender: function (item) {
-                                      item.on('hover:enter', function(){
-                                         location.reload();
-                                      });
-                                   }
-		});	*/		   
+	   
 /* Торрент */
 		Lampa.Settings.listener.follow('open', function (e) {
 					if (e.name == 'main') {
@@ -3383,7 +3304,7 @@ Lampa.SettingsApi.addComponent({
                                                 }
 					},
 					onRender: function (item) {$('.settings-param__name', item).css('color','f3d900'); hideInstall();
-						/*var myResult = checkPlugin('https://lampame.github.io/td/td.js')
+						/*var myResult = checkPlugin('https://lampame.github.io/main/torrentmanager/torrentmanager.js')
 						setTimeout(function() {	
 							$('div[data-name="Torr_download"]').append('<div class="settings-param__status one"></div>')
 							if (myResult) {
@@ -3495,13 +3416,13 @@ Lampa.SettingsApi.addComponent({
                                                 }
 					},
 					onRender: function (item) {$('.settings-param__name', item).css('color','f3d900'); hideInstall();
-						/*var myResult = checkPlugin('https://bylampa.github.io/freetorr.js')
+						/*var myResult = checkPlugin('https://plugin.rootu.top/ts-preload.js')
 						setTimeout(function() {	
-							$('div[data-name="free_torr"]').append('<div class="settings-param__status one"></div>')
+							$('div[data-name="visual_ts"]').append('<div class="settings-param__status one"></div>')
 							if (myResult) {
-								$('div[data-name="free_torr"]').find('.settings-param__status').removeClass('active error wait').addClass('active')
+								$('div[data-name="visual_ts"]').find('.settings-param__status').removeClass('active error wait').addClass('active')
 							} else {
-								$('div[data-name="free_torr"]').find('.settings-param__status').removeClass('active error wait').addClass('error')
+								$('div[data-name="visual_ts"]').find('.settings-param__status').removeClass('active error wait').addClass('error')
 							}
 						}, 100);*/
 						var myResult = checkPlugin('https://plugin.rootu.top/ts-preload.js');
@@ -3524,24 +3445,7 @@ Lampa.SettingsApi.addComponent({
                                                        }
                                                     }, 100);	
 					}
-		});
-	/*
-	        Lampa.SettingsApi.addParam({
-                                  component: 'add_torrent_plugin',
-                                  param: {
-                                         name: 'Reboot_torrent_plugin',
-                                         type: 'static',
-                                  },
-                                  field: {
-                                         name: '<div class="settings-folder" style="padding:0!important"><div style="display: block; margin: 0 auto;height:2.3em;padding-right:.1em"><svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg" version="1.1" fill="#ffffff"><g id="SVGRepo_bgCarrier" stroke-width="0"></g><g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g><g id="SVGRepo_iconCarrier"> <g style="fill:none;stroke:#ffffff;stroke-width:12px;stroke-linecap:round;stroke-linejoin:round;"> <path d="m 50,10 0,35"></path> <path d="M 20,29 C 4,52 15,90 50,90 85,90 100,47 74,20"></path> </g> <path style="fill:#ffffff;" d="m 2,21 29,-2 2,29"></path> </g></svg></div></div>',
-					 description: '<div style="text-align: center;">Нажмите для перезагрузки Lampa</div>',
-	                           },
-                                   onRender: function (item) {
-                                      item.on('hover:enter', function(){
-                                         location.reload();
-                                      });
-                                   }
-		});*/			   
+		});		   
 	
 		Lampa.Settings.listener.follow('open', function (e) {
 					if (e.name == 'main') {
@@ -3794,124 +3698,7 @@ Lampa.SettingsApi.addComponent({
                                                     }, 100);	
 					}
 		});
-	       /* Lampa.SettingsApi.addParam({
-                                  component: 'add_tv_plugin',
-                                  param: {
-                                         name: 'Reboot_tv_plugin',
-                                         type: 'static',
-                                  },
-                                  field: {
-                                         name: '<div class="settings-folder" style="padding:0!important"><div style="display: block; margin: 0 auto;height:2.3em;padding-right:.1em"><svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg" version="1.1" fill="#ffffff"><g id="SVGRepo_bgCarrier" stroke-width="0"></g><g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g><g id="SVGRepo_iconCarrier"> <g style="fill:none;stroke:#ffffff;stroke-width:12px;stroke-linecap:round;stroke-linejoin:round;"> <path d="m 50,10 0,35"></path> <path d="M 20,29 C 4,52 15,90 50,90 85,90 100,47 74,20"></path> </g> <path style="fill:#ffffff;" d="m 2,21 29,-2 2,29"></path> </g></svg></div></div>',
-					 description: '<div style="text-align: center;">Нажмите для перезагрузки Lampa</div>',
-	                           },
-                                   onRender: function (item) {
-                                      item.on('hover:enter', function(){
-                                         location.reload();
-                                      });
-                                   }
-		});*/			   
-               
-	        /*Lampa.Settings.listener.follow('open', function (e) {
-					if (e.name == 'main') {
-						Lampa.SettingsApi.addComponent({
-							component: 'add_music_plugin',
-							name: 'Music'
-						});
-					}
-		});*/
-/* Музыка */
-		/*Lampa.SettingsApi.addParam({
-					component: 'add_plugin',
-					param: {
-						name: 'add_music_plugin',
-						type: 'static',
-					default: true
-                         		},
-					field: {
-						name: icon_add_music_plugin
-                         		},
-					onRender: function(item) {
-						item.on('hover:enter', function () {
-							Lampa.Settings.create('add_music_plugin');
-							Lampa.Controller.enabled().controller.back = function(){
-								Lampa.Settings.create('add_plugin');
-							}
-						});
-					}
-		});*/
-
-	        /*Lampa.SettingsApi.addParam({
-					component: 'add_music_plugin',
-					param: {
-						name: 'lme_music',
-       				                type: 'select',
-                       				values: {
-							1:	'Установить',
-							2:	'Удалить',
-                        			},
-					//default: '1',
-					},
-					field: {
-						name: 'LME Music',
-						description: 'Слушаем или смотрим live с YouTube по жанрам (доступен поиск)'
-					},
-					onChange: function(value) {
-                        			if (value == '1') {
-							itemON('https://lampame.github.io/main/music.js', 'LME Music', '@GwynnBleiidd', 'lme_music');
-                     				}
-						if (value == '2') {
-							var pluginToRemoveUrl = "https://lampame.github.io/main/music.js";
-							deletePlugin(pluginToRemoveUrl);
-						}
-                    },
-					onRender: function (item) {$('.settings-param__name', item).css('color','f3d900'); hideInstall();
-						/*var myResult = checkPlugin('https://lampame.github.io/main/music.js')
-						setTimeout(function() {	
-							$('div[data-name="lme_music"]').append('<div class="settings-param__status one"></div>')
-							if (myResult) {
-								$('div[data-name="lme_music"]').find('.settings-param__status').removeClass('active error wait').addClass('active')
-							} else {
-								$('div[data-name="lme_music"]').find('.settings-param__status').removeClass('active error wait').addClass('error')
-							}
-						}, 100);*/
-						/*var myResult = checkPlugin('https://lampame.github.io/main/music.js');
-                                                var pluginsArray = Lampa.Storage.get('plugins');
-                                                    setTimeout(function() {
-                                                       $('div[data-name="lme_music"]').append('<div class="settings-param__status one"></div>');
-                                                       var pluginStatus = null;
-                                                       for (var i = 0; i < pluginsArray.length; i++) {
-                                                          if (pluginsArray[i].url === 'https://lampame.github.io/main/music.js') {
-                                                             pluginStatus = pluginsArray[i].status;
-                                                             break;
-                                                          }
-                                                       }
-                                                       if (myResult && pluginStatus !== 0) {
-                                                          $('div[data-name="lme_music"]').find('.settings-param__status').removeClass('active error').addClass('active');
-                                                       } else if (pluginStatus === 0) {
-                                                          $('div[data-name="lme_music"]').find('.settings-param__status').removeClass('active error').css('background-color', 'rgb(255, 165, 0)');
-                                                       } else {
-                                                          $('div[data-name="lme_music"]').find('.settings-param__status').removeClass('active error').addClass('error');
-                                                       }
-                                                    }, 100);	
-					}
-		});*/
-	
-                /* Lampa.SettingsApi.addParam({
-                                  component: 'add_music_plugin',
-                                  param: {
-                                         name: 'Reboot_music_plugin',
-                                         type: 'static',
-                                  },
-                                  field: {
-                                         name: '<div class="settings-folder" style="padding:0!important"><div style="display: block; margin: 0 auto;height:2.3em;padding-right:.1em"><svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg" version="1.1" fill="#ffffff"><g id="SVGRepo_bgCarrier" stroke-width="0"></g><g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g><g id="SVGRepo_iconCarrier"> <g style="fill:none;stroke:#ffffff;stroke-width:12px;stroke-linecap:round;stroke-linejoin:round;"> <path d="m 50,10 0,35"></path> <path d="M 20,29 C 4,52 15,90 50,90 85,90 100,47 74,20"></path> </g> <path style="fill:#ffffff;" d="m 2,21 29,-2 2,29"></path> </g></svg></div></div>',
-					 description: '<div style="text-align: center;">Нажмите для перезагрузки Lampa</div>',
-	                           },
-                                   onRender: function (item) {
-                                      item.on('hover:enter', function(){
-                                         location.reload();
-                                      });
-                                   }
-		});*/			   
+			   
 	
 		Lampa.Settings.listener.follow('open', function (e) {
 					if (e.name == 'main') {
@@ -4109,22 +3896,7 @@ Lampa.SettingsApi.addComponent({
                                                     }, 100);	
 					}
 		});
-	       /* Lampa.SettingsApi.addParam({
-                                  component: 'add_radio_plugin',
-                                  param: {
-                                         name: 'Reboot_radio_plugin',
-                                         type: 'static',
-                                  },
-                                  field: {
-                                         name: '<div class="settings-folder" style="padding:0!important"><div style="display: block; margin: 0 auto;height:2.3em;padding-right:.1em"><svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg" version="1.1" fill="#ffffff"><g id="SVGRepo_bgCarrier" stroke-width="0"></g><g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g><g id="SVGRepo_iconCarrier"> <g style="fill:none;stroke:#ffffff;stroke-width:12px;stroke-linecap:round;stroke-linejoin:round;"> <path d="m 50,10 0,35"></path> <path d="M 20,29 C 4,52 15,90 50,90 85,90 100,47 74,20"></path> </g> <path style="fill:#ffffff;" d="m 2,21 29,-2 2,29"></path> </g></svg></div></div>',
-					 description: '<div style="text-align: center;">Нажмите для перезагрузки Lampa</div>',
-	                           },
-                                   onRender: function (item) {
-                                      item.on('hover:enter', function(){
-                                         location.reload();
-                                      });
-                                   }
-		});*/			   
+		   
 /* Клубника */
 		Lampa.Settings.listener.follow('open', function (e) {
 					if (e.name == 'main') {
