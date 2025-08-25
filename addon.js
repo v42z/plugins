@@ -548,7 +548,7 @@ Lampa.SettingsApi.addComponent({
 								$('div[data-name="PersonalHub"]').find('.settings-param__status').removeClass('active error wait').addClass('error')
 							}
 						}, 100);*/
-						var myResult = checkPlugin('https://v42z.github.io/plugins/ipersonalhub.js');
+						var myResult = checkPlugin('https://v42z.github.io/plugins/personalhub.js');
                                                 var pluginsArray = Lampa.Storage.get('plugins');
                                                     setTimeout(function() {
                                                        $('div[data-name="PersonalHub"]').append('<div class="settings-param__status one"></div>');
@@ -587,16 +587,16 @@ Lampa.SettingsApi.addComponent({
                             },
 					onChange: function(value) {
 						if (value == '1') {
-							itemON('http://v42z.github.io/plugins/qlty.js', 'qlty', '@lampa', 'qlty');
+							itemON('https://v42z.github.io/plugins/qlty.js', 'qlty', '@lampa', 'qlty');
 						}
 						if (value == '2') {
-							var pluginToRemoveUrl = "http://v42z.github.io/plugins/qlty.js";
+							var pluginToRemoveUrl = "https://v42z.github.io/plugins/qlty.js";
 							deletePlugin(pluginToRemoveUrl);
 						}
 					},
 					onRender: function (item) {
 						$('.settings-param__name', item).css('color','f3d900'); hideInstall();
-						/*var myResult = checkPlugin('http://v42z.github.io/plugins/qlty.js')
+						/*var myResult = checkPlugin('https://v42z.github.io/plugins/qlty.js')
 						setTimeout(function() {	
 							$('div[data-name="qlty"]').append('<div class="settings-param__status one"></div>')
 							if (myResult) {
@@ -605,13 +605,13 @@ Lampa.SettingsApi.addComponent({
 								$('div[data-name="qlty"]').find('.settings-param__status').removeClass('active error wait').addClass('error')
 							}
 						}, 100);*/
-						var myResult = checkPlugin('http://v42z.github.io/plugins/qlty.js');
+						var myResult = checkPlugin('https://v42z.github.io/plugins/qlty.js');
                                                 var pluginsArray = Lampa.Storage.get('plugins');
                                                     setTimeout(function() {
                                                        $('div[data-name="qlty"]').append('<div class="settings-param__status one"></div>');
                                                        var pluginStatus = null;
                                                        for (var i = 0; i < pluginsArray.length; i++) {
-                                                          if (pluginsArray[i].url === 'http://v42z.github.io/plugins/qlty.js') {
+                                                          if (pluginsArray[i].url === 'https://v42z.github.io/plugins/qlty.js') {
                                                              pluginStatus = pluginsArray[i].status;
                                                              break;
                                                           }
