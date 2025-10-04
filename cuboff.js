@@ -68,7 +68,7 @@
             let fakeVideo = target.apply(thisArg, args);
             fakeVideo.play = function () {
               setTimeout(() => {
-                fakeVideo.ended = true;
+                fakeVideo.pause();
                 fakeVideo.dispatchEvent(new Event("ended"));
               }, 500);
             };
