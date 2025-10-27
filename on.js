@@ -4,7 +4,7 @@
   var Defined = {
     api: 'lampac',
     localhost: 'https://lam.akter-black.com/',
-    apn: ''
+    apn: 'http://apn.cfhttp.top/'
   };
   
     var unic_id = Lampa.Storage.get('lampac_unic_id', '');
@@ -1696,4 +1696,5 @@
   if (!window.lampac_plugin) startPlugin();
 
 })();
+
 
