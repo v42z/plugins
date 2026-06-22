@@ -16,12 +16,12 @@
     }
 
     function customizePreroll() {
-      const observer = new MutationObserver(function () {
-        const preroll = document.querySelector('.ad-preroll');
+      var observer = new MutationObserver(function () {
+        var preroll = document.querySelector('.ad-preroll');
         if (preroll && !preroll.dataset.customized) {
           preroll.dataset.customized = 'true';
 
-          const textEl = preroll.querySelector('.ad-preroll__text');
+          var textEl = preroll.querySelector('.ad-preroll__text');
           if (textEl) {
             textEl.textContent = 'Приятного просмотра';
             textEl.style.fontSize = '2.2em';
@@ -34,10 +34,10 @@
           preroll.style.backgroundSize = 'cover';
           preroll.style.backgroundPosition = 'center';
 
-          const bgEl = preroll.querySelector('.ad-preroll__bg');
+          var bgEl = preroll.querySelector('.ad-preroll__bg');
           if (bgEl) bgEl.style.opacity = '0';
 
-          const overEl = preroll.querySelector('.ad-preroll__over');
+          var overEl = preroll.querySelector('.ad-preroll__over');
           if (overEl) overEl.style.opacity = '0';
         }
       });
@@ -46,14 +46,14 @@
     }
 
     function initializeApp() {
-      const origCreateElement = document.createElement;
+      var origCreateElement = document.createElement;
       document.createElement = function(tag) {
         if (tag.toLowerCase() === 'video') {
-          const video = origCreateElement.apply(this, arguments);
-          const origPlay = video.play;
+          var video = origCreateElement.apply(this, arguments);
+          var origPlay = video.play;
           video.play = function() {
             if (origPlay) origPlay.apply(this);
-            setTimeout(() => {
+            setTimeout(function() {
               video.pause();
               video.currentTime = video.duration || 99999;
               video.dispatchEvent(new Event('ended'));
@@ -65,26 +65,25 @@
         return origCreateElement.apply(this, arguments);
       };
 
-      const style = document.createElement('style');
-      style.innerHTML = `
-        .button--subscribe,
-        [class*="subscribe"]:not([class*="sync"]),
-        [class*="premium"]:not(.premium-quality):not([class*="sync"]),
-        .open--premium,
-        .open--feed,
-        .open--notice,
-        .icon--blink,
-        [class*="black-friday"],
-        [class*="christmas"],
-        .ad-server,
-        .ad-bot,
-        .full-start__button.button--options,
-        .new-year__button,
-        .notice--icon { display: none !important; }
-      `;
+      var style = document.createElement('style');
+      style.innerHTML = 
+        '.button--subscribe,' +
+        '[class*="subscribe"]:not([class*="sync"]),' +
+        '[class*="premium"]:not(.premium-quality):not([class*="sync"]),' +
+        '.open--premium,' +
+        '.open--feed,' +
+        '.open--notice,' +
+        '.icon--blink,' +
+        '[class*="black-friday"],' +
+        '[class*="christmas"],' +
+        '.ad-server,' +
+        '.ad-bot,' +
+        '.full-start__button.button--options,' +
+        '.new-year__button,' +
+        '.notice--icon { display: none !important; }';
       document.head.appendChild(style);
 
-      setTimeout(() => {
+      setTimeout(function() {
         $('.open--feed, .open--premium, .open--notice, .icon--blink, [class*="friday"], [class*="christmas"]').remove();
       }, 1000);
 
