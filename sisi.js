@@ -3,8 +3,7 @@
 
   var Defined = {
     use_api: 'lampac',
-    localhost: 'https://akter-black.com/sisi',
-    vip_site: '',
+    localhost: 'http://31.129.234.181/sisi',
     framework: ''
   };
 
@@ -25,6 +24,10 @@
 
   var network = new Lampa.Reguest();
   var preview_timer, preview_video;
+  var SISI_SOURCE = 'sisi_lampac';
+  var REQUEST_TIMEOUT = 10000;
+
+  network.timeout(REQUEST_TIMEOUT);
 
   function sourceTitle(title) {
     return Lampa.Utils.capitalizeFirstLetter(title.split('.')[0]);
@@ -34,16 +37,45 @@
     return /vip.mp4/.test(element.video);
   }
 
-  if (window.rchtype == undefined) {
-    window.rchtype = 'web';
-    var check = function check(good) {
-      window.rchtype = Lampa.Platform.is('android') ? 'apk' : good ? 'cors' : 'web';
+    function getAndroidVersion() {
+  if (Lampa.Platform.is('android')) {
+    try {
+      var current = AndroidJS.appVersion().split('-');
+      return parseInt(current.pop());
+    } catch (e) {
+      return 0;
     }
+  } else {
+    return 0;
+  }
+}
+
+var hostkey = 'http://31.129.234.181'.replace('http://', '').replace('https://', '');
+
+if (!window.rch_nws || !window.rch_nws[hostkey]) {
+  if (!window.rch_nws) window.rch_nws = {};
+
+  window.rch_nws[hostkey] = {
+    type: Lampa.Platform.is('android') ? 'apk' : Lampa.Platform.is('tizen') ? 'cors' : undefined,
+    startTypeInvoke: false,
+    rchRegistry: false,
+    apkVersion: getAndroidVersion()
+  };
+}
+
+window.rch_nws[hostkey].typeInvoke = function rchtypeInvoke(host, call) {
+  if (!window.rch_nws[hostkey].startTypeInvoke) {
+    window.rch_nws[hostkey].startTypeInvoke = true;
+
+    var check = function check(good) {
+      window.rch_nws[hostkey].type = Lampa.Platform.is('android') ? 'apk' : good ? 'cors' : 'web';
+      call();
+    };
 
     if (Lampa.Platform.is('android') || Lampa.Platform.is('tizen')) check(true);
     else {
       var net = new Lampa.Reguest();
-      net.silent('https://akter-black.com'.indexOf(location.host) >= 0 ? 'https://github.com/' : 'https://akter-black.com/cors/check', function() {
+      net.silent('http://31.129.234.181'.indexOf(location.host) >= 0 ? 'https://github.com/' : host + '/cors/check', function() {
         check(true);
       }, function() {
         check(false);
@@ -51,59 +83,153 @@
         dataType: 'text'
       });
     }
-  }
+  } else call();
+};
 
-  var hubConnection;
-  var hub_timer
+window.rch_nws[hostkey].Registry = function RchRegistry(client, startConnection) {
+  window.rch_nws[hostkey].typeInvoke('http://31.129.234.181', function() {
+
+    client.invoke("RchRegistry", {
+      host: location.host,
+      rchtype: Lampa.Platform.is('android') ? 'apk' : Lampa.Platform.is('tizen') ? 'cors' : (window.rch_nws[hostkey].type || 'web'),
+      apkVersion: Lampa.Platform.is('android') ? (window.rch_nws[hostkey].apkVersion || 0) : 0,
+      player: Lampa.Storage.field('player')
+    });
+
+    if (window.rch_nws[hostkey].rchRegistry)
+      return;
+
+    window.rch_nws[hostkey].rchRegistry = true;
+
+    var handled = false;
+    client.on('RchRegistry', function (clientIp, connectionId, rchtype) {
+      if (startConnection && !handled) {
+	    handled = true;
+	    startConnection();
+      }
+    });
+
+    client.on("RchClient", function(rchId, url, data, headers, returnHeaders) {
+      var network = new Lampa.Reguest();
+	  
+	  function sendResult(uri, html) {
+	    $.ajax({
+	      url: 'http://31.129.234.181/rch/' + uri + '?id=' + rchId,
+	      type: 'POST',
+	      data: html,
+	      async: true,
+	      cache: false,
+	      contentType: false,
+	      processData: false,
+	      success: function(j) {},
+	      error: function() {
+	        client.invoke("RchResult", rchId, '');
+	      }
+	    });
+	  }
+
+      function result(html) {
+        if (Lampa.Arrays.isObject(html) || Lampa.Arrays.isArray(html)) {
+          html = JSON.stringify(html);
+        }
+
+        if (typeof CompressionStream !== 'undefined' && html && html.length > 1000) {
+          var compressionStream = new CompressionStream('gzip');
+          var encoder = new TextEncoder();
+          var readable = new ReadableStream({
+            start: function(controller) {
+              controller.enqueue(encoder.encode(html));
+              controller.close();
+            }
+          });
+          var compressedStream = readable.pipeThrough(compressionStream);
+          new Response(compressedStream).arrayBuffer()
+            .then(function(compressedBuffer) {
+              var compressedArray = new Uint8Array(compressedBuffer);
+              if (compressedArray.length > html.length) {
+                sendResult('result', html);
+              } else {
+                sendResult('gzresult', compressedArray);
+              }
+            })
+            .catch(function() {
+              sendResult('result', html);
+            });
+
+        } else {
+          sendResult('result', html);
+        }
+      }
+
+      if (url == 'eval') {
+        console.log('RCH', url, data);
+        result(eval(data));
+      } else if (url == 'evalrun') {
+        console.log('RCH', url, data);
+        eval(data);
+      } else if (url == 'ping') {
+        result('pong');
+      } else {
+        console.log('RCH', url);
+        network["native"](url, result, function(e) {
+          console.log('RCH', 'result empty, ' + e.status);
+          result('');
+        }, data, {
+          dataType: 'text',
+          timeout: 1000 * 8,
+          headers: headers,
+          returnHeaders: returnHeaders
+        });
+      }
+    });
+
+    client.on('Connected', function(connectionId) {
+      console.log('RCH', 'ConnectionId: ' + connectionId);
+      window.rch_nws[hostkey].connectionId = connectionId;
+    });
+    client.on('Closed', function() {
+      console.log('RCH', 'Connection closed');
+    });
+    client.on('Error', function(err) {
+      console.log('RCH', 'error:', err);
+    });
+  });
+};
+
+  window.rch_nws[hostkey].typeInvoke('http://31.129.234.181', function() {});
 
   function rchInvoke(json, call) {
-    if (hubConnection) {
-      hubConnection.stop();
-      hubConnection = null;
-    }
-    hubConnection = new signalR.HubConnectionBuilder().withUrl(json.ws).build();
-    hubConnection.start().then(function() {
-      hubConnection.invoke("RchRegistry", JSON.stringify({version: 138, host: location.host, rchtype: window.rchtype})).then(function() {
-        call()
-        hubConnection.on("RchClient", function(rchId, url, data, headers, returnHeaders) {
-          function result(html) {
-            if (Lampa.Arrays.isObject(html) || Lampa.Arrays.isArray(html)) html = JSON.stringify(html);
-            network.silent(json.result, false, false, {
-              id: rchId,
-              value: html
-            }, {
-              dataType: 'text',
-              timeout: 1000 * 5
-            });
-          }
+    if (!window.nwsClient) 
+      window.nwsClient = {};
 
-          if (url == 'eval')
-            result(eval(data))
-          else {
-            network["native"](url, result, function() {
-              result('');
-            }, data, {
-              dataType: 'text',
-              timeout: 1000 * json.timeout,
-              headers: headers,
-              returnHeaders: returnHeaders
-            });
-          }
+    var client = window.nwsClient[hostkey];
+    if (client && client.connectionId != null) {
+      call();
+    }
+    else if (client) {
+      console.log('RCH', 'Reconnecting...');
+      client.reconnect(function() {
+        call();
+      });
+    }
+    else {
+      window.nwsClient[hostkey] = new NativeWsClient(json.nws, {
+        autoReconnect: true
+      });
+
+      window.nwsClient[hostkey].on('Connected', function(connectionId) {
+        window.rch_nws[hostkey].Registry(window.nwsClient[hostkey], function() {
+          call();
         });
       });
-    })["catch"](function(err) {
-      //return console.error(err.toString());
-    });
-    if (json.keepalive > 0) {
-      hub_timer = setTimeout(function() {
-        hubConnection.stop();
-      }, 1000 * json.keepalive);
+
+      window.nwsClient[hostkey].connect();
     }
   }
 
   function rchRun(json, call) {
-    if (typeof signalR == 'undefined') {
-      Lampa.Utils.putScript(["https://akter-black.com/signalr-6.0.25_es5.js"], function() {}, false, function() {
+    if (typeof NativeWsClient == 'undefined') {
+      Lampa.Utils.putScript(["http://31.129.234.181/js/nws-client-es5.js?v21042026"], function() {}, false, function() {
         rchInvoke(json, call);
       }, true);
     } else {
@@ -111,12 +237,12 @@
     }
   }
 
-  function modal() {
+  function modal(text) {
     var id = Lampa.Storage.get('sisi_unic_id', '').toLowerCase();
     var controller = Lampa.Controller.enabled().name;
-    var content = "<div class=\"about\">\n        <div>\u042D\u0442\u043E \u0432\u0438\u0434\u0435\u043E \u0434\u043E\u0441\u0442\u0443\u043F\u043D\u043E \u0441 VIP \u043F\u043E\u0434\u043F\u0438\u0441\u043A\u043E\u0439. \u0414\u043B\u044F \u043F\u043E\u0434\u043A\u043B\u044E\u0447\u0435\u043D\u0438\u044F VIP \u043F\u043E\u0434\u043F\u0438\u0441\u043A\u0438, \u043F\u0435\u0440\u0435\u0439\u0434\u0438\u0442\u0435 \u043D\u0430 \u0441\u0430\u0439\u0442 \u043A\u043E\u0442\u043E\u0440\u044B\u0439 \u0443\u043A\u0430\u0437\u0430\u043D \u043D\u0438\u0436\u0435 \u0438 \u0443\u043A\u0430\u0436\u0438\u0442\u0435 \u0432\u0430\u0448 ID</div>\n        <div class=\"about__contacts\">\n            <div>\n                <small>\u0421\u0430\u0439\u0442</small><br>\n                ".concat(Defined.vip_site, "\n            </div>\n\n            <div>\n                <small>\u0412\u0430\u0448 ID</small><br>\n                ").concat(id, "\n            </div>\n        </div>\n    </div>");
+    var content = sisiModalHtml(text, id);
     Lampa.Modal.open({
-      title: 'VIP Контент',
+      title: 'Доступ ограничен',
       html: $(content),
       size: 'medium',
       onBack: function onBack() {
@@ -148,6 +274,15 @@
       return modal();
     }
 
+    if (true && !element.history_uid && element.bookmark && Lampa.Storage.field('sisi_history')) {
+      network.timeout(REQUEST_TIMEOUT);
+      network.silent(Api.account(Defined.localhost + '/history/add'), function(e) {}, function() {}, JSON.stringify(element), {
+        headers: {
+          'Content-Type': 'application/json'
+        }
+      });
+    }
+
     if (element.json) {
       Lampa.Loading.start(function() {
         network.clear();
@@ -173,7 +308,8 @@
           title: element.name,
           url: Api.account(qualityDefault(qualitys), true),
           url_reserve: data.qualitys_proxy ? Api.account(qualityDefault(data.qualitys_proxy), true) : false,
-          quality: qualitys
+          quality: qualitys,
+          headers: data.headers_stream
         };
         Lampa.Player.play(video);
 
@@ -239,11 +375,33 @@
     });
   }
 
+  function pauseMedia(media) {
+    if (!media || !media.length) return;
+    var pausePromise;
+    try {
+      pausePromise = media[0].pause();
+    } catch (e) {}
+    if (pausePromise !== undefined) {
+      pausePromise.then(function () {}).catch(function () {});
+    }
+  }
+
+  function playMedia(media) {
+    if (!media) return;
+    var playPromise;
+    try {
+      playPromise = media.play();
+    } catch (e) {}
+    if (playPromise !== undefined) {
+      playPromise.then(function () {}).catch(function () {});
+    }
+  }
+
   function hidePreview() {
     clearTimeout(preview_timer);
 
     if (preview_video) {
-      preview_video.find('video').pause();
+      pauseMedia(preview_video.find('video'));
       preview_video.addClass('hide');
       preview_video = false;
     }
@@ -251,38 +409,30 @@
 
   function preview(target, element) {
     hidePreview();
-    preview_timer = setTimeout(function() {
+    preview_timer = setTimeout(function () {
       if (!element.preview || !Lampa.Storage.field('sisi_preview')) return;
       var video = target.find('video');
       var container = target.find('.sisi-video-preview');
 
-      if (!video) {
+      if (!video.length) {
         video = document.createElement('video');
         container = document.createElement('div');
-        container.addClass('sisi-video-preview');
-        container.style.position = 'absolute';
-        container.style.width = '100%';
-        container.style.height = '100%';
-        container.style.left = '0';
-        container.style.top = '0';
-        container.style.overflow = 'hidden';
-        container.style.borderRadius = '1em';
-        video.style.position = 'absolute';
-        video.style.width = '100%';
-        video.style.height = '100%';
-        video.style.left = '0';
-        video.style.top = '0';
-        video.style.objectFit = 'cover';
+        container.className = 'sisi-video-preview';
         container.append(video);
         target.find('.card__view').append(container);
-        video.src = element.preview; // 'https://thumb-v4.xhcdn.com/a/og0z25CtaTIZXgzkV7qJ8Q/023/463/094/526x298.44.t.webm'
-
+        video.src = element.preview;
+        video.addEventListener('ended', function () {
+          container.classList.add('hide');
+        });
         video.load();
+      } else {
+        video = video[0];
+        container = container[0];
       }
 
-      preview_video = container;
-      video.play();
-      container.removeClass('hide');
+      preview_video = $(container);
+      playMedia(video);
+      $(container).removeClass('hide');
     }, 1500);
   }
 
@@ -299,6 +449,13 @@
       title: !card_data.bookmark.uid ? 'В закладки' : 'Удалить из закладок'
     }];
 
+    if (card_data.history_uid) {
+      cm.push({
+        title: 'Удалить из истории',
+        history: true
+      });
+    }
+
     if (card_data.related) {
       cm.push({
         title: 'Похожие',
@@ -310,6 +467,13 @@
       cm.push({
         title: card_data.model.name,
         model: true
+      });
+    }
+
+    if (Lampa.Platform.is('android') && Lampa.Storage.field('player') !== 'inner') {
+      cm.push({
+        title: 'Плеер Lampa',
+        lampaplayer: true
       });
     }
 
@@ -331,6 +495,14 @@
             component: 'sisi_view_' + Defined.use_api,
             page: 1
           });
+        } else if (m.history) {
+          Api.history(card_data, function(status) {
+            Lampa.Noty.show('Успешно');
+          });
+          Lampa.Controller.toggle('content');
+        } else if (m.lampaplayer) {
+          Lampa.Controller.toggle('content');
+          play(card_data);
         } else {
           Api.bookmark(card_data, !card_data.bookmark.uid, function(status) {
             Lampa.Noty.show('Успешно');
@@ -355,12 +527,214 @@
     menu: menu$2
   };
 
+  function sisiCardHandlers() {
+    return {
+      onMenu: function (target, card_data) {
+        return Utils.menu(target, card_data);
+      },
+      onEnter: function (card, element) {
+        Utils.hidePreview();
+        Utils.play(element);
+      },
+      onFocus: function (target, element) {
+        Utils.preview($(target), element);
+      }
+    };
+  }
+
+  function mapPlaylistLine(line) {
+    var handlers = sisiCardHandlers();
+
+    line.url = line.url || '';
+    Utils.fixCards(line.results);
+
+    line.params = {
+      items: {
+        mapping: 'grid',
+        cols: 3,
+        align_left: true
+      }
+    };
+
+    line.results.forEach(function (element) {
+      element.source = SISI_SOURCE;
+      element.params = {
+        style: { name: 'collection' },
+        emit: {
+          onFocus: function (target) {
+            handlers.onFocus(target, element);
+          },
+          onlyEnter: function (target, data) {
+            handlers.onEnter(null, data || element);
+          },
+          onLong: function (target, data) {
+            handlers.onMenu($(target), data || element);
+          }
+        }
+      };
+    });
+
+    return Lampa.Utils.addSource(line, SISI_SOURCE);
+  }
+
+  function normalizeViewJson(json) {
+    json.results = Utils.fixList(json.list);
+    json.total_pages = json.total_pages || 30;
+    delete json.list;
+    Utils.fixCards(json.results);
+
+    json.params = {
+      items: {
+        mapping: 'grid',
+        cols: 3
+      }
+    };
+
+    var handlers = sisiCardHandlers();
+
+    json.results.forEach(function (element) {
+      element.source = SISI_SOURCE;
+      element.params = {
+        style: { name: 'collection' },
+        emit: {
+          onFocus: function (target) {
+            handlers.onFocus(target, element);
+          },
+          onlyEnter: function (target, data) {
+            handlers.onEnter(null, data || element);
+          },
+          onLong: function (target, data) {
+            handlers.onMenu($(target), data || element);
+          }
+        }
+      };
+    });
+
+    return Lampa.Utils.addSource(json, SISI_SOURCE);
+  }
+
+  function processViewMenu(menu) {
+    if (!menu) return;
+
+    menu.forEach(function (m) {
+      var spl = m.title.split(':');
+      m.title = spl[0].trim();
+      if (spl[1]) m.subtitle = Lampa.Utils.capitalizeFirstLetter(spl[1].trim().replace(/all/i, 'Любой'));
+
+      if (m.submenu) {
+        m.submenu.forEach(function (s) {
+          s.title = Lampa.Utils.capitalizeFirstLetter(s.title.trim().replace(/all/i, 'Любой'));
+        });
+      }
+    });
+  }
+
+  function sisiShowEmpty(comp, er) {
+    var empty = new Lampa.Empty({
+      descr: typeof er == 'string' ? er : Lampa.Lang.translate('empty_text_two')
+    });
+
+    Lampa.Activity.all().forEach(function (active) {
+      if (comp.activity == active.activity) {
+        active.activity.render().find('.activity__body > div')[0].appendChild(empty.render(true));
+      }
+    });
+
+    comp.start = empty.start.bind(empty);
+    comp.activity.loader(false);
+    comp.activity.toggle();
+  }
+
+  function sisiViewFilter(menu, object) {
+    if (!menu) return;
+
+    var items = menu.filter(function (m) {
+      return !m.search_on;
+    });
+    var search = menu.find(function (m) {
+      return m.search_on;
+    });
+
+    if (!search) search = object.search_start;
+    if (!items.length && !search) return;
+
+    if (search) {
+      Lampa.Arrays.insert(items, 0, {
+        title: 'Найти',
+        onSelect: function onSelect() {
+          $('body').addClass('ambience--enable');
+          Lampa.Input.edit(
+            {
+              title: 'Поиск',
+              value: '',
+              free: true,
+              nosave: true
+            },
+            function (value) {
+              $('body').removeClass('ambience--enable');
+              Lampa.Controller.toggle('content');
+
+              if (value) {
+                var separator = search.playlist_url.indexOf('?') !== -1 ? '&' : '?';
+                Lampa.Activity.push({
+                  url: search.playlist_url + separator + 'search=' + encodeURIComponent(value),
+                  title: 'Поиск - ' + value,
+                  component: 'sisi_view_' + Defined.use_api,
+                  search_start: search,
+                  page: 1
+                });
+              }
+            }
+          );
+        }
+      });
+    }
+
+    Lampa.Select.show({
+      title: 'Фильтр',
+      items: items,
+      onBack: function onBack() {
+        Lampa.Controller.toggle('content');
+      },
+      onSelect: function onSelect(a) {
+        menu.forEach(function (m) {
+          m.selected = m == a;
+        });
+
+        if (a.submenu) {
+          Lampa.Select.show({
+            title: a.title,
+            items: a.submenu,
+            onBack: function onBack() {
+              sisiViewFilter(menu, object);
+            },
+            onSelect: function onSelect(b) {
+              Lampa.Activity.push({
+                title: object.title,
+                url: b.playlist_url,
+                component: 'sisi_view_' + Defined.use_api,
+                page: 1
+              });
+            }
+          });
+        } else {
+          sisiViewFilter(menu, object);
+        }
+      }
+    });
+  }
+
+  function suspendSisiActivity() {
+    Utils.hidePreview();
+  }
+
   var menu$1;
 
   function ApiPWA() {
     var _this = this;
 
     var network = new Lampa.Reguest();
+    network.timeout(REQUEST_TIMEOUT);
 
     this.menu = function(success, error) {
       if (menu$1) return success(menu$1);
@@ -381,12 +755,7 @@
       var u = this.account(Lampa.Utils.addUrlComponent(params.url, 'pg=' + (params.page || 1)));
       DotNet.invokeMethodAsync("JinEnergy", u.path, u.query).then(function(json) {
         if (json.list) {
-          json.results = Utils.fixList(json.list);
-          json.collection = true;
-          json.total_pages = json.total_pages || 30;
-          Utils.fixCards(json.results);
-          delete json.list;
-          success(json);
+          success(normalizeViewJson(json));
         } else {
           error();
         }
@@ -416,7 +785,7 @@
       }
 
       if (uid) {
-        if (u.indexOf('&uid=') == -1) u = Lampa.Utils.addUrlComponent(u, 'uid=' + encodeURIComponent(uid));
+        if (u.indexOf('uid=') == -1) u = Lampa.Utils.addUrlComponent(u, 'uid=' + encodeURIComponent(uid));
       }
 
       if (u.indexOf('token=') == -1) {
@@ -445,7 +814,9 @@
         };
 
         menu$1.forEach(function(m, i) {
-          var u = _this.account(m.playlist_url + add_url_query);
+          var separator = m.playlist_url.indexOf('?') !== -1 ? '&' : '?';
+          var url_query = add_url_query.indexOf('?') !== -1 || add_url_query.indexOf('&') !== -1 ? add_url_query.substring(1) : add_url_query;
+          var u = _this.account(m.playlist_url + separator + url_query);
 
           var b = false;
           var w = setTimeout(function() {
@@ -460,18 +831,8 @@
               json.title = Utils.sourceTitle(m.title);
               json.results = Utils.fixList(json.list);
               json.url = m.playlist_url;
-              json.collection = true;
-              json.line_type = 'none';
-              json.card_events = {
-                onMenu: Utils.menu,
-                onEnter: function onEnter(card, element) {
-                  Utils.hidePreview();
-                  Utils.play(element);
-                }
-              };
-              Utils.fixCards(json.results);
               delete json.list;
-              status.append(m.playlist_url, json);
+              status.append(m.playlist_url, mapPlaylistLine(json));
             } else {
               status.error();
             }
@@ -518,10 +879,13 @@
     var _this = this;
 
     var network = new Lampa.Reguest();
+    network.timeout(REQUEST_TIMEOUT);
 
     this.menu = function(success, error) {
       if (menu) return success(menu);
-      network.silent(this.account(Defined.localhost)+'&rchtype='+window.rchtype, function(data) {
+      var url = this.account(Defined.localhost);
+        url += (url.indexOf('?') === -1 ? '?' : '&') + 'rchtype=' + ((window.rch_nws && window.rch_nws[hostkey] ? window.rch_nws[hostkey].type : window.rch && window.rch[hostkey] ? window.rch[hostkey].type : '') || '');
+      network.silent(url, function(data) {
         if (data.channels) {
           menu = data.channels;
           success(menu);
@@ -531,20 +895,22 @@
       }, error);
     };
 
-    this.view = function(params, success, error) {
+    this.view = function(params, success, error, waiting_rch) {
       var u = Lampa.Utils.addUrlComponent(params.url, 'pg=' + (params.page || 1));
       network.silent(this.account(u), function(json) {
         if (json.rch) {
+          if (waiting_rch){
+            error();
+            return;
+          }
           rchRun(json, function() {
-            _this.view(params, success, error)
-          })
+            _this.view(params, success, error, true);
+          });
+        } else if (json.accsdb) {
+          error();
+          Lampa.Noty.show(json.denymsg || json.msg, {style: 'error', time: 8000});
         } else if (json.list) {
-          json.results = Utils.fixList(json.list);
-          json.collection = true;
-          json.total_pages = json.total_pages || 30;
-          Utils.fixCards(json.results);
-          delete json.list;
-          success(json);
+          success(normalizeViewJson(json));
         } else {
           error();
         }
@@ -552,7 +918,7 @@
     };
 
     this.bookmark = function(element, add, call) {
-      var u = Defined.localhost + '/bookmark/' + (add ? 'add' : 'remove?buid=' + element.bookmark.uid);
+      var u = Defined.localhost + '/bookmark/' + (add ? 'add' : 'remove?id=' + element.bookmark.uid);
       network.silent(this.account(u), function(e) {
         call(true);
       }, function() {
@@ -564,29 +930,50 @@
       });
     };
 
+    this.history = function(element, call) {
+      var u = Defined.localhost + '/history/remove?id=' + element.history_uid;
+      network.silent(this.account(u), function(e) {
+        call(true);
+      }, function() {
+        call(false);
+      });
+    };
+
     this.account = function(u) {
-      if (Defined.use_api == 'lampac' && u.indexOf(Defined.localhost.replace('/sisi', '')) == -1 && window.location.hostname !== 'localhost') return u;
+      u = u.replace(/^[\?&]+/, '');
+      u = u.replace(/[\?&]+$/, '');
+
+      if (u.replace(/[\?&]+$/, '').indexOf('http://31.129.234.181'.replace(/https:/, '').replace(/http:/, '')) === -1)
+        return u;
 
       var unic_id = Lampa.Storage.get('sisi_unic_id', '');
       var uid = Lampa.Storage.get('lampac_unic_id', '');
       var email = Lampa.Storage.get('account', {}).email;
 
-      if (u.indexOf('box_mac=') == -1) u = Lampa.Utils.addUrlComponent(u, 'box_mac=' + unic_id);
-      else u = u.replace(/box_mac=[^&]+/, 'box_mac=' + unic_id);
+      if (u.indexOf('box_mac=') === -1)
+        u = Lampa.Utils.addUrlComponent(u, 'box_mac=' + unic_id);
 
       if (email) {
-        if (u.indexOf('account_email=') == -1) u = Lampa.Utils.addUrlComponent(u, 'account_email=' + encodeURIComponent(email));
-        else u = u.replace(/account_email=[^&]+/, 'account_email=' + encodeURIComponent(email));
+        if (u.indexOf('account_email=') === -1)
+          u = Lampa.Utils.addUrlComponent(u, 'account_email=' + encodeURIComponent(email));
       }
 
       if (uid) {
-        if (u.indexOf('&uid=') == -1) u = Lampa.Utils.addUrlComponent(u, 'uid=' + encodeURIComponent(uid));
-        else u = u.replace(/uid=[^&]+/, 'uid=' + encodeURIComponent(uid));
+        if (u.indexOf('uid=') === -1)
+          u = Lampa.Utils.addUrlComponent(u, 'uid=' + encodeURIComponent(uid));
       }
 
-      if (u.indexOf('token=') == -1) {
+      if (u.indexOf('token=') === -1) {
         var token = '';
         if (token != '') u = Lampa.Utils.addUrlComponent(u, 'token=');
+      }
+
+      var profile_id = Lampa.Storage.get('lampac_profile_id', '');
+      if (profile_id != '') u = Lampa.Utils.addUrlComponent(u, 'profile_id=' + profile_id);
+
+      if (u.indexOf('nws_id=') === -1) {
+        var nws_id = Lampa.Storage.get('lampac_nws_id', '');
+        if (nws_id) u = Lampa.Utils.addUrlComponent(u, 'nws_id=' + encodeURIComponent(nws_id));
       }
 
       return u;
@@ -607,34 +994,28 @@
 
         menu.forEach(function(m) {
           function loadThis() {
-            network.silent(_this.account(m.playlist_url + add_url_query), function(json) {
+            var separator = m.playlist_url.indexOf('?') !== -1 ? '&' : '?';
+            network.silent(_this.account(m.playlist_url.replace(/[\?&]+$/, '') + separator + add_url_query.replace(/^[\?&]+/, '')), function(json) {
               if (json.rch) {
                 rchRun(json, function() {
-                  loadThis()
-                })
+                  loadThis();
+                });
+              } else if (json.accsdb) {
+                status.error();
+                Lampa.Noty.show(json.denymsg || json.msg, {style: 'error', time: 8000});
               } else if (json.list) {
                 json.title = Utils.sourceTitle(m.title);
                 json.results = Utils.fixList(json.list);
                 json.url = m.playlist_url;
-                json.collection = true;
-                json.line_type = 'none';
-                json.card_events = {
-                  onMenu: Utils.menu,
-                  onEnter: function onEnter(card, element) {
-                    Utils.hidePreview();
-                    Utils.play(element);
-                  }
-                };
-                Utils.fixCards(json.results);
                 delete json.list;
-                status.append(m.playlist_url, json);
+                status.append(m.playlist_url, mapPlaylistLine(json));
               } else {
                 status.error();
               }
             }, status.error.bind(status));
           }
 
-          loadThis()
+          loadThis();
         });
       };
 
@@ -652,13 +1033,20 @@
       this.playlist('?search=' + encodeURIComponent(params.query), oncomplite, error);
     };
 
-    this.qualitys = function(video_url, oncomplite, error) {
+    this.qualitys = function(video_url, oncomplite, error, waiting_rch) {
       network.silent(this.account(video_url + '&json=true'), function(json) {
         if (json.rch) {
+          if (waiting_rch) {
+            error();
+            return;
+          }
           rchRun(json, function() {
-            _this.qualitys(video_url, oncomplite, error)
-          })
-        } else oncomplite(json)
+            _this.qualitys(video_url, oncomplite, error, true);
+          });
+        } else if (json.accsdb) {
+          error();
+          Lampa.Noty.show(json.denymsg || json.msg, {style: 'error', time: 8000});
+        } else oncomplite(json);
       }, error);
     };
 
@@ -672,185 +1060,238 @@
   var Api = ApiHttp$1; //Defined.use_api == 'pwa' ? ApiPWA$1 : ApiHttp$1;
 
   function Sisi(object) {
-    var comp = new Lampa.InteractionMain(object);
+    var comp = Lampa.Maker.make('Main', object);
 
-    comp.create = function() {
-      this.activity.loader(true);
-      Api.main(object, this.build.bind(this), this.empty.bind(this));
-      return this.render();
-    };
-
-    comp.empty = function(er) {
-      var _this = this;
-
-      var empty = new Lampa.Empty({
-        descr: typeof er == 'string' ? er : Lampa.Lang.translate('empty_text_two')
-      });
-      Lampa.Activity.all().forEach(function(active) {
-        if (_this.activity == active.activity) active.activity.render().find('.activity__body > div')[0].appendChild(empty.render(true));
-      });
-      this.start = empty.start;
-      this.activity.loader(false);
-      this.activity.toggle();
-    };
-
-    comp.onMore = function(data) {
-      Lampa.Activity.push({
-        url: data.url,
-        title: data.title,
-        component: 'sisi_view_' + Defined.use_api,
-        page: 2
-      });
-    };
-
-    comp.onAppend = function(line, element) {
-      line.onAppend = function(card) {
-        var origFocus = card.onFocus;
-
-        card.onFocus = function(target, card_data) {
-          origFocus(target, card_data);
-          Utils.preview(target, card_data);
-        };
-      };
-    };
+    comp.use({
+      onCreate: function () {
+        Api.main(
+          object,
+          function (data) {
+            for (var i = 0; i < data.length; i++) data[i] = mapPlaylistLine(data[i]);
+            this.build(Lampa.Utils.addSource(data, SISI_SOURCE));
+          }.bind(this),
+          function (er) {
+            sisiShowEmpty(this, er);
+          }.bind(this)
+        );
+      },
+      onInstance: function (line, data) {
+        line.use({
+          onMore: function () {
+            Lampa.Activity.push({
+              url: data.url,
+              title: data.title,
+              component: 'sisi_view_' + Defined.use_api,
+              page: 2
+            });
+          }
+        });
+      },
+      onPause: suspendSisiActivity,
+      onStop: suspendSisiActivity,
+      onDestroy: suspendSisiActivity
+    });
 
     return comp;
   }
 
   function View(object) {
-    var comp = new Lampa.InteractionCategory(object);
     var menu;
+    var comp = Lampa.Maker.make('Category', object, function (module) {
+      module.toggle(Lampa.Maker.module('Category').MASK.base, 'Pagination');
+    });
 
-    comp.create = function() {
-      var _this = this;
+    comp.filter = function () {
+      sisiViewFilter(menu, object);
+    };
 
-      this.activity.loader(true);
-      Api.view(object, function(data) {
-        menu = data.menu;
+    comp.use({
+      onCreate: function () {
+        Api.view(
+          object,
+          function (data) {
+            menu = data.menu;
+            processViewMenu(menu);
+            this.build(data);
 
-        if (menu) {
-          menu.forEach(function(m) {
-            var spl = m.title.split(':');
-            m.title = spl[0].trim();
-            if (spl[1]) m.subtitle = Lampa.Utils.capitalizeFirstLetter(spl[1].trim().replace(/all/i, 'Любой'));
-
-            if (m.submenu) {
-              m.submenu.forEach(function(s) {
-                s.title = Lampa.Utils.capitalizeFirstLetter(s.title.trim().replace(/all/i, 'Любой'));
+            if (!data.results.length && object.url.indexOf('/bookmarks') !== -1) {
+              Lampa.Noty.show('Удерживайте ОК на видео для добавления в закладки.', {
+                time: 10000
               });
             }
-          });
-        }
+          }.bind(this),
+          function (er) {
+            sisiShowEmpty(this, er);
+          }.bind(this)
+        );
+      },
+      onNext: function (resolve, reject) {
+        Api.view(object, resolve, reject);
+      },
+      onRight: function () {
+        comp.filter();
+      },
+      onPause: suspendSisiActivity,
+      onStop: suspendSisiActivity,
+      onDestroy: suspendSisiActivity
+    });
 
-        _this.build(data);
-
-        if (!data.results.length && object.url.indexOf('/bookmarks')) {
-          Lampa.Noty.show('Удерживайте ОК на видео для добавления в закладки.', {
-            time: 10000
-          });
-        }
-      }, this.empty.bind(this));
-    };
-
-    comp.nextPageReuest = function(object, resolve, reject) {
-      Api.view(object, resolve.bind(this), reject.bind(this));
-    };
-
-    comp.cardRender = function(object, element, card) {
-      card.onMenu = function(target, card_data) {
-        return Utils.menu(target, card_data);
-      };
-
-      card.onEnter = function() {
-        Utils.hidePreview();
-        Utils.play(element);
-      };
-
-      var origFocus = card.onFocus;
-
-      card.onFocus = function(target, card_data) {
-        origFocus(target, card_data);
-        Utils.preview(target, element);
-      };
-    };
-
-    comp.filter = function() {
-      if (menu) {
-        var items = menu.filter(function(m) {
-          return !m.search_on;
-        });
-        var search = menu.find(function(m) {
-          return m.search_on;
-        });
-        if (!search) search = object.search_start;
-        if (!items.length && !search) return;
-
-        if (search) {
-          Lampa.Arrays.insert(items, 0, {
-            title: 'Найти',
-            onSelect: function onSelect() {
-              Lampa.Input.edit({
-                title: 'Поиск',
-                value: '',
-                free: true,
-                nosave: true
-              }, function(value) {
-                Lampa.Controller.toggle('content');
-
-                if (value) {
-                  Lampa.Activity.push({
-                    url: search.playlist_url + '?search=' + encodeURIComponent(value),
-                    title: 'Поиск - ' + value,
-                    component: 'sisi_view_' + Defined.use_api,
-                    search_start: search,
-                    page: 1
-                  });
-                }
-              });
-            }
-          });
-        }
-
-        Lampa.Select.show({
-          title: 'Фильтр',
-          items: items,
-          onBack: function onBack() {
-            Lampa.Controller.toggle('content');
-          },
-          onSelect: function onSelect(a) {
-            menu.forEach(function(m) {
-              m.selected = m == a ? true : false;
-            });
-
-            if (a.submenu) {
-              Lampa.Select.show({
-                title: a.title,
-                items: a.submenu,
-                onBack: function onBack() {
-                  comp.filter();
-                },
-                onSelect: function onSelect(b) {
-                  Lampa.Activity.push({
-                    title: object.title,
-                    url: b.playlist_url,
-                    component: 'sisi_view_' + Defined.use_api,
-                    page: 1
-                  });
-                }
-              });
-            } else {
-              comp.filter();
-            }
-          }
-        });
-      }
-    };
-
-    comp.onRight = comp.filter.bind(comp);
     return comp;
   }
 
+  var Search = {
+    title: 'Клубничка',
+    search: function search(params, oncomplite) {
+      network.timeout(REQUEST_TIMEOUT);
+      network.silent(
+        'http://31.129.234.181/rch/check/connected',
+        function (json) {
+          if (json.rch) {
+            rchRun(json, function () {
+              Api.search(params, function (data) {
+                oncomplite(Lampa.Utils.addSource(data, SISI_SOURCE));
+              });
+            });
+          } else {
+            Api.search(params, function (data) {
+              oncomplite(Lampa.Utils.addSource(data, SISI_SOURCE));
+            });
+          }
+        },
+        function () {
+          oncomplite([]);
+        }
+      );
+    },
+    onCancel: function onCancel() {
+      Api.clear();
+    },
+    params: {
+      lazy: true,
+      align_left: true
+    },
+    onMore: function onMore(params, close) {
+      close();
+      var url = Lampa.Utils.addUrlComponent(params.data.url, 'search=' + encodeURIComponent(params.query));
+      Lampa.Activity.push({
+        url: url,
+        title: 'Поиск - ' + params.query,
+        component: 'sisi_view_' + Defined.use_api,
+        page: 2
+      });
+    },
+    onSelect: function onSelect(params, close) {
+      Utils.play(params.element);
+    }
+  };
+
+
+  // ── UI assets: CSS + HTML fragments ──
+  function sisiCssHtml() {
+    return [
+      '<style>',
+      "@charset 'UTF-8';",
+      '/* ── card video preview ── */',
+      '.sisi-video-preview {',
+      '  position: absolute;',
+      '  width: 100%;',
+      '  height: 100%;',
+      '  left: 0;',
+      '  top: 0;',
+      '  overflow: hidden;',
+      '  border-radius: 1em;',
+      '}',
+      '.sisi-video-preview video {',
+      '  position: absolute;',
+      '  width: 100%;',
+      '  height: 100%;',
+      '  left: 0;',
+      '  top: 0;',
+      '  object-fit: cover;',
+      '}',
+      '/* ── menu PWA badge ── */',
+      '.sisi-menu-pwa-badge {',
+      '  position: absolute;',
+      '  right: -0.3em;',
+      '  bottom: -0.5em;',
+      '  color: #fff;',
+      '  padding: 0.2em 0.4em;',
+      '  font-size: 0.6em;',
+      '  border-radius: 0.5em;',
+      '  font-weight: 900;',
+      '  text-transform: uppercase;',
+      '}',
+      '</style>'
+    ].join('\n');
+  }
+
+  var SISI_ICON_SVG = [
+    '<svg width="200" height="243" viewBox="0 0 200 243" fill="none" xmlns="http://www.w3.org/2000/svg">',
+    '  <path d="M187.714 130.727C206.862 90.1515 158.991 64.2019 100.983 64.2019C42.9759 64.2019 -4.33044 91.5669 10.875 130.727C26.0805 169.888 63.2501 235.469 100.983 234.997C138.716 234.526 168.566 171.303 187.714 130.727Z" stroke="currentColor" stroke-width="15"/>',
+    '  <path d="M102.11 62.3146C109.995 39.6677 127.46 28.816 169.692 24.0979C172.514 56.1811 135.338 64.2018 102.11 62.3146Z" stroke="currentColor" stroke-width="15"/>',
+    '  <path d="M90.8467 62.7863C90.2285 34.5178 66.0667 25.0419 31.7127 33.063C28.8904 65.1461 68.8826 62.7863 90.8467 62.7863Z" stroke="currentColor" stroke-width="15"/>',
+    '  <path d="M100.421 58.5402C115.627 39.6677 127.447 13.7181 85.2149 9C82.3926 41.0832 83.5258 35.4214 100.421 58.5402Z" stroke="currentColor" stroke-width="15"/>',
+    '  <rect x="39.0341" y="98.644" width="19.1481" height="30.1959" rx="9.57407" fill="currentColor"/>',
+    '  <rect x="90.8467" y="92.0388" width="19.1481" height="30.1959" rx="9.57407" fill="currentColor"/>',
+    '  <rect x="140.407" y="98.644" width="19.1481" height="30.1959" rx="9.57407" fill="currentColor"/>',
+    '  <rect x="116.753" y="139.22" width="19.1481" height="30.1959" rx="9.57407" fill="currentColor"/>',
+    '  <rect x="64.9404" y="139.22" width="19.1481" height="30.1959" rx="9.57407" fill="currentColor"/>',
+    '  <rect x="93.0994" y="176.021" width="19.1481" height="30.1959" rx="9.57407" fill="currentColor"/>',
+    '</svg>'
+  ].join('\n');
+
+  var SISI_FILTER_BUTTON = [
+    '<div class="head__action head__settings selector">',
+    '  <svg height="36" viewBox="0 0 38 36" fill="none" xmlns="http://www.w3.org/2000/svg">',
+    '    <rect x="1.5" y="1.5" width="35" height="33" rx="1.5" stroke="currentColor" stroke-width="3"></rect>',
+    '    <rect x="7" y="8" width="24" height="3" rx="1.5" fill="currentColor"></rect>',
+    '    <rect x="7" y="16" width="24" height="3" rx="1.5" fill="currentColor"></rect>',
+    '    <rect x="7" y="25" width="24" height="3" rx="1.5" fill="currentColor"></rect>',
+    '    <circle cx="13.5" cy="17.5" r="3.5" fill="currentColor"></circle>',
+    '    <circle cx="23.5" cy="26.5" r="3.5" fill="currentColor"></circle>',
+    '    <circle cx="21.5" cy="9.5" r="3.5" fill="currentColor"></circle>',
+    '  </svg>',
+    '</div>'
+  ].join('\n');
+
+  function sisiMenuItemHtml(title) {
+    return [
+      '<li class="menu__item selector" data-action="sisi">',
+      '  <div class="menu__ico">',
+      '    ' + SISI_ICON_SVG,
+      '  </div>',
+      '  <div class="menu__text">' + title + '</div>',
+      '</li>'
+    ].join('\n');
+  }
+
+  function sisiModalHtml(text, boxMac) {
+    return [
+      '<div class="about">',
+      '  <div>' + (text || 'Добавьте идентификатор устройства в init.conf') + '</div>',
+      '  <div class="about__contacts">',
+      '    <div>',
+      '      <small>unic_id</small><br>',
+      '      ' + luid,
+      '    </div>',
+      '    <div>',
+      '      <small>box_mac</small><br>',
+      '      ' + boxMac,
+      '    </div>',
+      '  </div>',
+      '</div>'
+    ].join('\n');
+  }
+
+  function injectSisiAssets() {
+    if (window.sisi_assets_injected) return;
+    window.sisi_assets_injected = true;
+    $('body').append(sisiCssHtml());
+  }
+
+
   function startPlugin() {
+    injectSisiAssets();
     window['plugin_sisi_' + Defined.use_api + '_ready'] = true;
     var unic_id = Lampa.Storage.get('sisi_unic_id', '');
 
@@ -860,18 +1301,26 @@
     }
 
     Lampa.Component.add('sisi_' + Defined.use_api, Sisi);
-    Lampa.Component.add('sisi_view_' + Defined.use_api, View); //Lampa.Search.addSource(Search)
+    Lampa.Component.add('sisi_view_' + Defined.use_api, View);
+    // addSourceSearch();
+    Lampa.Search.addSource(Search);
 
     function addFilter() {
       var activi;
       var timer;
-      var button = $("<div class=\"head__action head__settings selector\">\n            <svg height=\"36\" viewBox=\"0 0 38 36\" fill=\"none\" xmlns=\"http://www.w3.org/2000/svg\">\n                <rect x=\"1.5\" y=\"1.5\" width=\"35\" height=\"33\" rx=\"1.5\" stroke=\"currentColor\" stroke-width=\"3\"></rect>\n                <rect x=\"7\" y=\"8\" width=\"24\" height=\"3\" rx=\"1.5\" fill=\"currentColor\"></rect>\n                <rect x=\"7\" y=\"16\" width=\"24\" height=\"3\" rx=\"1.5\" fill=\"currentColor\"></rect>\n                <rect x=\"7\" y=\"25\" width=\"24\" height=\"3\" rx=\"1.5\" fill=\"currentColor\"></rect>\n                <circle cx=\"13.5\" cy=\"17.5\" r=\"3.5\" fill=\"currentColor\"></circle>\n                <circle cx=\"23.5\" cy=\"26.5\" r=\"3.5\" fill=\"currentColor\"></circle>\n                <circle cx=\"21.5\" cy=\"9.5\" r=\"3.5\" fill=\"currentColor\"></circle>\n            </svg>\n        </div>");
-      button.hide().on('hover:enter', function() {
-        if (activi) {
-          activi.activity.component().filter();
-        }
-      });
-      $('.head .open--search').after(button);
+      var button;
+
+      function openFilter() {
+        if (!activi) return;
+        var comp = activi.activity.component;
+        if (comp && typeof comp.filter === 'function') comp.filter();
+      }
+
+      var filterSvg = SISI_FILTER_BUTTON.match(/<svg[\s\S]*<\/svg>/);
+      button = Lampa.Head.addIcon(filterSvg ? filterSvg[0] : '', openFilter);
+      button.addClass('head__settings');
+      button.hide();
+
       Lampa.Listener.follow('activity', function(e) {
         if (e.type == 'start') activi = e.object;
         clearTimeout(timer);
@@ -897,7 +1346,7 @@
       Lampa.SettingsApi.addComponent({
         component: 'sisi',
         name: Lampa.Lang.translate('lampac_sisiname'),
-        icon: "<svg width=\"200\" height=\"243\" viewBox=\"0 0 200 243\" fill=\"none\" xmlns=\"http://www.w3.org/2000/svg\"><path d=\"M187.714 130.727C206.862 90.1515 158.991 64.2019 100.983 64.2019C42.9759 64.2019 -4.33044 91.5669 10.875 130.727C26.0805 169.888 63.2501 235.469 100.983 234.997C138.716 234.526 168.566 171.303 187.714 130.727Z\" stroke=\"currentColor\" stroke-width=\"15\"/><path d=\"M102.11 62.3146C109.995 39.6677 127.46 28.816 169.692 24.0979C172.514 56.1811 135.338 64.2018 102.11 62.3146Z\" stroke=\"currentColor\" stroke-width=\"15\"/><path d=\"M90.8467 62.7863C90.2285 34.5178 66.0667 25.0419 31.7127 33.063C28.8904 65.1461 68.8826 62.7863 90.8467 62.7863Z\" stroke=\"currentColor\" stroke-width=\"15\"/><path d=\"M100.421 58.5402C115.627 39.6677 127.447 13.7181 85.2149 9C82.3926 41.0832 83.5258 35.4214 100.421 58.5402Z\" stroke=\"currentColor\" stroke-width=\"15\"/><rect x=\"39.0341\" y=\"98.644\" width=\"19.1481\" height=\"30.1959\" rx=\"9.57407\" fill=\"currentColor\"/><rect x=\"90.8467\" y=\"92.0388\" width=\"19.1481\" height=\"30.1959\" rx=\"9.57407\" fill=\"currentColor\"/><rect x=\"140.407\" y=\"98.644\" width=\"19.1481\" height=\"30.1959\" rx=\"9.57407\" fill=\"currentColor\"/><rect x=\"116.753\" y=\"139.22\" width=\"19.1481\" height=\"30.1959\" rx=\"9.57407\" fill=\"currentColor\"/><rect x=\"64.9404\" y=\"139.22\" width=\"19.1481\" height=\"30.1959\" rx=\"9.57407\" fill=\"currentColor\"/><rect x=\"93.0994\" y=\"176.021\" width=\"19.1481\" height=\"30.1959\" rx=\"9.57407\" fill=\"currentColor\"/></svg>"
+        icon: SISI_ICON_SVG
       });
       Lampa.SettingsApi.addParam({
         component: 'sisi',
@@ -913,29 +1362,40 @@
         },
         onRender: function onRender(item) {}
       });
+      Lampa.SettingsApi.addParam({
+        component: 'sisi',
+        param: {
+          name: 'sisi_history',
+          type: 'trigger',
+          values: '',
+          "default": true
+        },
+        field: {
+          name: 'История',
+          description: 'Сохранять историю просмотров'
+        },
+        onRender: function onRender(item) {}
+      });
     }
 
     function add() {
-      var button = $("<li class=\"menu__item selector\">\n            <div class=\"menu__ico\">\n                <svg width=\"200\" height=\"243\" viewBox=\"0 0 200 243\" fill=\"none\" xmlns=\"http://www.w3.org/2000/svg\"><path d=\"M187.714 130.727C206.862 90.1515 158.991 64.2019 100.983 64.2019C42.9759 64.2019 -4.33044 91.5669 10.875 130.727C26.0805 169.888 63.2501 235.469 100.983 234.997C138.716 234.526 168.566 171.303 187.714 130.727Z\" stroke=\"currentColor\" stroke-width=\"15\"/><path d=\"M102.11 62.3146C109.995 39.6677 127.46 28.816 169.692 24.0979C172.514 56.1811 135.338 64.2018 102.11 62.3146Z\" stroke=\"currentColor\" stroke-width=\"15\"/><path d=\"M90.8467 62.7863C90.2285 34.5178 66.0667 25.0419 31.7127 33.063C28.8904 65.1461 68.8826 62.7863 90.8467 62.7863Z\" stroke=\"currentColor\" stroke-width=\"15\"/><path d=\"M100.421 58.5402C115.627 39.6677 127.447 13.7181 85.2149 9C82.3926 41.0832 83.5258 35.4214 100.421 58.5402Z\" stroke=\"currentColor\" stroke-width=\"15\"/><rect x=\"39.0341\" y=\"98.644\" width=\"19.1481\" height=\"30.1959\" rx=\"9.57407\" fill=\"currentColor\"/><rect x=\"90.8467\" y=\"92.0388\" width=\"19.1481\" height=\"30.1959\" rx=\"9.57407\" fill=\"currentColor\"/><rect x=\"140.407\" y=\"98.644\" width=\"19.1481\" height=\"30.1959\" rx=\"9.57407\" fill=\"currentColor\"/><rect x=\"116.753\" y=\"139.22\" width=\"19.1481\" height=\"30.1959\" rx=\"9.57407\" fill=\"currentColor\"/><rect x=\"64.9404\" y=\"139.22\" width=\"19.1481\" height=\"30.1959\" rx=\"9.57407\" fill=\"currentColor\"/><rect x=\"93.0994\" y=\"176.021\" width=\"19.1481\" height=\"30.1959\" rx=\"9.57407\" fill=\"currentColor\"/></svg>\n            </div>\n            <div class=\"menu__text\">" + Lampa.Lang.translate('lampac_sisiname') + "</div>\n        </li>");
+      var button = $(sisiMenuItemHtml(Lampa.Lang.translate('lampac_sisiname')));
 
       if (Defined.use_api == 'pwa') {
-        var pw = $('<div>p</div>');
-        pw.css({
-          position: 'absolute',
-          right: '-0.3em',
-          bottom: '-0.5em',
-          backgroundColor: '#fff',
-          color: '#000',
-          padding: '0.2em 0.4em',
-          fontSize: '0.6em',
-          borderRadius: '0.5em',
-          fontWeight: 900,
-          textTransform: 'uppercase'
-        });
+        var pw = $('<div class="sisi-menu-pwa-badge">p</div>');
         button.find('.menu__ico').css('position', 'relative').append(pw);
       }
 
       button.on('hover:enter', function() {
+        // Проверка и создание Lampa.ParentalControl, если не существует
+        if (!Lampa.ParentalControl) {
+            Lampa.ParentalControl = {
+            query: function(success, error) {
+                // По умолчанию всегда разрешает доступ
+                if (typeof success === 'function') success();
+            }
+            };
+        }
         Lampa.ParentalControl.query(function() {
           Api.menu(function(data) {
             // let items = [{
@@ -943,7 +1403,7 @@
             // }]
             var items = [];
 
-            if (true && (Defined.use_api == 'lampac' || Lampa.Platform.is('android'))) {
+            if (true && (Defined.use_api !== 'pwa' || Lampa.Platform.is('android'))) {
               items.push({
                 title: 'Все'
               });
@@ -977,42 +1437,57 @@
                 Lampa.Controller.toggle('menu');
               }
             });
-          }, function() {});
-        }, function() {})
+          }, function (e) {
+            if (typeof e == 'string') modal(e);
+          });
+        }, function () {});
       });
       $('.menu .menu__list').eq(0).append(button);
+    }
+
+    function init() {
+      if (window.lampa_settings.sisi_app) {
+        Api.menu(function (data) {
+          data.forEach(function (a) {
+            a.title = Utils.sourceTitle(a.title);
+
+            Lampa.Menu.addButton('<img src="./img/icons/settings/more.svg">', a.title, function () {
+              if (a.playlist_url) {
+                Lampa.Activity.push({
+                  url: a.playlist_url,
+                  title: a.title,
+                  component: 'sisi_view_' + Defined.use_api,
+                  page: 1
+                });
+              } else {
+                Lampa.Activity.push({
+                  url: '',
+                  title: Lampa.Lang.translate('lampac_sisiname'),
+                  component: 'sisi_' + Defined.use_api,
+                  page: 1
+                });
+              }
+            });
+          });
+        });
+      } else {
+        add();
+      }
+
       addFilter();
       addSettings();
     }
 
-    if (window.appready) add();
+    if (window.appready) init();
     else {
       Lampa.Listener.follow('app', function(e) {
-        if (e.type == 'ready') add();
+        if (e.type == 'ready') init();
       });
     }
   }
 
   if (!window['plugin_sisi_' + Defined.use_api + '_ready']) {
     startPlugin();
-    /*
-    if(Defined.use_api == 'pwa'){
-        let s = document.createElement('script')
-            s.onload = function(){
-                Blazor.start({
-                    loadBootResource: function (type, name, defaultUri, integrity) {
-                        return Defined.framework+'/_framework/' + name
-                    }
-                })
-                  startPlugin()
-            }
-              s.setAttribute('autostart', 'false')
-            s.setAttribute('src', Defined.framework+'/_framework/blazor.webassembly.js')
-        
-            document.body.appendChild(s)
-    }
-    else startPlugin()
-    */
   }
 
 })();
