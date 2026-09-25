@@ -3,6 +3,53 @@
   Lampa.Platform.tv();
 
   (function () {
+    function initLampaHook() {
+      if (window.Lampa && Lampa.Player && Lampa.Player.listener) {
+        $.ajaxTransport('+json', function (options) {
+          if (/\/api\/ad\/get\/banner(?:[?#]|$)/.test(options.url)) {
+            return {
+              send: function (headers, complete) {
+                complete(200, 'OK', { json: { ad: [] } });
+              },
+              abort: function () {}
+            };
+          }
+        });
+
+        var listener = Lampa.Player.listener;
+        var originalSend = listener.send;
+        var restore;
+
+        listener.send = function (type, event) {
+          if (restore && (type === 'create' || type === 'start' || type === 'external' || type === 'destroy')) {
+            restore();
+            restore = null;
+          }
+
+          var result = originalSend.apply(this, arguments);
+
+          if (type === 'create' && event && event.data) {
+            var data = event.data;
+            var hadIptv = Object.prototype.hasOwnProperty.call(data, 'iptv');
+            var iptv = data.iptv;
+
+            restore = function () {
+              if (hadIptv) data.iptv = iptv;
+              else delete data.iptv;
+            };
+
+            data.iptv = true;
+            delete data.vast_url;
+            delete data.vast_msg;
+          }
+
+          return result;
+        };
+      } else {
+        setTimeout(initLampaHook, 500);
+      }
+    }
+
     function removeAdsOnToggle() {
       Lampa.Controller.listener.follow('toggle', function (event) {
         if (event.name === 'select') {
@@ -15,80 +62,33 @@
       });
     }
 
-    function customizePreroll() {
-      var observer = new MutationObserver(function () {
-        var preroll = document.querySelector('.ad-preroll');
-        if (preroll && !preroll.dataset.customized) {
-          preroll.dataset.customized = 'true';
-
-          var textEl = preroll.querySelector('.ad-preroll__text');
-          if (textEl) {
-            textEl.textContent = 'Приятного просмотра';
-            textEl.style.fontSize = '2.2em';
-            textEl.style.fontWeight = 'bold';
-            textEl.style.color = '#ffffff';
-            textEl.style.textShadow = '0 0 10px rgba(0,0,0,0.8)';
-          }
-
-          preroll.style.background = 'linear-gradient(135deg, rgba(0,0,0,0.85), rgba(10,20,40,0.95))';
-          preroll.style.backgroundSize = 'cover';
-          preroll.style.backgroundPosition = 'center';
-
-          var bgEl = preroll.querySelector('.ad-preroll__bg');
-          if (bgEl) bgEl.style.opacity = '0';
-
-          var overEl = preroll.querySelector('.ad-preroll__over');
-          if (overEl) overEl.style.opacity = '0';
-        }
-      });
-
-      observer.observe(document.body, { childList: true, subtree: true });
-    }
-
     function initializeApp() {
-      var origCreateElement = document.createElement;
-      document.createElement = function(tag) {
-        if (tag.toLowerCase() === 'video') {
-          var video = origCreateElement.apply(this, arguments);
-          var origPlay = video.play;
-          video.play = function() {
-            if (origPlay) origPlay.apply(this);
-            setTimeout(function() {
-              video.pause();
-              video.currentTime = video.duration || 99999;
-              video.dispatchEvent(new Event('ended'));
-              video.dispatchEvent(new Event('timeupdate'));
-            }, 0.000001);
-          };
-          return video;
-        }
-        return origCreateElement.apply(this, arguments);
-      };
-
-      var style = document.createElement('style');
-      style.innerHTML = 
-        '.button--subscribe,' +
-        '[class*="subscribe"]:not([class*="sync"]),' +
-        '[class*="premium"]:not(.premium-quality):not([class*="sync"]),' +
-        '.open--premium,' +
-        '.open--feed,' +
-        '.open--notice,' +
-        '.icon--blink,' +
-        '[class*="black-friday"],' +
-        '[class*="christmas"],' +
-        '.ad-server,' +
-        '.ad-bot,' +
-        '.full-start__button.button--options,' +
-        '.new-year__button,' +
-        '.notice--icon { display: none !important; }';
+      const style = document.createElement('style');
+      style.innerHTML = `
+        .button--subscribe,
+        [class*="subscribe"]:not([class*="sync"]),
+        [class*="premium"]:not(.premium-quality):not([class*="sync"]),
+        .open--premium,
+        .open--feed,
+        .open--notice,
+        .icon--blink,
+        [class*="black-friday"],
+        [class*="christmas"],
+        .ad-server,
+        .ad-bot,
+        .full-start__button.button--options,
+        .new-year__button,
+        .notice--icon
+        { display: none !important; }
+      `;
       document.head.appendChild(style);
 
-      setTimeout(function() {
+      setTimeout(() => {
         $('.open--feed, .open--premium, .open--notice, .icon--blink, [class*="friday"], [class*="christmas"]').remove();
       }, 1000);
-
-      customizePreroll();
     }
+
+    initLampaHook();
 
     if (window.appready) {
       initializeApp();
